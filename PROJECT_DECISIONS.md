@@ -74,3 +74,23 @@ The manual visual-check Vite process left a child `node.exe` listening on port 4
 The next integrated Playwright gate correctly failed because the port was occupied.
 The listener PID was identified as the ZaPan-local Vite command before termination; after stopping it, the full integrated regression passed.
 Future manual dev-server work should verify the listening port is released before the next browser gate.
+
+## DEC-010 — Dexie as the Phase 2 IndexedDB adapter
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: use Dexie as a thin service-layer adapter over browser IndexedDB; domain types/reducers remain framework- and storage-independent.
+Reason: Phase 2 requires durable transactions, schema versioning, indexed queries and deterministic tests without pushing persistence mechanics into React or domain math.
+Verification: repository integration suite passes reopen persistence, atomic event/progress/session writes, idempotency and due queries; full lint/test/build gate is green.
+Consequence: a future storage replacement remains possible through the `LearningRepository` port.
+
+## Implementation lesson 6 — test pass does not imply compile pass
+The first persistence full gate had all 30 tests passing but TypeScript build rejected a constructor parameter property under `erasableSyntaxOnly`.
+The gate correctly blocked progression until the class field was rewritten explicitly and the full check passed.
+
+## DEC-011 — Content is versioned, validated, and audited per bundle
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: ZaPan v2 does not bulk-copy legacy learning data. Each bundle has stable Card IDs, sourceVersion, runtime validation, provenance/audit state and duplicate detection.
+Current verified bundle: `foundation-kana-main-v1` with 92 basic Kana cards.
+Reason: legacy reference data contains at least one observed script inconsistency in Katakana dakuten and cannot be treated as automatically trustworthy.
+Consequence: un-audited content stays unavailable rather than being presented as complete N5 material.

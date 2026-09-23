@@ -147,3 +147,34 @@ Observed: lint 0 warnings/errors; 23/23 Vitest tests passed; TypeScript + Vite p
 Port check after browser work returned no LISTENING entry for 127.0.0.1:4173.
 Git status: local repository still has no commits; source/docs are untracked by design for owner review; generated/cache artifacts remain ignored.
 Result: PASS.
+
+## Phase 2
+
+### E-015 — Phase 1 Git baseline and GitHub tooling
+Date: 2026-09-24
+Baseline commit: `ae5c15a` — `chore: establish verified ZaPan v2 phase 1 foundation`.
+Local branch renamed to `main` to match the existing GitHub repository default branch.
+GitHub CLI status: authenticated as `trunnguyencore`; repository `trunnguyencore/zapan` verified public with default branch `main`.
+Local `origin` set to `https://github.com/trunnguyencore/zapan.git`.
+No push, fetch-based replacement, deploy, or remote mutation performed.
+Result: PASS.
+
+### E-016 — Local-first IndexedDB persistence gate
+Date: 2026-09-24
+Implementation: Dexie-backed IndexedDB adapter behind domain `LearningRepository` port.
+Focused repository suite: 7/7 PASS covering atomic event/progress/session persistence, reopen persistence, event idempotency, duplicate conflict rejection, missing-session rollback, due query, and session completion rules.
+First full gate: 30/30 tests passed but TypeScript build FAILED because constructor parameter properties are disallowed by the current `erasableSyntaxOnly` config.
+Action: replaced parameter property with an explicit class field; no behavior change.
+Final full gate: lint 0 warnings/errors across 31 files; 30/30 tests PASS; TypeScript + Vite production build PASS.
+npm install for `dexie` and `fake-indexeddb` reported 0 vulnerabilities.
+Result: PASS after blocking compile issue was corrected.
+
+### E-017 — Versioned content pipeline gate
+Date: 2026-09-24
+Source inspection: legacy Kana/Vocab/Kanji data read-only for reference; no legacy file modified.
+Implemented: domain content types/port, Zod runtime schemas, static content repository, provenance document, and `foundation-kana-main-v1` bundle.
+Verified imported scope: 92 basic Kana cards (46 Hiragana + 46 Katakana main rows only).
+Focused content suite: 8/8 PASS covering bundle cardinality, stable/unique card IDs, romanization variants, duplicate/source-version validation, repository querying and cross-bundle duplicate rejection.
+Full gate: lint 0 warnings/errors across 39 files; 38/38 tests PASS; TypeScript + Vite production build PASS.
+Legacy dakuten/yōon, vocabulary and kanji content remain explicitly unverified/not imported.
+Result: PASS.

@@ -2,8 +2,8 @@
 
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
-Current phase: Phase 1 — Product specification, architecture, foundation
-Current status: VERIFIED
+Current phase: Phase 2 — Core learning product
+Current status: IMPLEMENTING
 Last verified: 2026-09-24
 
 ## Hard scope boundary
@@ -42,13 +42,13 @@ No Firebase backend, real learning content, GitHub push or deployment was perfor
 See `PROJECT_EVIDENCE.md` for exact failures, corrections and observed output.
 
 ## Current task
-Owner review of Phase 1 result.
-Phase 2 has NOT started.
+Phase 2 implementation is active.
+Verified Phase 2 slices:
+- local-first IndexedDB persistence;
+- versioned content pipeline with 92 audited basic Kana cards.
+Next slice: Guest identity + Firebase Auth foundation.
 
-## Next after owner approval
-Phase 2 — Core learning product:
-1. choose/verify local persistence implementation;
-2. establish versioned N5 content bundle pipeline;
+## Phase 2 remaining work
 3. implement Guest identity and account/auth flow;
 4. implement StudySession/event persistence;
 5. implement real Review queue and Today session builder;
