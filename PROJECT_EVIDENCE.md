@@ -178,3 +178,40 @@ Focused content suite: 8/8 PASS covering bundle cardinality, stable/unique card 
 Full gate: lint 0 warnings/errors across 39 files; 38/38 tests PASS; TypeScript + Vite production build PASS.
 Legacy dakuten/yōon, vocabulary and kanji content remain explicitly unverified/not imported.
 Result: PASS.
+
+### E-018 — Firebase v2 project separation and backend creation
+Date: 2026-09-24
+Verified legacy mapping: Firebase project `zapan-app` matches the legacy gd9 Firebase project/app identifiers and was treated as immutable legacy backend.
+Created new Firebase project: `zapan-v2-trunk` (display name `ZaPan v2`) and a separate web app `ZaPan v2 Web`.
+Created Firestore `(default)` database in `asia-southeast1`, Native mode, Standard edition, free tier, realtime updates enabled, delete protection enabled.
+Local Firebase web config is stored only in ignored `app/.env.local`; `.env.example` contains empty placeholders. Temporary SDK config JSON is ignored.
+Result: PASS.
+
+### E-019 — Firebase dependency and tooling audit
+Date: 2026-09-24
+Installed Firebase Web SDK 12.19.0, firebase-tools 15.30.2 and rules-unit-testing 5.0.2.
+`npm audit --omit=dev`: 0 production vulnerabilities.
+Full npm audit: 7 moderate vulnerabilities in the dev-only `firebase-tools` dependency chain. The suggested all-fix path would downgrade firebase-tools to 10.1.1; no forced downgrade was applied.
+Status: documented non-blocking development-tooling risk; production dependency tree remains clean.
+
+### E-020 — Firebase Auth/Firestore emulator gate
+Date: 2026-09-24
+Runtime: project-local Temurin 21.0.12.1 LTS under `firebase/.runtime`; Firestore emulator v1.22.0 cached under `firebase/.emulators` using `FIREBASE_EMULATORS_PATH`.
+Firestore rules integration tests: 8/8 PASS covering owner access, unauthenticated rejection, cross-user rejection, schema/counter validation, session ownership and immutable event updates.
+Auth emulator tests: 2/2 PASS covering email/password signup, sign-out, sign-in and password-reset request using `FirebaseAccountAuthService`.
+Combined emulator gate: 10/10 PASS; emulators shut down after execution.
+Result: PASS.
+
+### E-021 — Production Firestore rules deployment and verification
+Date: 2026-09-24
+Target: `zapan-v2-trunk` only.
+Firebase deploy compiled and released `firebase/firestore.rules` and `firebase/firestore.indexes.json` successfully.
+Post-deploy database describe verified: Firestore Native, Standard, `asia-southeast1`, delete protection enabled, free tier true, realtime updates enabled.
+Legacy `zapan-app` was not modified.
+Result: PASS.
+
+### E-022 — Auth/backend foundation full regression
+Date: 2026-09-24
+After Firebase/Guest/Auth adapter changes: lint 0 warnings/errors across 52 files; 45/45 normal unit/component tests PASS; TypeScript + Vite production build PASS.
+Production Email/Password provider activation remains unverified because the Firebase Auth console initialization/toggle is not exposed by the stable local CLI path used here; emulator Auth behavior is verified.
+Result: PASS for implemented local/emulator/backend-foundation scope; production Auth provider toggle remains BLOCKED/UNVERIFIED.

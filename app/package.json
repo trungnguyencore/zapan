@@ -11,17 +11,21 @@
     "test:watch": "vitest",
     "playwright:install": "cross-env PLAYWRIGHT_BROWSERS_PATH=0 playwright install chromium",
     "test:e2e": "cross-env PLAYWRIGHT_BROWSERS_PATH=0 playwright test",
+    "test:firebase": "vitest run --config vitest.firebase.config.ts",
+    "test:firebase:emulated": "powershell -NoProfile -ExecutionPolicy Bypass -File ../firebase/requests/run-firestore-tests.ps1",
     "check": "npm run lint && npm run test && npm run build",
     "preview": "vite preview"
   },
   "dependencies": {
     "dexie": "^4.4.6",
+    "firebase": "^12.19.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4",
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.2",
     "@playwright/test": "^1.63.0",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
@@ -32,6 +36,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "cross-env": "^10.1.0",
     "fake-indexeddb": "^6.2.5",
+    "firebase-tools": "^15.30.2",
     "jsdom": "^30.1.1",
     "oxlint": "^1.81.0",
     "typescript": "~6.0.2",

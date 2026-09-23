@@ -94,3 +94,33 @@ Decision: ZaPan v2 does not bulk-copy legacy learning data. Each bundle has stab
 Current verified bundle: `foundation-kana-main-v1` with 92 basic Kana cards.
 Reason: legacy reference data contains at least one observed script inconsistency in Katakana dakuten and cannot be treated as automatically trustworthy.
 Consequence: un-audited content stays unavailable rather than being presented as complete N5 material.
+
+## DEC-012 — ZaPan v2 gets a separate Firebase project
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: use new Firebase project `zapan-v2-trunk`; do not reuse legacy `zapan-app`.
+Evidence: legacy gd9 Firebase source identifiers match the existing `zapan-app` web app.
+Consequence: v2 backend work cannot accidentally mutate legacy user/progress data.
+
+## DEC-013 — Firestore region and protection
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: create Firestore Native `(default)` database in `asia-southeast1` with delete protection enabled.
+Reason: dedicated v2 backend, regional placement suitable for the intended use, and protection against accidental destructive deletion.
+
+## DEC-014 — Firebase emulator/runtime artifacts stay project-local
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: use a verified Temurin 21 runtime under `firebase/.runtime` and set `FIREBASE_EMULATORS_PATH` to `firebase/.emulators`.
+Reason: the workspace rule prohibits relying on emulator/JDK installation artifacts outside the canonical project.
+
+## DEC-015 — Do not force-fix dev-only Firebase CLI audit findings
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: do not run `npm audit fix --force` while its suggested path downgrades firebase-tools to 10.1.1.
+Evidence: production audit is clean; current seven moderate findings are in the dev-only CLI dependency chain.
+Consequence: tooling risk is tracked explicitly and revisited on Firebase CLI updates rather than trading it for an unreviewed breaking downgrade.
+
+## Implementation lesson 7 — Production Auth setup differs from emulator readiness
+Email/password Auth works end-to-end against the Firebase Auth emulator, but production provider activation still requires project Auth initialization/provider enablement through a supported production control path.
+Do not treat emulator PASS as proof that the production sign-in provider is enabled.

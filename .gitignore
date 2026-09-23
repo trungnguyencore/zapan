@@ -2,6 +2,8 @@
 node_modules/
 app/node_modules/
 .npm-cache/
+.firebase-emulators/
+.runtime/
 /app/0*/
 
 # builds and test artifacts
@@ -16,6 +18,12 @@ test-results/
 .env
 .env.*
 !.env.example
+app/firebase-sdk-config.json
+firebase/.emulators/
+firebase/.runtime/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
 
 # editor / OS
 .vscode/

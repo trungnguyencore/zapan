@@ -1,0 +1,14 @@
+{
+  "signIn": {
+    "email": {
+      "enabled": true,
+      "passwordRequired": true
+    },
+    "anonymous": {
+      "enabled": false
+    }
+  },
+  "emailPrivacyConfig": {
+    "enableImprovedEmailPrivacy": true
+  }
+}

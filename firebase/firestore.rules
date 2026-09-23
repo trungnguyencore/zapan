@@ -1,0 +1,109 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owns(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    function nonNegativeInt(value) {
+      return value is int && value >= 0;
+    }
+
+    function validSrs(srs) {
+      return srs is map
+        && srs.keys().hasAll(['algorithmVersion', 'level', 'intervalMinutes', 'lapses', 'lastReviewAt', 'dueAt'])
+        && srs.keys().hasOnly(['algorithmVersion', 'level', 'intervalMinutes', 'lapses', 'lastReviewAt', 'dueAt'])
+        && srs.algorithmVersion == 1
+        && srs.level is int && srs.level >= 0 && srs.level <= 6
+        && nonNegativeInt(srs.intervalMinutes)
+        && nonNegativeInt(srs.lapses)
+        && (srs.lastReviewAt == null || srs.lastReviewAt is int)
+        && srs.dueAt is int;
+    }
+
+    function validProgress(data, cardId) {
+      return data is map
+        && data.keys().hasAll([
+          'cardId', 'attempts', 'correctCount', 'incorrectCount', 'currentCorrectStreak',
+          'accuracy', 'averageResponseTimeMs', 'responseTimeSampleCount', 'lastReviewedAt',
+          'nextReviewAt', 'mastery', 'srs', 'updatedAt', 'schemaVersion'
+        ])
+        && data.keys().hasOnly([
+          'cardId', 'attempts', 'correctCount', 'incorrectCount', 'currentCorrectStreak',
+          'accuracy', 'averageResponseTimeMs', 'responseTimeSampleCount', 'lastReviewedAt',
+          'nextReviewAt', 'mastery', 'srs', 'updatedAt', 'schemaVersion'
+        ])
+        && data.cardId == cardId
+        && data.schemaVersion == 1
+        && nonNegativeInt(data.attempts)
+        && nonNegativeInt(data.correctCount)
+        && nonNegativeInt(data.incorrectCount)
+        && data.correctCount + data.incorrectCount == data.attempts
+        && nonNegativeInt(data.currentCorrectStreak)
+        && data.accuracy is number && data.accuracy >= 0 && data.accuracy <= 1
+        && (data.averageResponseTimeMs == null || (data.averageResponseTimeMs is number && data.averageResponseTimeMs >= 0))
+        && nonNegativeInt(data.responseTimeSampleCount)
+        && data.responseTimeSampleCount <= data.attempts
+        && (data.lastReviewedAt == null || data.lastReviewedAt is int)
+        && data.nextReviewAt is int
+        && data.updatedAt is int
+        && data.mastery in ['unseen', 'learning', 'due', 'weak', 'mastered']
+        && validSrs(data.srs);
+    }
+
+    function validEvent(data, eventId) {
+      return data is map
+        && data.keys().hasAll(['eventId', 'sessionId', 'cardId', 'mode', 'result', 'occurredAt', 'inputKind', 'schemaVersion'])
+        && data.keys().hasOnly(['eventId', 'sessionId', 'cardId', 'mode', 'result', 'rating', 'responseTimeMs', 'occurredAt', 'inputKind', 'schemaVersion'])
+        && data.eventId == eventId
+        && data.eventId is string && data.sessionId is string && data.cardId is string
+        && data.mode in ['learn', 'review', 'custom', 'writing', 'time-attack', 'survival', 'match', 'confusable']
+        && data.result in ['correct', 'incorrect', 'skipped']
+        && (!('rating' in data) || data.rating in ['again', 'hard', 'good', 'easy'])
+        && (!('responseTimeMs' in data) || (data.responseTimeMs is number && data.responseTimeMs >= 0))
+        && data.occurredAt is int
+        && data.inputKind in ['typing', 'multiple-choice', 'self-grade', 'matching', 'drawing']
+        && data.schemaVersion == 1;
+    }
+
+    function validSession(data, sessionId, userId) {
+      return data is map
+        && data.keys().hasAll(['sessionId', 'userId', 'mode', 'startedAt', 'endedAt', 'eventIds', 'schemaVersion'])
+        && data.keys().hasOnly(['sessionId', 'userId', 'mode', 'startedAt', 'endedAt', 'eventIds', 'schemaVersion'])
+        && data.sessionId == sessionId
+        && data.userId == userId
+        && data.mode in ['learn', 'review', 'custom', 'writing', 'time-attack', 'survival', 'match', 'confusable']
+        && data.startedAt is int
+        && (data.endedAt == null || (data.endedAt is int && data.endedAt >= data.startedAt))
+        && data.eventIds is list
+        && data.schemaVersion == 1;
+    }
+
+    match /users/{userId} {
+      allow read, create, update: if owns(userId);
+      allow delete: if false;
+
+      match /progress/{cardId} {
+        allow read: if owns(userId);
+        allow create, update: if owns(userId) && validProgress(request.resource.data, cardId);
+        allow delete: if false;
+      }
+      match /events/{eventId} {
+        allow read: if owns(userId);
+        allow create: if owns(userId) && validEvent(request.resource.data, eventId);
+        allow update, delete: if false;
+      }
+
+      match /sessions/{sessionId} {
+        allow read: if owns(userId);
+        allow create, update: if owns(userId) && validSession(request.resource.data, sessionId, userId);
+        allow delete: if false;
+      }
+
+      match /preferences/{documentId} {
+        allow read, create, update: if owns(userId);
+        allow delete: if false;
+      }
+    }
+  }
+}

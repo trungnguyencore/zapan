@@ -46,7 +46,14 @@ Phase 2 implementation is active.
 Verified Phase 2 slices:
 - local-first IndexedDB persistence;
 - versioned content pipeline with 92 audited basic Kana cards.
-Next slice: Guest identity + Firebase Auth foundation.
+Verified Phase 2 backend/auth foundation:
+- persistent Guest identity;
+- Firebase v2 project separated from legacy backend;
+- Auth adapter verified on emulator;
+- Firestore production database created and protected;
+- Firestore rules verified on emulator and deployed.
+Current production blocker: Email/Password provider activation in Firebase Console.
+Next slice: real local learning session + Today/Review flow.
 
 ## Phase 2 remaining work
 3. implement Guest identity and account/auth flow;
