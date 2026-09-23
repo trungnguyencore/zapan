@@ -298,3 +298,14 @@ Generated versioned bundle: `app/src/data/n5/vocabN5.ts`, source version `vocab-
 Focused bundle tests: 4/4 PASS.
 Full gate: lint 0 warnings/errors across 73 files; 62/62 normal tests PASS; TypeScript + Vite production build PASS; production runtime chunks unchanged because the bundle is not exposed/imported yet.
 Result: PASS. Vocabulary bundle is verified for pipeline use but remains intentionally unavailable in runtime Learn until the subsequent wiring gate.
+
+### E-031 — N5 Kanji audit and versioned bundle gate
+Date: 2026-09-24
+Legacy reference read-only: `D:\STUDY\JAPANESE\WEB\gd9\src\data\kanji_data.js`.
+Audit parser removed only the static ESM export wrapper and used `JSON.parse`; legacy source code was not executed.
+Audit result: 10 groups, 109 unique single-character Kanji, 0 duplicate characters, 0 packed accepted readings, 0 missing on/kun fields, 0 missing VI/EN/Hán Việt/mnemonic fields, and 0 invalid stroke counts.
+Eight source records have explicit empty kunyomi strings and were preserved: 百, 万, 週, 午, 毎, 気, 校, 電.
+Generated versioned bundle: `app/src/data/n5/kanjiN5.ts`, source version `kanji-n5-legacy-audit-v1`, 109 cards.
+Focused bundle tests: 5/5 PASS.
+Full gate: lint 0 warnings/errors across 75 files; 67/67 normal tests PASS; TypeScript + Vite production build PASS; production runtime chunks unchanged because the bundle is not exposed/imported yet.
+Result: PASS. Kanji bundle is verified for pipeline use but remains intentionally unavailable in runtime Learn until the subsequent wiring gate.

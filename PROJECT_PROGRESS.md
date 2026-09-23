@@ -65,13 +65,12 @@ Verified learning slice:
 - Firebase Auth/Firestore are capability-split so production build has no >500 kB chunk warning.
 
 ## Current next slice
-Audit and import N5 Kanji into a versioned v2 content bundle, then gate it before exposing either new content bundle in Learn.
+Wire verified N5 Vocabulary and Kanji bundles into Learn/Today/Review without regressing the production bundle/performance gate.
 
 ## Phase 2 remaining work
-1. audit/normalize/version N5 Kanji content;
-2. wire verified Vocab/Kanji bundles into Learn/Today/Review and typed-answer sessions;
-3. run a production browser account + cloud-sync smoke with temporary-account/data cleanup;
-4. run the complete Phase 2 regression gate and only then mark Phase 2 VERIFIED.
+1. wire verified Vocab/Kanji bundles into Learn/Today/Review and typed-answer sessions;
+2. run a production browser account + cloud-sync smoke with temporary-account/data cleanup;
+3. run the complete Phase 2 regression gate and only then mark Phase 2 VERIFIED.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

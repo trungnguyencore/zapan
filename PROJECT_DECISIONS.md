@@ -176,3 +176,12 @@ Decision: the first N5 vocabulary bundle preserves legacy terms and Vietnamese m
 Card IDs use the frozen source key `vocab-n5-v1` plus audited group-position keys for source version `vocab-n5-legacy-audit-v1`.
 Reason: this imports usable legacy study content without silently rewriting semantics or making display text the identity key.
 Consequence: future source reorder/edit work must preserve existing IDs or use an explicit migration/new source version; rerunning the generator against arbitrarily reordered legacy content is not an ID migration strategy.
+
+## DEC-022 — Kanji metadata is preserved as audited study data, not silently corrected
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: the first N5 Kanji bundle preserves accepted readings, on/kun strings, VI/EN meanings, Hán Việt, stroke counts and mnemonic text from the audited legacy reference, trimming only outer whitespace.
+Eight explicit empty kunyomi strings remain empty rather than receiving AI-invented values.
+Mnemonic text is labeled/treated as a memory aid, not sourced etymology.
+Card IDs use source key `kanji-n5-v1` plus frozen audited group-position keys for source version `kanji-n5-legacy-audit-v1`.
+Consequence: future corrections are explicit content revisions with evidence and stable-ID/migration consideration, not silent generator behavior.

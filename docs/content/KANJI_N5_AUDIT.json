@@ -1,0 +1,126 @@
+{
+  "sourcePath": "D:\\STUDY\\JAPANESE\\WEB\\gd9\\src\\data\\kanji_data.js",
+  "generatedAt": "2026-09-23T23:35:34.165Z",
+  "parser": "JSON.parse after removing the static ESM export wrapper; legacy source was not executed",
+  "groupCount": 10,
+  "totalItems": 109,
+  "duplicateCharacterCount": 0,
+  "packedReadingCount": 0,
+  "nonSingleCharacterCount": 0,
+  "nonSingleCharacterItems": [],
+  "missingOn": 0,
+  "emptyOn": 0,
+  "missingKun": 0,
+  "emptyKun": 8,
+  "emptyKunItems": [
+    {
+      "groupKey": "k5_numbers",
+      "index": 10,
+      "char": "百"
+    },
+    {
+      "groupKey": "k5_numbers",
+      "index": 12,
+      "char": "万"
+    },
+    {
+      "groupKey": "k5_time",
+      "index": 3,
+      "char": "週"
+    },
+    {
+      "groupKey": "k5_time",
+      "index": 8,
+      "char": "午"
+    },
+    {
+      "groupKey": "k5_time",
+      "index": 12,
+      "char": "毎"
+    },
+    {
+      "groupKey": "k5_nature",
+      "index": 3,
+      "char": "気"
+    },
+    {
+      "groupKey": "k5_study",
+      "index": 1,
+      "char": "校"
+    },
+    {
+      "groupKey": "k5_misc",
+      "index": 1,
+      "char": "電"
+    }
+  ],
+  "missingEn": 0,
+  "missingHv": 0,
+  "missingHint": 0,
+  "invalidStrokes": 0,
+  "groups": [
+    {
+      "key": "k5_numbers",
+      "id": "k5_numbers",
+      "label": "Số đếm",
+      "count": 14
+    },
+    {
+      "key": "k5_time",
+      "id": "k5_time",
+      "label": "Thời gian",
+      "count": 13
+    },
+    {
+      "key": "k5_people",
+      "id": "k5_people",
+      "label": "Con người",
+      "count": 11
+    },
+    {
+      "key": "k5_nature",
+      "id": "k5_nature",
+      "label": "Tự nhiên",
+      "count": 14
+    },
+    {
+      "key": "k5_body",
+      "id": "k5_body",
+      "label": "Cơ thể",
+      "count": 5
+    },
+    {
+      "key": "k5_actions",
+      "id": "k5_actions",
+      "label": "Hành động",
+      "count": 16
+    },
+    {
+      "key": "k5_study",
+      "id": "k5_study",
+      "label": "Học tập",
+      "count": 6
+    },
+    {
+      "key": "k5_directions",
+      "id": "k5_directions",
+      "label": "Vị trí & Hướng",
+      "count": 10
+    },
+    {
+      "key": "k5_size",
+      "id": "k5_size",
+      "label": "Kích thước",
+      "count": 10
+    },
+    {
+      "key": "k5_misc",
+      "id": "k5_misc",
+      "label": "Khác",
+      "count": 10
+    }
+  ],
+  "duplicateCharacters": [],
+  "packedReadingItems": [],
+  "issues": []
+}
