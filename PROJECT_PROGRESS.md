@@ -53,7 +53,12 @@ Verified Phase 2 backend/auth foundation:
 - Firestore production database created and protected;
 - Firestore rules verified on emulator and deployed.
 Current production blocker: Email/Password provider activation in Firebase Console.
-Next slice: real local learning session + Today/Review flow.
+Verified learning slice:
+- real Today queue (due review first, then limited new cards);
+- real Learn/Review/Progress pages backed by IndexedDB;
+- real Kana typing session persisted as StudyEvent/ProgressRecord;
+- browser reload persistence verified end-to-end.
+Next slice: identity-separated local stores + cloud event sync/reconciliation.
 
 ## Phase 2 remaining work
 3. implement Guest identity and account/auth flow;

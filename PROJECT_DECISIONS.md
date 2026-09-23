@@ -124,3 +124,14 @@ Consequence: tooling risk is tracked explicitly and revisited on Firebase CLI up
 ## Implementation lesson 7 — Production Auth setup differs from emulator readiness
 Email/password Auth works end-to-end against the Firebase Auth emulator, but production provider activation still requires project Auth initialization/provider enablement through a supported production control path.
 Do not treat emulator PASS as proof that the production sign-in provider is enabled.
+
+## DEC-016 — Today is a canonical StudyMode
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: mixed daily sessions use StudyMode `today` rather than being mislabeled as `learn` or `review`.
+Reason: Today can contain both overdue review and new material; accurate session analytics should preserve that distinction while per-card SRS still derives from StudyEvent outcomes.
+Verification: domain/build/browser gates and Firestore rules emulator regression passed; production rules revision deployed.
+
+## Implementation lesson 8 — React compiler warnings are quality-gate failures
+The first real-session full gate passed all tests/build but produced four lint warnings around render purity, Fast Refresh module boundaries and effect state updates.
+Progression remained blocked until all four were corrected and lint returned 0 warnings/errors.

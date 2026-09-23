@@ -215,3 +215,27 @@ Date: 2026-09-24
 After Firebase/Guest/Auth adapter changes: lint 0 warnings/errors across 52 files; 45/45 normal unit/component tests PASS; TypeScript + Vite production build PASS.
 Production Email/Password provider activation remains unverified because the Firebase Auth console initialization/toggle is not exposed by the stable local CLI path used here; emulator Auth behavior is verified.
 Result: PASS for implemented local/emulator/backend-foundation scope; production Auth provider toggle remains BLOCKED/UNVERIFIED.
+
+### E-023 — Real local learning session gate
+Date: 2026-09-24
+Implemented: pure Today/Review/New queue builders, typed-answer validation, real Today/Learn/Review/Progress pages, AppServices composition, and a persisted Kana session route.
+Initial full gate: 54/54 tests and build passed but lint reported 4 React Compiler warnings (impure render-time clock calls, mixed Fast Refresh exports, and effect-triggered state update). Progression was blocked.
+Corrections: split services context/hook from provider component, moved snapshot time outside render, initialized question timer only after session preparation, and rewrote async external-store loading to avoid synchronous effect state updates.
+Corrected gate: lint 0 warnings/errors across 62 files; 54/54 tests PASS; TypeScript + Vite production build PASS.
+Result: PASS after blocking lint quality issues were corrected.
+
+### E-024 — Today mode Firestore rule regression
+Date: 2026-09-24
+Canonical StudyMode now includes `today` for mixed due+new daily sessions instead of mislabeling them as `learn` or `review`.
+Auth + Firestore emulator regression after rule change: 10/10 integration tests PASS.
+Updated Firestore rules compiled and were deployed successfully to `zapan-v2-trunk` only.
+Result: PASS.
+
+### E-025 — Browser learning + persistence end-to-end
+Date: 2026-09-24
+Playwright Chromium matrix after real learning UI:
+- desktop navigation/Instagram smoke: PASS;
+- mobile navigation/no-horizontal-overflow/Instagram smoke: PASS;
+- desktop real-learning flow: answered 5 real Hiragana cards (`あいうえお`) correctly, session summary reached 100%, Progress showed `5/92`, browser reload preserved `5/92` from IndexedDB: PASS.
+Overall: 3 executed tests PASS; 3 cross-project environment-specific executions intentionally skipped.
+Result: PASS.

@@ -1,24 +1,28 @@
+import { Link } from 'react-router-dom'
 import { PageIntro } from '../../components/ui/PageIntro'
+import { useAppServices } from '../../app/AppServicesContext'
+import { useLearningData } from '../shared/useLearningData'
 
 export function HomePage() {
+  const { guest } = useAppServices()
+  const { loading, error, overview } = useLearningData()
   return (
     <section className="page-stack">
-      <PageIntro
-        eyebrow="ZaPan v2 · Foundation"
-        title="Hôm nay học gì?"
-        description="Dashboard ngày sẽ chỉ hiển thị lịch học, review và tiến độ sau khi tracking thật được kết nối. Phase 1 hiện chỉ dựng khung sản phẩm sạch và có thể kiểm chứng."
-      />
-      <div className="hero-card" aria-label="Trạng thái nền tảng ZaPan v2">
+      <PageIntro eyebrow="Today" title="Hôm nay học gì?" description="ZaPan ưu tiên review đến hạn trước, sau đó thêm một lượng nhỏ thẻ mới. Tất cả số liệu dưới đây đọc trực tiếp từ tiến độ đã lưu trên thiết bị." />
+      <div className="hero-card today-card">
         <div>
-          <p className="card-kicker">CURRENT FOUNDATION</p>
-          <h2>Learn → Review → Practice → Measure → Adapt</h2>
-          <p>Không dùng dữ liệu giả cho streak, mastery hay review count. Các chỉ số sẽ xuất hiện khi event/progress pipeline thật sự hoạt động.</p>
+          <p className="card-kicker">TODAY'S SESSION</p>
+          <h2>{loading ? 'Đang đọc tiến độ…' : overview.dueCards > 0 ? `${overview.dueCards} thẻ đang đến hạn` : 'Sẵn sàng học Kana mới'}</h2>
+          <p>{error ?? `Đã học ${overview.studiedCards}/${overview.totalCards} thẻ · còn ${overview.unseenCards} thẻ chưa học.`}</p>
+          {!error && <Link className="button primary" to="/session/today">Bắt đầu phiên hôm nay</Link>}
         </div>
-        <span className="status-pill">Phase 1</span>
+        <span className="status-pill">{guest.persistent ? 'Guest · local saved' : 'Guest · temporary'}</span>
       </div>
-      <div className="grid-cards">
-        <article className="surface-card"><p className="card-kicker">NEXT</p><h3>Core learning loop</h3><p>Auth/Guest, content N5, Review queue và persistence sẽ vào Phase 2 sau khi foundation xanh.</p></article>
-        <article className="surface-card"><p className="card-kicker">QUALITY GATE</p><h3>Không pass thì không đi tiếp</h3><p>Unit test, lint, build và browser smoke test là điều kiện của từng bước.</p></article>
+      <div className="metric-grid" aria-label="Tiến độ hôm nay">
+        <article className="metric-card"><strong>{overview.dueCards}</strong><span>Due review</span></article>
+        <article className="metric-card"><strong>{overview.unseenCards}</strong><span>Chưa học</span></article>
+        <article className="metric-card"><strong>{overview.attempts}</strong><span>Lượt trả lời</span></article>
+        <article className="metric-card"><strong>{overview.accuracy === null ? '—' : `${Math.round(overview.accuracy * 100)}%`}</strong><span>Accuracy thật</span></article>
       </div>
     </section>
   )

@@ -57,7 +57,7 @@ service cloud.firestore {
         && data.keys().hasOnly(['eventId', 'sessionId', 'cardId', 'mode', 'result', 'rating', 'responseTimeMs', 'occurredAt', 'inputKind', 'schemaVersion'])
         && data.eventId == eventId
         && data.eventId is string && data.sessionId is string && data.cardId is string
-        && data.mode in ['learn', 'review', 'custom', 'writing', 'time-attack', 'survival', 'match', 'confusable']
+        && data.mode in ['today', 'learn', 'review', 'custom', 'writing', 'time-attack', 'survival', 'match', 'confusable']
         && data.result in ['correct', 'incorrect', 'skipped']
         && (!('rating' in data) || data.rating in ['again', 'hard', 'good', 'easy'])
         && (!('responseTimeMs' in data) || (data.responseTimeMs is number && data.responseTimeMs >= 0))
@@ -72,7 +72,7 @@ service cloud.firestore {
         && data.keys().hasOnly(['sessionId', 'userId', 'mode', 'startedAt', 'endedAt', 'eventIds', 'schemaVersion'])
         && data.sessionId == sessionId
         && data.userId == userId
-        && data.mode in ['learn', 'review', 'custom', 'writing', 'time-attack', 'survival', 'match', 'confusable']
+        && data.mode in ['today', 'learn', 'review', 'custom', 'writing', 'time-attack', 'survival', 'match', 'confusable']
         && data.startedAt is int
         && (data.endedAt == null || (data.endedAt is int && data.endedAt >= data.startedAt))
         && data.eventIds is list
