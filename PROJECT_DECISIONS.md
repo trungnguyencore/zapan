@@ -168,3 +168,11 @@ The first account-aware build compiled successfully but exceeded Vite's 500 kB c
 
 ## Implementation lesson 10 — Use Firebase Auth providers-as-code before falling back to manual console work
 An earlier REST-first attempt assumed Email/Password might require manual Firebase Console activation. Current firebase-tools supports `firebase.json` Auth provider configuration and `firebase deploy --only auth`, which enabled Email/Password without billing changes or owner intervention.
+
+## DEC-021 — Vocabulary normalization is formatting-only and IDs are frozen per source version
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: the first N5 vocabulary bundle preserves legacy terms and Vietnamese meanings, normalizing only outer whitespace and splitting packed reading delimiters into separate accepted answers.
+Card IDs use the frozen source key `vocab-n5-v1` plus audited group-position keys for source version `vocab-n5-legacy-audit-v1`.
+Reason: this imports usable legacy study content without silently rewriting semantics or making display text the identity key.
+Consequence: future source reorder/edit work must preserve existing IDs or use an explicit migration/new source version; rerunning the generator against arbitrarily reordered legacy content is not an ID migration strategy.

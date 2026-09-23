@@ -1,0 +1,200 @@
+{
+  "sourcePath": "D:\\STUDY\\JAPANESE\\WEB\\gd9\\src\\data\\vocab_data.js",
+  "auditedAt": "2026-09-23T23:29:01.888Z",
+  "groups": 15,
+  "totalItems": 923,
+  "uniqueQuestions": 923,
+  "groupStats": [
+    {
+      "key": "n5_numbers",
+      "id": "n5_numbers",
+      "label": "Số đếm & Lượng từ",
+      "items": 42
+    },
+    {
+      "key": "n5_time",
+      "id": "n5_time",
+      "label": "Thời gian & Ngày tháng",
+      "items": 101
+    },
+    {
+      "key": "n5_people",
+      "id": "n5_people",
+      "label": "Con người & Gia đình",
+      "items": 34
+    },
+    {
+      "key": "n5_places",
+      "id": "n5_places",
+      "label": "Địa điểm & Nơi chốn",
+      "items": 64
+    },
+    {
+      "key": "n5_objects",
+      "id": "n5_objects",
+      "label": "Đồ vật trong nhà",
+      "items": 50
+    },
+    {
+      "key": "n5_school",
+      "id": "n5_school",
+      "label": "Trường học & Văn phòng",
+      "items": 28
+    },
+    {
+      "key": "n5_food",
+      "id": "n5_food",
+      "label": "Ẩm thực",
+      "items": 37
+    },
+    {
+      "key": "n5_body",
+      "id": "n5_body",
+      "label": "Cơ thể & Sức khỏe",
+      "items": 26
+    },
+    {
+      "key": "n5_nature",
+      "id": "n5_nature",
+      "label": "Tự nhiên & Thời tiết",
+      "items": 23
+    },
+    {
+      "key": "n5_colors",
+      "id": "n5_colors",
+      "label": "Màu sắc",
+      "items": 11
+    },
+    {
+      "key": "n5_clothes",
+      "id": "n5_clothes",
+      "label": "Trang phục",
+      "items": 20
+    },
+    {
+      "key": "n5_transport",
+      "id": "n5_transport",
+      "label": "Phương tiện GTVT",
+      "items": 14
+    },
+    {
+      "key": "n5_adjectives",
+      "id": "n5_adjectives",
+      "label": "Tính từ",
+      "items": 109
+    },
+    {
+      "key": "n5_verbs",
+      "id": "n5_verbs",
+      "label": "Động từ",
+      "items": 193
+    },
+    {
+      "key": "n5_others",
+      "id": "n5_others",
+      "label": "Khác (Phó từ, Liên từ,...)",
+      "items": 171
+    }
+  ],
+  "issueCounts": {
+    "groupKeyMismatch": 0,
+    "badGroupPrefix": 0,
+    "missingLabel": 0,
+    "missingItems": 0,
+    "missingQuestion": 0,
+    "missingReadings": 0,
+    "badReadingType": 0,
+    "missingMeaningVi": 0,
+    "questionWhitespace": 0,
+    "readingWhitespace": 0,
+    "meaningWhitespace": 0,
+    "compoundReadingSeparators": 11,
+    "duplicateExact": 0,
+    "duplicateQuestionWithinGroup": 0,
+    "duplicateQuestionAcrossGroups": 0
+  },
+  "issues": {
+    "groupKeyMismatch": [],
+    "badGroupPrefix": [],
+    "missingLabel": [],
+    "missingItems": [],
+    "missingQuestion": [],
+    "missingReadings": [],
+    "badReadingType": [],
+    "missingMeaningVi": [],
+    "questionWhitespace": [],
+    "readingWhitespace": [],
+    "meaningWhitespace": [],
+    "compoundReadingSeparators": [
+      {
+        "loc": "n5_numbers[6]",
+        "q": "二十歳",
+        "readingIndex": 0,
+        "reading": "はたち,にじゅっさい"
+      },
+      {
+        "loc": "n5_time[8]",
+        "q": "一日",
+        "readingIndex": 0,
+        "reading": "いちにち,ついたち"
+      },
+      {
+        "loc": "n5_time[47]",
+        "q": "毎月",
+        "readingIndex": 0,
+        "reading": "まいげつ/まいつき"
+      },
+      {
+        "loc": "n5_time[50]",
+        "q": "毎年",
+        "readingIndex": 0,
+        "reading": "まいねん/まいとし"
+      },
+      {
+        "loc": "n5_adjectives[10]",
+        "q": "いい/よい",
+        "readingIndex": 0,
+        "reading": "いい/よい"
+      },
+      {
+        "loc": "n5_others[29]",
+        "q": "キロ/キログラム",
+        "readingIndex": 0,
+        "reading": "キロ/キログラム"
+      },
+      {
+        "loc": "n5_others[30]",
+        "q": "キロ/キロメートル",
+        "readingIndex": 0,
+        "reading": "キロ/キロメートル"
+      },
+      {
+        "loc": "n5_others[43]",
+        "q": "四",
+        "readingIndex": 0,
+        "reading": "し / よん"
+      },
+      {
+        "loc": "n5_others[48]",
+        "q": "七",
+        "readingIndex": 0,
+        "reading": "しち / なな"
+      },
+      {
+        "loc": "n5_others[103]",
+        "q": "ラジカセ / ラジオカセット",
+        "readingIndex": 0,
+        "reading": "ラジカセ / ラジオカセット"
+      },
+      {
+        "loc": "n5_others[144]",
+        "q": "何",
+        "readingIndex": 0,
+        "reading": "なん/なに"
+      }
+    ],
+    "duplicateExact": [],
+    "duplicateQuestionWithinGroup": [],
+    "duplicateQuestionAcrossGroups": []
+  }
+}

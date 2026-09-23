@@ -287,3 +287,14 @@ Observed:
 - Playwright: 4 executed PASS, 4 environment-specific skips; includes desktop/mobile shell, Account lazy-load surface, real Kana learning, and IndexedDB reload persistence;
 - production dependency audit: 0 vulnerabilities.
 Result: PASS.
+
+### E-030 — N5 Vocabulary audit and versioned bundle gate
+Date: 2026-09-24
+Legacy reference read-only: `D:\STUDY\JAPANESE\WEB\gd9\src\data\vocab_data.js`.
+Audit parser removed only the static ESM export wrapper and used `JSON.parse`; legacy source code was not executed.
+Audit result: 15 groups, 923 items, 0 missing terms/readings/Vietnamese meanings, 0 duplicate terms, 0 exact duplicates, 2 packed-reading cases.
+The two packed readings were normalized only by delimiter split: `二十歳` -> `はたち` / `にじゅっさい`; `一日` -> `いちにち` / `ついたち`.
+Generated versioned bundle: `app/src/data/n5/vocabN5.ts`, source version `vocab-n5-legacy-audit-v1`, 923 cards and 998 accepted reading entries.
+Focused bundle tests: 4/4 PASS.
+Full gate: lint 0 warnings/errors across 73 files; 62/62 normal tests PASS; TypeScript + Vite production build PASS; production runtime chunks unchanged because the bundle is not exposed/imported yet.
+Result: PASS. Vocabulary bundle is verified for pipeline use but remains intentionally unavailable in runtime Learn until the subsequent wiring gate.

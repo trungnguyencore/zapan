@@ -1,0 +1,126 @@
+{
+  "sourcePath": "D:\\STUDY\\JAPANESE\\WEB\\gd9\\src\\data\\vocab_data.js",
+  "generatedAt": "2026-09-23T23:30:24.455Z",
+  "parser": "JSON.parse after removing the static ESM export wrapper; legacy source was not executed",
+  "groupCount": 15,
+  "totalItems": 923,
+  "commaPackedReadings": 2,
+  "commaPackedItems": [
+    {
+      "groupKey": "n5_numbers",
+      "index": 6,
+      "term": "二十歳",
+      "readings": [
+        "はたち,にじゅっさい"
+      ]
+    },
+    {
+      "groupKey": "n5_time",
+      "index": 8,
+      "term": "一日",
+      "readings": [
+        "いちにち,ついたち"
+      ]
+    }
+  ],
+  "emptyReadings": 0,
+  "nonArrayReadings": 0,
+  "missingMeaning": 0,
+  "duplicateTermCount": 0,
+  "exactDuplicateCount": 0,
+  "groups": [
+    {
+      "key": "n5_numbers",
+      "id": "n5_numbers",
+      "label": "Số đếm & Lượng từ",
+      "count": 42
+    },
+    {
+      "key": "n5_time",
+      "id": "n5_time",
+      "label": "Thời gian & Ngày tháng",
+      "count": 101
+    },
+    {
+      "key": "n5_people",
+      "id": "n5_people",
+      "label": "Con người & Gia đình",
+      "count": 34
+    },
+    {
+      "key": "n5_places",
+      "id": "n5_places",
+      "label": "Địa điểm & Nơi chốn",
+      "count": 64
+    },
+    {
+      "key": "n5_objects",
+      "id": "n5_objects",
+      "label": "Đồ vật trong nhà",
+      "count": 50
+    },
+    {
+      "key": "n5_school",
+      "id": "n5_school",
+      "label": "Trường học & Văn phòng",
+      "count": 28
+    },
+    {
+      "key": "n5_food",
+      "id": "n5_food",
+      "label": "Ẩm thực",
+      "count": 37
+    },
+    {
+      "key": "n5_body",
+      "id": "n5_body",
+      "label": "Cơ thể & Sức khỏe",
+      "count": 26
+    },
+    {
+      "key": "n5_nature",
+      "id": "n5_nature",
+      "label": "Tự nhiên & Thời tiết",
+      "count": 23
+    },
+    {
+      "key": "n5_colors",
+      "id": "n5_colors",
+      "label": "Màu sắc",
+      "count": 11
+    },
+    {
+      "key": "n5_clothes",
+      "id": "n5_clothes",
+      "label": "Trang phục",
+      "count": 20
+    },
+    {
+      "key": "n5_transport",
+      "id": "n5_transport",
+      "label": "Phương tiện GTVT",
+      "count": 14
+    },
+    {
+      "key": "n5_adjectives",
+      "id": "n5_adjectives",
+      "label": "Tính từ",
+      "count": 109
+    },
+    {
+      "key": "n5_verbs",
+      "id": "n5_verbs",
+      "label": "Động từ",
+      "count": 193
+    },
+    {
+      "key": "n5_others",
+      "id": "n5_others",
+      "label": "Khác (Phó từ, Liên từ,...)",
+      "count": 171
+    }
+  ],
+  "duplicateTerms": [],
+  "exactDuplicates": [],
+  "issues": []
+}
