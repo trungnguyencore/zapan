@@ -25,6 +25,17 @@ function modeFor(kind: string | undefined): StudyMode {
   return 'learn'
 }
 
+function answerInstruction(card: ContentCard | undefined): string {
+  return card?.contentType === 'kana' ? 'Nhập romaji' : 'Nhập cách đọc bằng kana'
+}
+
+function contentLabel(card: ContentCard | undefined): string {
+  if (!card) return ''
+  if (card.contentType === 'kana') return `${card.script} · ${card.group}`
+  if (card.contentType === 'vocabulary') return 'Vocabulary · N5'
+  return 'Kanji · N5'
+}
+
 export function SessionPage() {
   const { sessionKind, topicId } = useParams()
   const { content, learning, identity, sync } = useAppServices()
@@ -143,16 +154,26 @@ export function SessionPage() {
       </div>
       <div className="session-progress" aria-label={`Tiến độ ${index + 1} trên ${cards.length}`}><span style={{ width: `${((index + 1) / cards.length) * 100}%` }} /></div>
       <article className="question-card">
-        <p className="card-kicker">{current?.contentType === 'kana' ? `${current.script} · ${current.group}` : current?.contentType}</p>
-        <div className="question-glyph" lang="ja">{current ? promptFor(current) : ''}</div>
-        <p className="question-hint">Nhập romaji</p>
+        <p className="card-kicker">{contentLabel(current)}</p>
+        <div className={`question-glyph${current?.contentType === 'vocabulary' ? ' is-term' : ''}`} lang="ja">{current ? promptFor(current) : ''}</div>
+        <p className="question-hint">{answerInstruction(current)}</p>
       </article>
       <form className="answer-form" onSubmit={submit}>
         <label htmlFor="study-answer">Câu trả lời</label>
         <input id="study-answer" value={answer} onChange={(event) => setAnswer(event.target.value)} disabled={Boolean(feedback) || saving} autoComplete="off" autoCapitalize="none" autoFocus />
         {!feedback && <button className="button primary" type="submit" disabled={saving || answer.trim().length === 0}>{saving ? 'Đang lưu…' : 'Kiểm tra'}</button>}
       </form>
-      {feedback && <div className={`feedback-card ${feedback.correct ? 'correct' : 'incorrect'}`} role="status"><strong>{feedback.correct ? 'Đúng' : 'Chưa đúng'}</strong><span>Đáp án: {feedback.acceptedAnswers.join(' / ')}</span><button className="button primary" type="button" onClick={() => void next()} disabled={saving}>{index === cards.length - 1 ? 'Xem kết quả' : 'Câu tiếp theo'}</button></div>}
+      {feedback && <div className={`feedback-card ${feedback.correct ? 'correct' : 'incorrect'}`} role="status">
+        <strong>{feedback.correct ? 'Đúng' : 'Chưa đúng'}</strong>
+        <span>Đáp án: {feedback.acceptedAnswers.join(' / ')}</span>
+        {current?.contentType === 'vocabulary' && <span>Nghĩa: {current.meanings.vi}</span>}
+        {current?.contentType === 'kanji' && <>
+          <span>Nghĩa: {current.meanings.vi} · Hán Việt: {current.hanViet}</span>
+          <span>On: {current.onYomi || '—'} · Kun: {current.kunYomi || '—'} · {current.strokeCount} nét</span>
+          {current.mnemonic && <span className="memory-aid">Gợi nhớ: {current.mnemonic}</span>}
+        </>}
+        <button className="button primary" type="button" onClick={() => void next()} disabled={saving}>{index === cards.length - 1 ? 'Xem kết quả' : 'Câu tiếp theo'}</button>
+      </div>}
       {error && <p className="inline-error" role="alert">{error}</p>}
     </section>
   )

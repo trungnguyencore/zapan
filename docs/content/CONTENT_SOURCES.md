@@ -17,7 +17,7 @@ Legacy dakuten and combination/yōon groups are not imported yet.
 Reason: they require a separate audit before being marked verified. During inspection the legacy Katakana dakuten `da` row contained a Hiragana `づ` where the surrounding data is Katakana; ZaPan v2 therefore does not bulk-copy that group.
 
 ## `n5-vocabulary-v1`
-Status: VERIFIED FOR PIPELINE USE, NOT YET EXPOSED IN RUNTIME UI.
+Status: VERIFIED AND EXPOSED IN RUNTIME LEARNING UI.
 Read-only reference: `D:\\STUDY\\JAPANESE\\WEB\\gd9\\src\\data\\vocab_data.js`.
 ZaPan v2 representation: `app/src/data/n5/vocabN5.ts`.
 Source version: `vocab-n5-legacy-audit-v1`.
@@ -27,7 +27,7 @@ Normalization is intentionally narrow: only packed reading delimiters are split 
 Card identity is frozen for this source version using source key `vocab-n5-v1` and audited group-position item keys. Future source revisions must preserve existing IDs or use an explicit migration/new source version; regenerating IDs from reordered legacy data is not allowed.
 
 ## `n5-kanji-v1`
-Status: VERIFIED FOR PIPELINE USE, NOT YET EXPOSED IN RUNTIME UI.
+Status: VERIFIED AND EXPOSED IN RUNTIME LEARNING UI.
 Read-only reference: `D:\\STUDY\\JAPANESE\\WEB\\gd9\\src\\data\\kanji_data.js`.
 ZaPan v2 representation: `app/src/data/n5/kanjiN5.ts`.
 Source version: `kanji-n5-legacy-audit-v1`.

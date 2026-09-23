@@ -1,24 +1,66 @@
 import { Link } from 'react-router-dom'
 import { PageIntro } from '../../components/ui/PageIntro'
+import type { ContentCard } from '../../domain/content/types'
+import type { ProgressRecord } from '../../domain/learning/types'
 import { deriveLearningOverview } from '../../domain/progress/overview'
+import { KANA_TOPIC_CATALOG, KANJI_N5_TOPIC_CATALOG, type LearningTopicMeta, VOCAB_N5_TOPIC_CATALOG } from '../../data/n5/topicCatalog'
 import { useLearningData } from '../shared/useLearningData'
+
+interface TopicCardProps {
+  topic: LearningTopicMeta
+  cards: ContentCard[]
+  progress: ProgressRecord[]
+  now: number
+  loading: boolean
+  accent: 'kana' | 'vocab' | 'kanji'
+}
+
+function TopicCard({ topic, cards, progress, now, loading, accent }: TopicCardProps) {
+  const scoped = cards.filter((card) => card.topicId === topic.topicId)
+  const stats = deriveLearningOverview(scoped, progress, now)
+  return (
+    <article className={`surface-card topic-card accent-${accent}`}>
+      <div className="topic-card-top"><h3>{topic.label}</h3><span>{topic.count}</span></div>
+      <p>{loading ? 'Đang đọc tiến độ…' : `${stats.studiedCards}/${topic.count} đã học · ${stats.dueCards} đến hạn`}</p>
+      <Link className="button secondary" aria-label={`Học ${topic.label}`} to={`/session/learn/${topic.topicId}`}>Học chủ đề</Link>
+    </article>
+  )
+}
+
+function TopicSection({ eyebrow, title, description, topics, cards, progress, now, loading, accent }: {
+  eyebrow: string
+  title: string
+  description: string
+  topics: readonly LearningTopicMeta[]
+  cards: ContentCard[]
+  progress: ProgressRecord[]
+  now: number
+  loading: boolean
+  accent: TopicCardProps['accent']
+}) {
+  const total = topics.reduce((sum, topic) => sum + topic.count, 0)
+  return (
+    <section className="learning-section" aria-labelledby={`${accent}-section-title`}>
+      <div className="section-heading">
+        <div><p className="card-kicker">{eyebrow}</p><h2 id={`${accent}-section-title`}>{title}</h2><p>{description}</p></div>
+        <span className="status-pill">{total} cards</span>
+      </div>
+      <div className="topic-grid">
+        {topics.map((topic) => <TopicCard key={topic.topicId} topic={topic} cards={cards} progress={progress} now={now} loading={loading} accent={accent} />)}
+      </div>
+    </section>
+  )
+}
 
 export function LearnPage() {
   const { loading, error, cards, progress, capturedAt } = useLearningData()
-  const now = capturedAt
-  const hira = cards.filter((card) => card.topicId === 'kana-hiragana-main')
-  const kata = cards.filter((card) => card.topicId === 'kana-katakana-main')
-  const hiraStats = deriveLearningOverview(hira, progress, now)
-  const kataStats = deriveLearningOverview(kata, progress, now)
-
-  return <section className="page-stack">
-    <PageIntro eyebrow="Learn" title="Học theo lộ trình" description="Phase 2 hiện mở bộ Kana cơ bản đã audit. Vocabulary/Kanji vẫn khóa cho tới khi bundle của chúng được kiểm chứng riêng." />
-    {error && <p className="inline-error" role="alert">{error}</p>}
-    <div className="grid-cards">
-      <article className="surface-card accent-kana"><p className="card-kicker">FOUNDATION · 46 CARDS</p><h3>Hiragana</h3><p>{loading ? 'Đang đọc…' : `${hiraStats.studiedCards}/46 đã học · ${hiraStats.dueCards} đến hạn`}</p><Link className="button primary" to="/session/learn/kana-hiragana-main">Học Hiragana</Link></article>
-      <article className="surface-card accent-kana"><p className="card-kicker">FOUNDATION · 46 CARDS</p><h3>Katakana</h3><p>{loading ? 'Đang đọc…' : `${kataStats.studiedCards}/46 đã học · ${kataStats.dueCards} đến hạn`}</p><Link className="button primary" to="/session/learn/kana-katakana-main">Học Katakana</Link></article>
-      <article className="surface-card locked-card"><p className="card-kicker">AUDIT PENDING</p><h3>Vocabulary N5</h3><p>Chưa mở: dữ liệu legacy chưa qua pipeline audit v2.</p></article>
-      <article className="surface-card locked-card"><p className="card-kicker">AUDIT PENDING</p><h3>Kanji N5</h3><p>Chưa mở: dữ liệu legacy chưa qua pipeline audit v2.</p></article>
-    </div>
-  </section>
+  return (
+    <section className="page-stack">
+      <PageIntro eyebrow="Learn" title="Học theo lộ trình" description="ZaPan hiện mở ba content pack đã qua audit: Kana cơ bản, N5 Vocabulary và N5 Kanji. Mỗi chủ đề dùng cùng StudyEvent/SRS/progress pipeline." />
+      {error && <p className="inline-error" role="alert">{error}</p>}
+      <TopicSection eyebrow="FOUNDATION" title="Kana" description="Nhận diện Hiragana và Katakana cơ bản trước khi mở rộng sang các nhóm biến âm." topics={KANA_TOPIC_CATALOG} cards={cards} progress={progress} now={capturedAt} loading={loading} accent="kana" />
+      <TopicSection eyebrow="JLPT N5" title="Vocabulary" description="923 từ đã audit, chia thành 15 chủ đề. Phiên typing hiện kiểm tra cách đọc bằng kana." topics={VOCAB_N5_TOPIC_CATALOG} cards={cards} progress={progress} now={capturedAt} loading={loading} accent="vocab" />
+      <TopicSection eyebrow="JLPT N5" title="Kanji" description="109 Kanji đã audit với readings, nghĩa, Hán Việt, stroke count và mnemonic memory aid." topics={KANJI_N5_TOPIC_CATALOG} cards={cards} progress={progress} now={capturedAt} loading={loading} accent="kanji" />
+    </section>
+  )
 }

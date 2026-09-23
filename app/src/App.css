@@ -116,3 +116,28 @@
 .account-form input { min-height: 50px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); padding: 0 14px; }
 .text-button { justify-self: start; border: 0; background: transparent; color: var(--brand); font: inherit; font-weight: 750; cursor: pointer; padding: 8px 0; }
 .sync-message { color: var(--muted); font-size: .9rem; }
+
+.content-bootstrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; gap: 16px; padding: 28px; background: var(--bg); color: var(--text); }
+.content-bootstrap strong { display: block; font-size: 1.05rem; }
+.content-bootstrap p { margin: 6px 0 0; color: var(--muted); line-height: 1.5; }
+.learning-section { display: grid; gap: 18px; }
+.section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding-top: 8px; }
+.section-heading h2 { margin: 0; font-size: clamp(1.55rem, 3vw, 2.2rem); letter-spacing: -.035em; }
+.section-heading p:not(.card-kicker) { margin: 8px 0 0; max-width: 680px; color: var(--muted); line-height: 1.6; }
+.topic-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.topic-card { min-height: 188px; display: flex; flex-direction: column; box-shadow: none; }
+.topic-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.topic-card-top span { flex: 0 0 auto; min-width: 30px; height: 30px; padding-inline: 8px; border-radius: 999px; display: grid; place-items: center; background: var(--surface-soft); color: var(--muted); font-size: .75rem; font-weight: 800; }
+.topic-card p { flex: 1; }
+.question-glyph.is-term { font-size: clamp(2.8rem, 10vw, 5.5rem); line-height: 1.12; overflow-wrap: anywhere; }
+.feedback-card .memory-aid { flex-basis: 100%; font-size: .9rem; font-style: italic; }
+
+@media (max-width: 900px) {
+  .topic-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .section-heading { flex-direction: column; }
+  .topic-grid { grid-template-columns: 1fr; }
+  .topic-card { min-height: 0; }
+}

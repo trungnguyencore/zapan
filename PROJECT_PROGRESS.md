@@ -62,15 +62,17 @@ Verified learning slice:
 - real Kana typing session persisted as StudyEvent/ProgressRecord;
 - browser reload persistence verified end-to-end;
 - Account UI lazy-loads Firebase without blocking Guest;
-- Firebase Auth/Firestore are capability-split so production build has no >500 kB chunk warning.
+- Firebase Auth/Firestore are capability-split so production build has no >500 kB chunk warning;
+- verified N5 Vocabulary (923 cards / 15 topics) and Kanji (109 cards / 10 topics) are loaded as separate dynamic content chunks;
+- Learn exposes all verified Kana/Vocabulary/Kanji topics with real per-topic progress;
+- Vocabulary/Kanji typed-reading sessions write to the same StudyEvent/SRS pipeline and reveal audited metadata only after answering.
 
 ## Current next slice
-Wire verified N5 Vocabulary and Kanji bundles into Learn/Today/Review without regressing the production bundle/performance gate.
+Run a production browser account + Firestore cloud-sync smoke using a temporary account, verify cross-context convergence, and clean up all temporary cloud data.
 
 ## Phase 2 remaining work
-1. wire verified Vocab/Kanji bundles into Learn/Today/Review and typed-answer sessions;
-2. run a production browser account + cloud-sync smoke with temporary-account/data cleanup;
-3. run the complete Phase 2 regression gate and only then mark Phase 2 VERIFIED.
+1. run a production browser account + cloud-sync smoke with temporary-account/data cleanup;
+2. run the complete Phase 2 regression gate and only then mark Phase 2 VERIFIED.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

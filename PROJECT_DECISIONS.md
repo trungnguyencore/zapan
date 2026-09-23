@@ -185,3 +185,13 @@ Eight explicit empty kunyomi strings remain empty rather than receiving AI-inven
 Mnemonic text is labeled/treated as a memory aid, not sourced etymology.
 Card IDs use source key `kanji-n5-v1` plus frozen audited group-position keys for source version `kanji-n5-legacy-audit-v1`.
 Consequence: future corrections are explicit content revisions with evidence and stable-ID/migration consideration, not silent generator behavior.
+
+## DEC-023 — Large verified content packs are runtime-split but metrics wait for the complete repository
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: N5 Vocabulary and Kanji load through dynamic content chunks rather than inflating the initial core bundle. The application keeps the learning shell in a bootstrap state until all currently verified content packs are available, then exposes one complete 1,124-card repository to Today/Learn/Review/Progress.
+Reason: showing Kana-only metrics first and changing totals after asynchronous content load would be misleading, while eagerly bundling all content would regress the established performance gate.
+Verification: repository integration test confirms 1,124 unique cards; production build retains all chunks below the warning threshold; browser Kana/Vocab/Kanji learning flows pass.
+
+## Implementation lesson 11 — Accessible-name selectors need exactness when topic labels overlap
+The first Kanji browser test used accessible name `Học Số đếm`, which also matched Vocabulary `Học Số đếm & Lượng từ` under Playwright substring semantics. The app behavior was correct, but the quality gate failed. The selector now uses exact matching and the full E2E matrix passes.

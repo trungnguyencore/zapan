@@ -309,3 +309,15 @@ Generated versioned bundle: `app/src/data/n5/kanjiN5.ts`, source version `kanji-
 Focused bundle tests: 5/5 PASS.
 Full gate: lint 0 warnings/errors across 75 files; 67/67 normal tests PASS; TypeScript + Vite production build PASS; production runtime chunks unchanged because the bundle is not exposed/imported yet.
 Result: PASS. Kanji bundle is verified for pipeline use but remains intentionally unavailable in runtime Learn until the subsequent wiring gate.
+
+### E-032 — Verified Vocab/Kanji runtime wiring and browser gate
+Date: 2026-09-24
+Runtime content repository now loads all verified content packs: 92 Kana + 923 N5 Vocabulary + 109 N5 Kanji = 1,124 cards.
+Performance design: Vocab and Kanji are dynamically imported as separate content chunks; the app waits for all verified bundles before showing learning metrics so totals are never a misleading partial 92-card snapshot.
+Learn now exposes 2 Kana topics, 15 Vocabulary topics and 10 Kanji topics with live IndexedDB-backed progress. Existing Today/Review builders automatically operate over the complete verified repository.
+Session UX distinguishes answer type: Kana asks for romaji; Vocabulary/Kanji ask for a kana reading. Vocabulary feedback reveals the audited Vietnamese meaning. Kanji feedback reveals audited meaning, Hán Việt, on/kun, stroke count and mnemonic explicitly labeled as a memory aid.
+Full static/unit/build gate: lint 0 warnings/errors across 79 files; 69/69 tests PASS; TypeScript + Vite production build PASS.
+Production chunk sizes observed after runtime wiring: core 479.17 kB, Vocab 220.98 kB, Kanji 40.71 kB, Firestore sync 434.39 kB, Auth 79.67 kB, Firebase App 29.41 kB. No >500 kB Vite chunk warning.
+First Playwright run: all non-Kanji flows passed; Kanji test failed only because a non-exact accessible-name selector matched both `Học Số đếm` and `Học Số đếm & Lượng từ`. Progression was blocked and the selector was corrected to exact matching.
+Corrected Playwright matrix: 6 executed tests PASS, 6 environment-specific skips. Verified desktop/mobile shell, Account lazy-loading, Kana persistence across reload with total `5/1124`, N5 Vocabulary reading/meaning flow, and N5 Kanji reading/Hán Việt/stroke/mnemonic flow.
+Result: PASS.
