@@ -46,27 +46,33 @@ Phase 2 implementation is active.
 Verified Phase 2 slices:
 - local-first IndexedDB persistence;
 - versioned content pipeline with 92 audited basic Kana cards.
-Verified Phase 2 backend/auth foundation:
+Verified Phase 2 backend/auth/sync:
 - persistent Guest identity;
 - Firebase v2 project separated from legacy backend;
-- Auth adapter verified on emulator;
-- Firestore production database created and protected;
-- Firestore rules verified on emulator and deployed.
-Current production blocker: Email/Password provider activation in Firebase Console.
+- production Email/Password Auth enabled and signup/signin/cleanup verified;
+- Anonymous Auth disabled and email-enumeration protection enabled;
+- Firestore production database created in asia-southeast1 with delete protection;
+- Firestore ownership/schema rules verified on emulator and deployed;
+- local IndexedDB isolated per Guest/account identity;
+- immutable StudyEvent cloud journal with deterministic replay reconciliation;
+- two offline clients for one account converged to the same local/cloud progress in emulator tests.
 Verified learning slice:
 - real Today queue (due review first, then limited new cards);
 - real Learn/Review/Progress pages backed by IndexedDB;
 - real Kana typing session persisted as StudyEvent/ProgressRecord;
-- browser reload persistence verified end-to-end.
-Next slice: identity-separated local stores + cloud event sync/reconciliation.
+- browser reload persistence verified end-to-end;
+- Account UI lazy-loads Firebase without blocking Guest;
+- Firebase Auth/Firestore are capability-split so production build has no >500 kB chunk warning.
+
+## Current next slice
+Audit and import N5 Vocabulary into a versioned v2 content bundle, then gate it before exposing it in Learn.
 
 ## Phase 2 remaining work
-3. implement Guest identity and account/auth flow;
-4. implement StudySession/event persistence;
-5. implement real Review queue and Today session builder;
-6. connect Progress UI to persisted canonical records;
-7. implement Firebase sync + security rules with emulator/integration tests;
-8. verify offline -> online reconciliation before expanding features.
+1. audit/normalize/version N5 Vocabulary content;
+2. audit/normalize/version N5 Kanji content;
+3. wire verified Vocab/Kanji bundles into Learn/Today/Review and typed-answer sessions;
+4. run a production browser account + cloud-sync smoke with temporary-account/data cleanup;
+5. run the complete Phase 2 regression gate and only then mark Phase 2 VERIFIED.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.
@@ -78,10 +84,9 @@ It is not used by the application or final browser tests and is excluded from Gi
 It has not been deleted because project rules prohibit unapproved deletion.
 
 ## Deferred / unverified
-- real Firebase project configuration and production security rules;
-- real GitHub repository remote state from this local workspace;
-- production deployment configuration;
-- N5/N4/N3 content completeness;
-- cross-device sync implementation;
-- live GitHub Pages behavior;
-- Firefox/Safari support.
+- GitHub push/deployment migration has not started;
+- production GitHub Pages configuration/live behavior remains unverified;
+- N5 Vocabulary/Kanji content completeness remains under audit;
+- N4/N3 learning content is not implemented;
+- production multi-device cloud-sync smoke is still pending (emulator convergence is verified);
+- Firefox/Safari support remains unverified.

@@ -30,6 +30,16 @@ test('mobile shell uses bottom navigation without horizontal overflow', async ({
   await expect(page.getByRole('heading', { name: 'Tiến độ từ dữ liệu thật' })).toBeVisible()
 })
 
+test('account surface lazy-loads Firebase Auth without blocking Guest', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chromium-desktop', 'desktop account smoke test')
+  await page.goto('/')
+  await page.locator('.sidebar').getByRole('link', { name: 'Account' }).click()
+  await expect(page).toHaveURL(/\/account$/)
+  await expect(page.getByRole('heading', { name: 'Guest hoặc tài khoản' })).toBeVisible()
+  await expect(page.getByText(/không tự trộn progress Guest vào account/i)).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Đăng nhập' })).toBeVisible({ timeout: 10_000 })
+})
+
 test('a real Kana session persists progress across reload', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'chromium-desktop', 'desktop persistence flow')
   await page.goto('/')

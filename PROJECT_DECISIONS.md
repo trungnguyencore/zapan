@@ -135,3 +135,36 @@ Verification: domain/build/browser gates and Firestore rules emulator regression
 ## Implementation lesson 8 — React compiler warnings are quality-gate failures
 The first real-session full gate passed all tests/build but produced four lint warnings around render purity, Fast Refresh module boundaries and effect state updates.
 Progression remained blocked until all four were corrected and lint returned 0 warnings/errors.
+
+## DEC-017 — Local progress is isolated per identity
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: Guest and each authenticated Firebase uid use distinct IndexedDB databases (`zapan-v2:<userId>`).
+Reason: progress from different people/accounts using the same browser must never appear in the wrong profile.
+Consequence: switching identity switches the local progress store; explicit migration is required if Guest data is ever transferred into an account.
+
+## DEC-018 — Immutable StudyEvent journal drives multi-device reconciliation
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: cloud synchronization merges immutable StudyEvents by eventId and deterministically replays events per card; cloud ProgressRecord documents are derived snapshots, not the merge authority.
+Reason: two devices can study the same card while offline. Last-write-wins progress snapshots can lose history; event replay preserves both actions and converges deterministically.
+Verification: two independent offline clients converged to identical local/cloud progress in Firebase emulator tests.
+
+## DEC-019 — Guest progress is not silently merged into an account
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: signing in selects the account's isolated local/cloud history. Existing Guest history remains in its Guest database unless a future explicit import/migration UX is designed and approved.
+Reason: automatic merging can combine study histories belonging to different people on a shared device and is difficult to reverse safely.
+
+## DEC-020 — Firebase infrastructure is lazy-loaded by capability
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: core/Guest loads without Firebase Auth/Firestore. Firebase App/Auth are dynamically loaded for account capability; Firestore sync is loaded only after authentication.
+Reason: eager Firebase imports produced a >1 MB production bundle and a Vite chunk warning.
+Verification: final build has no >500 kB warning; largest observed chunks are core 475.45 kB and sync 434.39 kB.
+
+## Implementation lesson 9 — A successful build with a performance warning is not a green gate
+The first account-aware build compiled successfully but exceeded Vite's 500 kB chunk warning. Raising the threshold would only hide the issue. Dynamic capability boundaries removed the warning while preserving behavior.
+
+## Implementation lesson 10 — Use Firebase Auth providers-as-code before falling back to manual console work
+An earlier REST-first attempt assumed Email/Password might require manual Firebase Console activation. Current firebase-tools supports `firebase.json` Auth provider configuration and `firebase deploy --only auth`, which enabled Email/Password without billing changes or owner intervention.

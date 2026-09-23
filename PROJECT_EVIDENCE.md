@@ -239,3 +239,51 @@ Playwright Chromium matrix after real learning UI:
 - desktop real-learning flow: answered 5 real Hiragana cards (`あいうえお`) correctly, session summary reached 100%, Progress showed `5/92`, browser reload preserved `5/92` from IndexedDB: PASS.
 Overall: 3 executed tests PASS; 3 cross-project environment-specific executions intentionally skipped.
 Result: PASS.
+
+### E-026 — Identity-separated local stores and event-journal sync convergence
+Date: 2026-09-24
+Implemented:
+- local IndexedDB name is derived from active identity (`zapan-v2:<userId>`), separating Guest and account data on the same browser;
+- local repository can list/merge immutable StudyEvents and deterministically rebuild affected ProgressRecords;
+- Firestore sync uploads local events idempotently, downloads the cloud event journal, replays/merges locally, then writes derived progress snapshots.
+Two-client emulator scenario: two independent IndexedDB clients for the same Firebase uid each studied the same card offline (one correct, one incorrect); after sequential sync both local stores and cloud progress converged to attempts=2, correct=1, incorrect=1.
+Firebase emulator gate including Auth, rules and convergence: 11/11 PASS.
+Result: PASS.
+
+### E-027 — Production Firebase Authentication provider and security verification
+Date: 2026-09-24
+Firebase CLI 15.30.2 supports Auth provider configuration as code. `firebase.json` now enables Email/Password and disables Anonymous auth; `firebase deploy --only auth` reported `Auth providers enabled: email/password`.
+Production lifecycle verification used a temporary random test account against Firebase Auth REST: signup=PASS, signin=PASS, cleanup=PASS. The test account was deleted in the same verification flow.
+Identity Toolkit config was then patched and re-read:
+- email.enabled=True;
+- email.passwordRequired=True;
+- anonymous.enabled=False;
+- emailPrivacy.enabled=True.
+Production signup/signin/cleanup was rerun after the security patch and passed again.
+Result: PASS.
+
+### E-028 — Firebase lazy-loading and bundle gate
+Date: 2026-09-24
+Problem: eager Firebase imports increased the production JS bundle to ~1,019 kB and triggered Vite's >500 kB chunk warning. A first dynamic split reduced the initial bundle but left a 543.34 kB Firebase chunk, so progression remained blocked.
+Correction: split Firebase App, Auth, and Firestore Sync into separate dynamic boundaries. Guest/core learning no longer imports Firebase Auth/Firestore eagerly.
+Final production build chunks observed:
+- core index: 475.45 kB (147.83 kB gzip);
+- Firebase app shared: 29.41 kB (9.86 kB gzip);
+- Auth infrastructure: 79.67 kB (23.71 kB gzip);
+- Firestore sync infrastructure: 434.39 kB (127.94 kB gzip).
+Final build produced no chunk-size warning.
+Result: PASS.
+
+### E-029 — Account surface and final integrated Phase 2 regression checkpoint
+Date: 2026-09-24
+Account UI now lazy-loads Firebase Auth, keeps Guest usable during cloud loading, provides email/password signup/signin/reset controls, manual sync for authenticated accounts, and clearly states that Guest progress is not automatically merged into account progress.
+Session completion preserves local-first semantics: local completion succeeds first; account cloud sync is best-effort and a sync failure does not roll back local study data.
+Final integrated command sequence: `npm run check && npm run test:firebase:emulated && npm run test:e2e && npm audit --omit=dev`.
+Observed:
+- lint: 0 warnings/errors across 71 files;
+- normal unit/component tests: 58/58 PASS;
+- TypeScript + Vite production build: PASS with no size warning;
+- Firebase emulator tests: 11/11 PASS;
+- Playwright: 4 executed PASS, 4 environment-specific skips; includes desktop/mobile shell, Account lazy-load surface, real Kana learning, and IndexedDB reload persistence;
+- production dependency audit: 0 vulnerabilities.
+Result: PASS.

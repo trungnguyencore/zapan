@@ -104,3 +104,15 @@
   .feedback-card { align-items: flex-start; }
   .feedback-card .button { width: 100%; margin-left: 0; }
 }
+
+.account-link { min-height: 40px; display: inline-flex; align-items: center; color: var(--muted); text-decoration: none; font-weight: 750; }
+.account-link:hover, .account-link.active { color: var(--text); }
+.sidebar-meta { display: grid; gap: 4px; }
+.mobile-topbar-actions { display: flex; align-items: center; gap: 12px; }
+.account-card code { word-break: break-all; color: var(--muted); }
+.account-form { display: grid; gap: 16px; max-width: 620px; }
+.account-form h3 { margin: 0 0 4px; }
+.account-form label { display: grid; gap: 7px; color: var(--muted); font-size: .84rem; font-weight: 750; }
+.account-form input { min-height: 50px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); padding: 0 14px; }
+.text-button { justify-self: start; border: 0; background: transparent; color: var(--brand); font: inherit; font-weight: 750; cursor: pointer; padding: 8px 0; }
+.sync-message { color: var(--muted); font-size: .9rem; }

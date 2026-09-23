@@ -27,7 +27,7 @@ function modeFor(kind: string | undefined): StudyMode {
 
 export function SessionPage() {
   const { sessionKind, topicId } = useParams()
-  const { content, learning, guest } = useAppServices()
+  const { content, learning, identity, sync } = useAppServices()
   const sessionIdRef = useRef(`session-${crypto.randomUUID()}`)
   const questionStartedAt = useRef(0)
   const [status, setStatus] = useState<SessionStatus>('loading')
@@ -38,6 +38,7 @@ export function SessionPage() {
   const [correctCount, setCorrectCount] = useState(0)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [syncMessage, setSyncMessage] = useState<string | null>(null)
   const mode = useMemo(() => modeFor(sessionKind), [sessionKind])
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export function SessionPage() {
         if (!active) return
         if (queue.length === 0) { setStatus('empty'); return }
         const sessionId = sessionIdRef.current
-        await learning.createSession({ sessionId, userId: guest.userId, mode, startedAt: now, endedAt: null, eventIds: [], schemaVersion: 1 })
+        await learning.createSession({ sessionId, userId: identity.userId, mode, startedAt: now, endedAt: null, eventIds: [], schemaVersion: 1 })
         if (!active) return
         setCards(queue)
         questionStartedAt.current = performance.now()
@@ -68,7 +69,7 @@ export function SessionPage() {
     }
     void prepare()
     return () => { active = false }
-  }, [content, guest.userId, learning, mode, sessionKind, topicId])
+  }, [content, identity.userId, learning, mode, sessionKind, topicId])
 
   const current = cards[index]
 
@@ -107,6 +108,10 @@ export function SessionPage() {
       try {
         await learning.completeSession(sessionIdRef.current, Date.now())
         setStatus('complete')
+        if (sync) {
+          setSyncMessage('Đã lưu local · đang đồng bộ…')
+          void sync.sync().then(() => setSyncMessage('Đã đồng bộ với cloud')).catch(() => setSyncMessage('Đã lưu local · cloud sync đang chờ thử lại'))
+        }
       } catch (reason) {
         setError(reason instanceof Error ? reason.message : 'Không thể kết thúc phiên học.')
       } finally {
@@ -127,7 +132,7 @@ export function SessionPage() {
 
   if (status === 'complete') {
     const accuracy = cards.length > 0 ? Math.round((correctCount / cards.length) * 100) : 0
-    return <section className="page-stack session-complete"><p className="eyebrow">SESSION COMPLETE</p><h1>Hoàn thành phiên học</h1><div className="summary-grid"><div><strong>{cards.length}</strong><span>Câu đã làm</span></div><div><strong>{correctCount}</strong><span>Trả lời đúng</span></div><div><strong>{accuracy}%</strong><span>Accuracy</span></div></div><div className="session-actions"><Link className="button primary" to="/">Về Today</Link><Link className="button secondary" to="/review">Xem Review</Link></div></section>
+    return <section className="page-stack session-complete"><p className="eyebrow">SESSION COMPLETE</p><h1>Hoàn thành phiên học</h1><div className="summary-grid"><div><strong>{cards.length}</strong><span>Câu đã làm</span></div><div><strong>{correctCount}</strong><span>Trả lời đúng</span></div><div><strong>{accuracy}%</strong><span>Accuracy</span></div></div>{syncMessage && <p className="sync-message" role="status">{syncMessage}</p>}<div className="session-actions"><Link className="button primary" to="/">Về Today</Link><Link className="button secondary" to="/review">Xem Review</Link></div></section>
   }
 
   return (

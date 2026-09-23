@@ -30,13 +30,14 @@ export function AppShell() {
         </div>
         <NavigationLinks />
         <div className="sidebar-meta">
-          <p>ZaPan v2 · Foundation</p>
+          <p>ZaPan v2 · Core learning</p>
+          <NavLink className="account-link" to="/account">Account</NavLink>
           <InstagramLink />
         </div>
       </aside>
       <header className="mobile-topbar">
         <strong>ZaPan</strong>
-        <InstagramLink />
+        <div className="mobile-topbar-actions"><NavLink className="account-link" to="/account">Account</NavLink><InstagramLink /></div>
       </header>
       <main id="main-content" className="main-content" tabIndex={-1}>
         <Outlet />

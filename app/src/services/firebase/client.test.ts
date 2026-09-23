@@ -1,40 +1,36 @@
-import { deleteApp } from 'firebase/app'
+import { deleteApp, type FirebaseApp } from 'firebase/app'
 import { afterEach, describe, expect, it } from 'vitest'
-import { createFirebaseServices, resolveFirebaseServices, type FirebaseServices } from './client'
+import { resolveFirebaseApp } from './appClient'
 
-let services: FirebaseServices | null = null
+let app: FirebaseApp | null = null
 
 afterEach(async () => {
-  if (services) await deleteApp(services.app)
-  services = null
+  if (app) await deleteApp(app)
+  app = null
 })
 
-describe('Firebase client adapter', () => {
+const completeEnv = {
+  VITE_FIREBASE_API_KEY: 'public-test-key',
+  VITE_FIREBASE_AUTH_DOMAIN: 'example.firebaseapp.com',
+  VITE_FIREBASE_PROJECT_ID: 'example-project',
+  VITE_FIREBASE_STORAGE_BUCKET: 'example.firebasestorage.app',
+  VITE_FIREBASE_MESSAGING_SENDER_ID: '123',
+  VITE_FIREBASE_APP_ID: '1:123:web:abc',
+}
+
+describe('Firebase app config boundary', () => {
   it('stays disabled when Firebase env is absent', () => {
-    expect(resolveFirebaseServices({}, `test-${crypto.randomUUID()}`)).toBeNull()
+    expect(resolveFirebaseApp({}, `test-${crypto.randomUUID()}`)).toBeNull()
   })
 
   it('initializes a named Firebase app from a complete web config', () => {
-    services = createFirebaseServices({
-      apiKey: 'public-test-key',
-      authDomain: 'example.firebaseapp.com',
-      projectId: 'example-project',
-      storageBucket: 'example.firebasestorage.app',
-      messagingSenderId: '123',
-      appId: '1:123:web:abc',
-    }, `test-${crypto.randomUUID()}`)
-    expect(services.app.options.projectId).toBe('example-project')
-    expect(services.auth.app).toBe(services.app)
-    expect(services.firestore.app).toBe(services.app)
+    app = resolveFirebaseApp(completeEnv, `test-${crypto.randomUUID()}`)
+    expect(app?.options.projectId).toBe('example-project')
   })
 
   it('rejects reusing an app name for a different project', () => {
     const appName = `test-${crypto.randomUUID()}`
-    services = createFirebaseServices({
-      apiKey: 'a', authDomain: 'one.firebaseapp.com', projectId: 'one', storageBucket: 'one', messagingSenderId: '1', appId: 'one',
-    }, appName)
-    expect(() => createFirebaseServices({
-      apiKey: 'b', authDomain: 'two.firebaseapp.com', projectId: 'two', storageBucket: 'two', messagingSenderId: '2', appId: 'two',
-    }, appName)).toThrow('different project')
+    app = resolveFirebaseApp(completeEnv, appName)
+    expect(() => resolveFirebaseApp({ ...completeEnv, VITE_FIREBASE_PROJECT_ID: 'other-project' }, appName)).toThrow('different project')
   })
 })

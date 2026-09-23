@@ -113,4 +113,23 @@ describe('LocalLearningRepository', () => {
     expect(completed.endedAt).toBe(NOW + 5000)
     await expect(repo.completeSession('session-1', NOW + 6000)).rejects.toThrow('already completed')
   })
+
+  it('merges remote events and deterministically rebuilds progress', async () => {
+    db = createLocalDatabase(`zapan-test-${crypto.randomUUID()}`)
+    const repo = new LocalLearningRepository(db)
+    await repo.createSession(session())
+    await repo.recordEvent(event({ eventId: 'event-late', occurredAt: NOW + 2000, result: 'incorrect' }))
+    const remote = event({ eventId: 'event-early', occurredAt: NOW + 1000, result: 'correct' })
+    const rebuilt = await repo.mergeEvents([remote])
+    expect(rebuilt[0]).toMatchObject({ attempts: 2, correctCount: 1, incorrectCount: 1 })
+    expect((await repo.listEvents()).map((item) => item.eventId).sort()).toEqual(['event-early', 'event-late'])
+  })
+
+  it('rejects conflicting remote payload for an existing event id', async () => {
+    db = createLocalDatabase(`zapan-test-${crypto.randomUUID()}`)
+    const repo = new LocalLearningRepository(db)
+    await repo.createSession(session())
+    await repo.recordEvent(event())
+    await expect(repo.mergeEvents([event({ result: 'incorrect' })])).rejects.toThrow('Conflicting eventId')
+  })
 })

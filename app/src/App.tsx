@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AppShell } from './app/AppShell'
 import { AppServicesProvider } from './app/AppServices'
+import { AccountPage } from './features/account/AccountPage'
 import { HomePage } from './features/home/HomePage'
 import { LearnPage } from './features/learn/LearnPage'
 import { LibraryPage } from './features/library/LibraryPage'
@@ -18,6 +19,7 @@ export function AppRoutes() {
         <Route path="review" element={<ReviewPage />} />
         <Route path="library" element={<LibraryPage />} />
         <Route path="progress" element={<ProgressPage />} />
+        <Route path="account" element={<AccountPage />} />
         <Route path="session/:sessionKind/:topicId?" element={<SessionPage />} />
       </Route>
     </Routes>

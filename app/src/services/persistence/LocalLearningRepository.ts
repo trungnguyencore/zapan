@@ -80,6 +80,38 @@ export class LocalLearningRepository implements LearningRepository {
     return this.db.events.get(eventId)
   }
 
+  listEvents(): Promise<StudyEvent[]> {
+    return this.db.events.toArray()
+  }
+
+  async mergeEvents(events: readonly StudyEvent[]): Promise<ProgressRecord[]> {
+    if (events.length === 0) return []
+    return this.db.transaction('rw', this.db.events, this.db.progress, async () => {
+      const affected = new Set<CardId>()
+      for (const incoming of events) {
+        const existing = await this.db.events.get(incoming.eventId)
+        if (existing) {
+          if (!sameEvent(existing, incoming)) throw new Error('Conflicting eventId already exists')
+        } else {
+          await this.db.events.add(incoming)
+        }
+        affected.add(incoming.cardId)
+      }
+
+      const rebuilt: ProgressRecord[] = []
+      for (const cardId of affected) {
+        const cardEvents = await this.db.events.where('cardId').equals(cardId).toArray()
+        cardEvents.sort((a, b) => a.occurredAt - b.occurredAt || a.eventId.localeCompare(b.eventId))
+        if (cardEvents.length === 0) continue
+        let progress = createInitialProgress(cardId, cardEvents[0].occurredAt)
+        for (const studyEvent of cardEvents) progress = applyStudyEvent(progress, studyEvent)
+        await this.db.progress.put(progress)
+        rebuilt.push(progress)
+      }
+      return rebuilt
+    })
+  }
+
   getProgress(cardId: CardId): Promise<ProgressRecord | undefined> {
     return this.db.progress.get(cardId)
   }

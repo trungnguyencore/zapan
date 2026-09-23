@@ -4,7 +4,7 @@ import { useAppServices } from '../../app/AppServicesContext'
 import { useLearningData } from '../shared/useLearningData'
 
 export function HomePage() {
-  const { guest } = useAppServices()
+  const { guest, identity } = useAppServices()
   const { loading, error, overview } = useLearningData()
   return (
     <section className="page-stack">
@@ -16,7 +16,7 @@ export function HomePage() {
           <p>{error ?? `Đã học ${overview.studiedCards}/${overview.totalCards} thẻ · còn ${overview.unseenCards} thẻ chưa học.`}</p>
           {!error && <Link className="button primary" to="/session/today">Bắt đầu phiên hôm nay</Link>}
         </div>
-        <span className="status-pill">{guest.persistent ? 'Guest · local saved' : 'Guest · temporary'}</span>
+        <span className="status-pill">{identity.kind === 'account' ? (identity.user.email ?? 'Account') : guest.persistent ? 'Guest · local saved' : 'Guest · temporary'}</span>
       </div>
       <div className="metric-grid" aria-label="Tiến độ hôm nay">
         <article className="metric-card"><strong>{overview.dueCards}</strong><span>Due review</span></article>
