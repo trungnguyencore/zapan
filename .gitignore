@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+app/node_modules/
+.npm-cache/
+/app/0*/
+
+# builds and test artifacts
+dist/
+app/dist/
+coverage/
+app/coverage/
+playwright-report/
+test-results/
+
+# local environment
+.env
+.env.*
+!.env.example
+
+# editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+npm-debug.log*
