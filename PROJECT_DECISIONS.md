@@ -292,3 +292,10 @@ Decision: production builds emit a Vite manifest and `npm run check` must fail w
 Reason: Phase 3 repeatedly approached Vite's 500 kB warning threshold. A measured guard prevents future feature work from silently consuming the remaining core-entry margin or hiding a new oversized dynamic chunk.
 Verification: current build passes at 483.97 kB core; a controlled +7,000-byte mutation of generated `dist` raised the core to 490.97 kB and the budget command failed, then a clean rebuild restored the passing artifact.
 Consequence: bundle size is now a release/check invariant. These limits are not a substitute for Phase 4 runtime performance profiling.
+
+## DEC-034 — Local runtime profiling is observational until a stable baseline justifies thresholds
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: Phase 4 keeps the first production-preview runtime profile as raw + median baseline evidence and does not create hard runtime thresholds from three localhost Chromium samples.
+Reason: local FCP/task/script timing contains machine/scheduler noise and is not equivalent to production Web Vitals. Bundle size remains a hard deterministic gate; runtime timing becomes a gate only after repeatable evidence and an explicit environment/target are defined.
+Consequence: do not refactor a route merely because one local sample is slower. Preserve the baseline artifact and compare future measured runs before making performance claims.

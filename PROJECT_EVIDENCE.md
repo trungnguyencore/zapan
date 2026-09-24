@@ -565,3 +565,45 @@ Blocking-path probe:
 
 Result: PASS — bundle-size regression is now an executable gate.
 Limitation: no claim is made yet about runtime parse/execute time, network transfer under real hosting, Web Vitals, memory use, or device CPU performance.
+
+### E-047 — Phase 4 local production-preview runtime baseline
+Date: 2026-09-24
+Scope: reusable local-lab runtime profiling baseline. This is not production Web Vitals or a real-user-device benchmark.
+
+Profiler implementation:
+- `app/scripts/profile-runtime.mjs` serves the built `dist` through Vite preview and launches project-local headless Chromium;
+- browser cache is disabled per fresh context;
+- six representative routes are measured: Today, Learn, Progress, Roadmap, Writing setup and Match setup;
+- each route receives three cold-context samples;
+- collected metrics include FCP, DOMContentLoaded/load timing, resource/JS transfer bytes, Chromium task/script/layout/recalc duration, JS heap, DOM node count and layout/style counts;
+- raw samples plus medians are written to `docs/testing/runtime-profile-2026-09-24.json`.
+
+Environment recorded in the artifact:
+- Chromium 153.0.8010.12;
+- Node v22.23.2;
+- win32;
+- Vite local production preview;
+- cache disabled;
+- 3 samples per route.
+
+Observed medians across the six routes:
+- FCP range: 104–112 ms;
+- DOMContentLoaded range: 55.0–62.7 ms;
+- total task duration range: 143.11–162.19 ms;
+- script duration range: 46.08–59.65 ms;
+- JS transfer range: 214,819–219,314 bytes;
+- JS heap used range: approximately 5.31–6.01 MB.
+Route-level lazy loading is visible in transfer counts: Today/Learn use 5 JS resources; Progress/Roadmap/Writing use 6; Match uses 7.
+
+Interpretation:
+- no route is sufficiently separated in this 3-sample local baseline to justify a performance refactor;
+- Progress has the highest median script duration (~59.65 ms), but the difference is too small/noisy to call it a bottleneck;
+- the first Today FCP sample was 280 ms while the other two were 112 ms, demonstrating why medians/raw samples are retained instead of promoting a single run.
+
+Verification:
+- profiler completed successfully and wrote the JSON artifact;
+- after adding the profiler, `npm run check` remained green: lint 0 warnings/errors, 102/102 normal tests PASS, production build PASS, bundle budget PASS;
+- `git diff --check`: PASS.
+
+Result: PASS — reproducible local runtime baseline established.
+Limitation: no production network latency, mobile hardware CPU, memory pressure, interaction latency, Core Web Vitals or hosted compression/CDN behavior is represented by this measurement.

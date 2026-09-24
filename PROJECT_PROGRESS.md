@@ -110,15 +110,16 @@ See `PROJECT_EVIDENCE.md` E-045 for the exact final failures, corrections and re
 
 ## Phase 4 current work
 Phase 4 is IMPLEMENTING.
-Verified hardening slice:
-- production builds now emit a Vite manifest and `npm run check` includes a manifest-based JS bundle budget gate;
+Verified hardening slices:
+- production builds emit a Vite manifest and `npm run check` includes a manifest-based JS bundle budget gate;
 - the core entry budget is 490.00 kB raw and every JS chunk has a 500.00 kB raw upper bound;
 - current production artifact measures core 483.97 kB and largest non-entry chunk 434.97 kB;
-- the blocking path was exercised against generated `dist` output: a temporary +7 kB entry probe produced 490.97 kB and `check:bundle` failed as designed; rebuilding restored the clean artifact and the gate passed again.
+- the blocking path was exercised against generated `dist` output: a temporary +7 kB entry probe produced 490.97 kB and `check:bundle` failed as designed; rebuilding restored the clean artifact and the gate passed again;
+- reusable production-preview runtime profiler now records cold-context local-lab baselines for Today, Learn, Progress, Roadmap, Writing setup and Match setup. On 2026-09-24, median FCP was 104–112 ms, task duration 143.11–162.19 ms and JS transfer 214.82–219.31 kB across those routes. No route showed enough separation in this 3-sample local run to justify a targeted optimization.
 
 Current next slices:
-- perform actual runtime performance profiling before making any optimization claim beyond bundle size;
-- continue security-rule review, multi-device/offline stress, migration/recovery behavior and error/empty/loading-state hardening.
+- perform security-rule review against the deployed/emulator schema and add missing negative-path coverage where evidence identifies gaps;
+- continue multi-device/offline stress, migration/recovery behavior and error/empty/loading-state hardening.
 Grammar, listening, reading, JLPT practice, N4 and N3 remain gated until a real source/content set is inspected, versioned and verified; no placeholder level is to be promoted into active learning content.
 
 Performance guard:
