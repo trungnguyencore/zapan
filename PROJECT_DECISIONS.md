@@ -236,3 +236,23 @@ Decision: keep the primary learning loop (Today/Home, Learn, Review, Session) ea
 Reason: route-level splitting reduces initial bundle pressure without delaying the most frequent learning path.
 Verification: core entry decreased to 480.09 kB and full desktop/mobile browser regression stayed green.
 Consequence: new heavier Phase 3 practice surfaces should default to lazy route boundaries unless measured evidence shows eager loading is preferable.
+
+## DEC-028 — Writing is explicit self-grade, not simulated handwriting recognition
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: Trace, Copy and Recall share one pointer/touch canvas. ZaPan does not claim to recognize handwriting quality. After drawing and reference comparison, the learner explicitly grades the attempt; that grade becomes the canonical Writing StudyEvent.
+Writing events use `mode=writing` and `inputKind=drawing`. Until a validated timing definition exists, Writing self-grade events omit `responseTimeMs`.
+Reason: visual similarity or stroke correctness cannot be inferred reliably from the current canvas without a validated recognition model. Inventing correctness/timing would violate evidence rules.
+Consequence: Writing practice contributes honestly to SRS/mastery and activity-event counts without fabricating measured study time.
+
+## DEC-029 — Stroke-order network assets are auxiliary and rendered as images
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: stroke-order assets use codepoint-addressed KanjiVG URLs rendered through browser image loading. Remote SVG markup is not injected into the DOM.
+Network failure or missing asset produces an explicit fallback and never blocks the Writing canvas/self-grade flow.
+Reason: safer remote-content boundary and reliable offline degradation.
+Verification: desktop/mobile Playwright Writing gate deliberately aborts the KanjiVG request and still records a valid Writing event.
+
+## Implementation lesson 13 — Session creation must be atomic under StrictMode
+The first Writing browser gate exposed a real persistence race: React StrictMode could start two identical session-creation effects concurrently, and the repository's previous get-then-add sequence allowed both to observe a missing key before one add caused a ConstraintError.
+The fix belongs in the repository, not in individual UI effects. `createSession` now performs the idempotency check and add in one IndexedDB transaction, with a concurrent Promise.all regression test.

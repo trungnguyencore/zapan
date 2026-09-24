@@ -423,3 +423,24 @@ Static/unit gate: lint 0 warnings/errors; 81/81 tests PASS; TypeScript + Vite bu
 Full browser regression after lazy-route change: 10 executed PASS, 6 intentional environment-specific skips. Library, Progress activity/reload and Custom Practice lazy-route flows remained operational.
 Git diff whitespace check: PASS.
 Result: PASS.
+
+### E-041 — Phase 3 verified Writing / stroke-order fallback slice
+Date: 2026-09-24
+Scope: Kana/Kanji Writing with Trace, Copy and Recall modes.
+Domain behavior: Writing queue accepts only explicitly selected Kana/Kanji topics and is deterministic. Vocabulary is intentionally excluded from the single-character writing surface.
+Learning semantics: Writing self-grade emits canonical StudyEvents with `mode=writing`, `inputKind=drawing`, and user-selected correct/incorrect rating into the same SRS/progress pipeline. No `responseTimeMs` is written because the current self-grade drawing flow has no validated active-response timing definition.
+Stroke order: ZaPan derives the KanjiVG asset path from the Unicode codepoint and renders the remote SVG as an external image rather than injecting remote SVG markup. Asset loading is auxiliary; network/error fallback leaves the drawing canvas and self-grade flow fully usable.
+Initial static gate found two React Compiler warnings: synchronous state reset inside a stroke-image effect and render-time `Date.now()`. Progression remained blocked. Corrections removed the effect reset through character-keyed load state and moved session start time to a lazy state initializer. Lint rerun: 0 warnings/errors.
+Initial Writing browser gate then FAILed on both desktop/mobile with IndexedDB `ConstraintError: Key already exists`. Error-context inspection showed StrictMode could concurrently execute identical `createSession()` calls; repository creation used non-atomic get-then-add.
+Correction: `LocalLearningRepository.createSession` now serializes existence check + add inside an IndexedDB transaction. Added concurrent identical-session regression; focused repository suite 11/11 PASS. Corrected Writing browser gate then passed desktop + mobile.
+Browser gate explicitly aborts KanjiVG network, draws on the canvas, reveals Recall reference, verifies visible stroke fallback, self-grades one card, and directly inspects IndexedDB. Observed exactly one event with `mode=writing`, `inputKind=drawing`, `result=correct`, and no `responseTimeMs`.
+Full gate:
+- lint: 0 warnings/errors;
+- normal tests: 85/85 PASS across 25 files;
+- TypeScript + Vite build: PASS;
+- Writing lazy chunk: 11.78 kB; core entry: 480.53 kB; no >500 kB warning;
+- Playwright full matrix: 12 executed PASS, 6 intentional environment-specific skips;
+- Firebase emulator: 14/14 PASS, including a Writing event round-trip without invented response timing;
+- production dependency audit: 0 vulnerabilities;
+- git diff whitespace check: PASS.
+Result: PASS.

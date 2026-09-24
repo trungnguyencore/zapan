@@ -56,6 +56,14 @@ describe('LocalLearningRepository', () => {
     expect((await repo.getSession('session-1'))?.eventIds).toEqual(['event-1'])
   })
 
+  it('serializes concurrent identical session creation idempotently', async () => {
+    db = createLocalDatabase(`zapan-test-${crypto.randomUUID()}`)
+    const repo = new LocalLearningRepository(db)
+    const value = session()
+    await Promise.all([repo.createSession(value), repo.createSession({ ...value, eventIds: [] })])
+    expect(await repo.getSession(value.sessionId)).toEqual(value)
+  })
+
   it('survives database close and reopen with the same name', async () => {
     const name = `zapan-test-${crypto.randomUUID()}`
     db = createLocalDatabase(name)

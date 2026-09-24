@@ -24,12 +24,14 @@ export class LocalLearningRepository implements LearningRepository {
   }
 
   async createSession(session: StudySession): Promise<void> {
-    const existing = await this.db.sessions.get(session.sessionId)
-    if (existing) {
-      if (!sameSession(existing, session)) throw new Error('Conflicting sessionId already exists')
-      return
-    }
-    await this.db.sessions.add(session)
+    await this.db.transaction('rw', this.db.sessions, async () => {
+      const existing = await this.db.sessions.get(session.sessionId)
+      if (existing) {
+        if (!sameSession(existing, session)) throw new Error('Conflicting sessionId already exists')
+        return
+      }
+      await this.db.sessions.add(session)
+    })
   }
 
   getSession(sessionId: string): Promise<StudySession | undefined> {

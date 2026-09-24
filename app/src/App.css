@@ -221,3 +221,62 @@
   .activity-heatmap { gap: 6px; }
   .heat-cell { border-radius: 6px; }
 }
+
+.practice-entry-actions { display: flex; flex-wrap: wrap; gap: 10px; flex: 0 0 auto; }
+.practice-entry-actions .button { margin-top: 0; }
+.writing-setup { display: grid; gap: 22px; box-shadow: none; }
+.writing-setup > div:first-child { display: grid; gap: 8px; }
+.writing-setup label, .writing-style-fieldset legend { color: var(--muted); font-size: .84rem; font-weight: 800; }
+.writing-setup select { min-height: 48px; width: 100%; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); padding: 0 12px; font: inherit; }
+.writing-style-fieldset { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 0; border: 0; }
+.writing-style-fieldset legend { margin-bottom: 8px; }
+.writing-style-option { min-height: 92px; padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg); display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+.writing-style-option.is-selected { border-color: color-mix(in srgb, var(--brand) 45%, var(--border)); background: var(--brand-soft); }
+.writing-style-option input { margin-top: 3px; accent-color: var(--brand); }
+.writing-style-option span { display: grid; gap: 5px; }
+.writing-style-option small { color: var(--muted); line-height: 1.45; }
+.writing-session { max-width: 1180px; }
+.writing-workspace { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, .8fr); gap: 20px; align-items: start; }
+.writing-main { display: grid; gap: 14px; min-width: 0; }
+.writing-reference { min-height: 122px; display: grid; place-items: center; text-align: center; box-shadow: none; }
+.writing-reference .card-kicker { justify-self: start; width: 100%; text-align: left; }
+.writing-reference-char { font-size: clamp(3.2rem, 8vw, 5.5rem); line-height: 1; font-family: "Yu Gothic", Meiryo, sans-serif; }
+.writing-reference p { margin: 0; color: var(--muted); }
+.writing-canvas-frame { position: relative; width: min(100%, 620px); aspect-ratio: 1; justify-self: center; border: 2px solid var(--border); border-radius: 22px; overflow: hidden; background: var(--surface); touch-action: none; }
+.writing-axis { position: absolute; z-index: 1; pointer-events: none; opacity: .6; }
+.writing-axis.horizontal { inset: 50% 0 auto; border-top: 1px dashed var(--border); }
+.writing-axis.vertical { inset: 0 auto 0 50%; border-left: 1px dashed var(--border); }
+.writing-guide { position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; color: var(--muted); opacity: .18; font-size: min(62vw, 25rem); line-height: 1; font-family: "Yu Gothic", Meiryo, sans-serif; pointer-events: none; user-select: none; }
+.writing-canvas { position: relative; z-index: 2; display: block; width: 100%; height: 100%; cursor: crosshair; touch-action: none; }
+.writing-controls { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.writing-controls .button { margin-top: 0; }
+.writing-grade-panel { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px; align-items: center; padding: 16px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
+.writing-grade-panel p { margin: 4px 0 0; color: var(--muted); }
+.writing-grade-panel .button { margin-top: 0; }
+.stroke-panel { position: sticky; top: 24px; display: grid; gap: 14px; padding: 18px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); min-width: 0; }
+.stroke-panel.is-hidden-reference { min-height: 180px; align-content: center; color: var(--muted); }
+.stroke-panel-heading { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.stroke-panel-heading h3 { margin: 0; font-size: 2.5rem; }
+.stroke-asset-frame { position: relative; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; border: 1px dashed var(--border); border-radius: 16px; background: var(--bg); }
+.stroke-image { position: absolute; inset: 8%; width: 84%; height: 84%; object-fit: contain; opacity: 0; pointer-events: none; }
+.stroke-image.is-ready { opacity: 1; }
+.stroke-fallback { padding: 20px; text-align: center; }
+.stroke-fallback p, .stroke-source-note { color: var(--muted); line-height: 1.5; }
+.stroke-source-note { margin: 0; font-size: .78rem; }
+
+@media (max-width: 900px) {
+  .writing-workspace { grid-template-columns: 1fr; }
+  .stroke-panel { position: static; }
+  .writing-grade-panel { grid-template-columns: 1fr 1fr; }
+  .writing-grade-panel > div { grid-column: 1 / -1; }
+}
+
+@media (max-width: 760px) {
+  .practice-entry-actions { width: 100%; }
+  .practice-entry-actions .button { flex: 1 1 100%; }
+  .writing-style-fieldset { grid-template-columns: 1fr; }
+  .writing-canvas-frame { border-radius: 16px; }
+  .writing-grade-panel { grid-template-columns: 1fr; }
+  .writing-grade-panel > div { grid-column: auto; }
+  .writing-grade-panel .button, .writing-controls .button { width: 100%; }
+}

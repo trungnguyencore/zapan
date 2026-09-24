@@ -85,14 +85,16 @@ See `PROJECT_EVIDENCE.md` for the production identity-race failures that were ca
 Verified Phase 3 slices:
 - Library searches the full verified 1,124-card repository across real Kana/Vocabulary/Kanji fields, filters by content type, and limits DOM rendering to the first 60 matches while preserving the complete match count;
 - Custom Practice supports explicit multi-topic selection with 5/10/20-card deterministic sessions, emits canonical `mode=custom` StudyEvents into the same SRS/progress pipeline, and is verified on desktop/mobile plus Firestore emulator sync;
-- Progress now derives measured active-study time, streak, active days, 7-day totals and a 28-day heatmap directly from persisted StudyEvents with explicit timezone/day-boundary semantics; desktop/mobile persisted-history flows are verified.
+- Progress derives measured active-study time, streak, active days, 7-day totals and a 28-day heatmap directly from persisted StudyEvents with explicit timezone/day-boundary semantics; desktop/mobile persisted-history flows are verified;
+- Writing supports Trace / Copy / Recall for Kana/Kanji, explicit self-grade through canonical `mode=writing` / `inputKind=drawing` StudyEvents with no synthetic response time, and codepoint-based KanjiVG viewing with tested network-failure fallback;
+- local session creation is now transactionally idempotent under concurrent StrictMode effects, with regression coverage.
 
 Current next slice:
-- implement Writing foundation (Trace / Copy / Recall) using canonical `mode=writing`, `inputKind=drawing`, and no synthetic response time;
-- add stroke-order viewing with graceful offline/unavailable fallback.
+- implement Time Attack + Survival on a shared typed-practice foundation; both must emit canonical measured StudyEvents and keep score/lives as presentation state only;
+- then implement Match and Confusables, followed by canonical Roadmap and remaining Phase 3 UI/accessibility polish.
 
 Performance guard:
-- secondary Phase 3 routes are now lazy-loaded; measured core production JS entry is 480.09 kB after splitting Library, Progress and Custom Practice.
+- secondary/heavier Phase 3 routes are lazy-loaded; Writing builds as an ~11.78 kB route chunk and measured core production JS entry remains ~480.53 kB.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

@@ -112,4 +112,28 @@ describe('FirestoreEventSyncService convergence', () => {
     const cloud = await getDoc(doc(firestore, 'users/user-a/events/event-custom'))
     expect(cloud.data()).toMatchObject({ mode: 'custom', inputKind: 'typing', result: 'correct' })
   })
+
+  it('syncs Writing self-grade events without inventing response timing', async () => {
+    const repo = makeRepo()
+    await repo.createSession(session('session-writing', 'writing'))
+    await repo.recordEvent({
+      eventId: 'event-writing',
+      sessionId: 'session-writing',
+      cardId,
+      mode: 'writing',
+      result: 'correct',
+      rating: 'good',
+      occurredAt: NOW + 4000,
+      inputKind: 'drawing',
+      schemaVersion: 1,
+    })
+
+    const firestore = testEnv.authenticatedContext('user-a').firestore()
+    const result = await new FirestoreEventSyncService(firestore, 'user-a', repo).sync()
+
+    expect(result.uploadedEvents).toBe(1)
+    const cloud = await getDoc(doc(firestore, 'users/user-a/events/event-writing'))
+    expect(cloud.data()).toMatchObject({ mode: 'writing', inputKind: 'drawing', result: 'correct' })
+    expect(cloud.data()).not.toHaveProperty('responseTimeMs')
+  })
 })

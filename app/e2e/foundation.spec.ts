@@ -174,3 +174,59 @@ test('Custom Practice uses the canonical custom StudyEvent pipeline', async ({ p
   await expect(page.locator('.heat-cell.has-activity')).toHaveCount(1)
   await expect(page.locator('.heat-cell.has-activity')).toHaveAttribute('aria-label', /5 lượt/)
 })
+
+test('Writing Recall records self-grade drawing events and survives stroke-order network failure', async ({ page }) => {
+  await page.route('https://raw.githubusercontent.com/**', (route) => route.abort())
+  await page.goto('/learn')
+  await page.getByRole('link', { name: 'Luyện Writing' }).click()
+  await expect(page).toHaveURL(/\/practice\/writing$/)
+  await expect(page.getByRole('heading', { name: 'Trace · Copy · Recall' })).toBeVisible()
+  await expect(page.getByLabel('Trace')).toBeVisible()
+  await expect(page.getByLabel('Copy')).toBeVisible()
+  await expect(page.getByLabel('Recall')).toBeVisible()
+
+  await page.getByLabel('Recall').check()
+  await page.getByRole('button', { name: 'Bắt đầu Writing · 5 cards' }).click()
+  await expect(page).toHaveURL(/\/practice\/writing\?/)
+  await expect(page.getByText('Viết từ trí nhớ')).toBeVisible()
+
+  const canvas = page.getByLabel('Ô luyện viết')
+  const box = await canvas.boundingBox()
+  expect(box).not.toBeNull()
+  if (!box) return
+  await page.mouse.move(box.x + box.width * 0.3, box.y + box.height * 0.35)
+  await page.mouse.down()
+  await page.mouse.move(box.x + box.width * 0.7, box.y + box.height * 0.65, { steps: 6 })
+  await page.mouse.up()
+
+  await page.getByRole('button', { name: 'Hiện đáp án' }).click()
+  await expect(page.locator('.writing-reference-char')).toHaveText('あ')
+  await expect(page.getByText('Không tải được thứ tự nét')).toBeVisible()
+  await page.getByRole('button', { name: 'Viết đạt' }).click()
+  await expect(page.getByText(/2 \/ 5 · RECALL/)).toBeVisible()
+
+  const events = await page.evaluate(async () => {
+    const output: Array<Record<string, unknown>> = []
+    for (const info of await indexedDB.databases()) {
+      if (!info.name?.startsWith('zapan-v2:')) continue
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open(info.name!)
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      if (!db.objectStoreNames.contains('events')) { db.close(); continue }
+      const rows = await new Promise<Array<Record<string, unknown>>>((resolve, reject) => {
+        const request = db.transaction('events', 'readonly').objectStore('events').getAll()
+        request.onsuccess = () => resolve(request.result as Array<Record<string, unknown>>)
+        request.onerror = () => reject(request.error)
+      })
+      output.push(...rows)
+      db.close()
+    }
+    return output
+  })
+
+  expect(events).toHaveLength(1)
+  expect(events[0]).toMatchObject({ mode: 'writing', inputKind: 'drawing', result: 'correct' })
+  expect(events[0]).not.toHaveProperty('responseTimeMs')
+})
