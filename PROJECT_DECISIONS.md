@@ -313,3 +313,10 @@ Date: 2026-09-24
 Decision: snapshot-dependent learning pages must hide their data/action surface while the active repository is loading or has failed, expose an explicit retry on read failure, and never reuse a snapshot produced by a different Guest/account repository.
 Reason: zero values and previous-profile values are plausible-looking data, so showing them after an IndexedDB failure or identity switch is more misleading than a visible loading/error state.
 Consequence: Home, Learn, Review, Library, Progress, Roadmap and Custom Practice share a recovery boundary; switching repositories shows loading until the matching snapshot resolves. Recovery retries reads only and does not reset local progress.
+
+## DEC-037 — Source-gated content candidates do not become placeholders to satisfy a phase checklist
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: Phase 4 can close when its hardening quality gate is verified while Grammar, Reading, Listening, JLPT practice, N4 and N3 remain inactive if no inspected/versioned/verified content set exists. Their roadmap presence is not permission to invent or expose placeholder learning content.
+Reason: both the engineering roadmap and learner roadmap explicitly gate later learning stages on real verified source material. Treating an absent source as a mandatory implementation target would conflict with the project's source-grounded rule and create misleading product availability.
+Consequence: Phase 5 may begin release planning for the verified current product; later content expansion reopens only when suitable source material is available and reviewed.

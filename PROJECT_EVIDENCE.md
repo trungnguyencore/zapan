@@ -724,3 +724,49 @@ Result: PASS — current loading/error/snapshot-recovery behavior is verified wi
 Limitations:
 - the content-bootstrap retry control is source-reviewed and included in the normal browser application path, but this slice did not inject a synthetic production dynamic-import/content-chunk failure in Playwright;
 - this does not deploy the pending hardened Firestore rules, test a nonexistent Dexie v2 migration, or establish Firefox/Safari failure behavior.
+
+### E-051 — Final Phase 4 integrated closeout
+Date: 2026-09-24
+Scope: integrated verification of the completed Phase 4 hardening work and the source-gated content boundary. No production deployment, Firebase production rule change, GitHub push or legacy working-tree replacement was executed.
+
+Integrated closeout command from `app/`:
+- `npm run check`
+- `npm run test:firebase:emulated`
+- `npm run test:e2e`
+- `npm audit --omit=dev`
+- repository `git diff --check` and `git status --short --branch`
+
+Observed final results:
+- lint: 0 warnings / 0 errors;
+- normal unit/component suite: 108/108 PASS across 34 files;
+- TypeScript + production Vite build: PASS;
+- production bundle budget: PASS; core entry 486.05 kB raw <= 490.00 kB; all JS chunks <= 500.00 kB; largest non-entry chunk 434.97 kB;
+- Firebase Auth/Firestore emulator: 24/24 PASS across 3 files, including ownership/schema hardening and multi-device/offline stress;
+- Playwright Chromium desktop/mobile matrix: 32 PASS / 8 intentional project-specific skips;
+- checked-in Phase 3 visual baseline comparisons remained PASS during the full browser run;
+- production dependency audit: `found 0 vulnerabilities`;
+- `git diff --check`: PASS;
+- an earlier integrated rerun exposed React `act(...)` warnings in `SessionPage.identity.test.tsx` even though the test passed; root cause was test sequencing reading repositories before the async completion UI settled. The test was corrected to await the completion heading/status first, then the focused identity test and the final 108/108 suite ran without that warning;
+- final integrated command ended with only the intended Phase 4 closeout docs plus this test-sequencing fix dirty; no unrelated project files were modified;
+- integrated command exit code: 0.
+
+Phase 4 quality-gate mapping:
+- no placeholder level appears as available learning content: PASS. Active learner stages remain Hiragana, Katakana, N5 Vocabulary and N5 Kanji only;
+- content provenance/versioning documented: PASS for currently active verified bundles and migrated Confusables data;
+- security and sync scenarios verified: PASS through Firestore negative-path rules, immutable journal convergence, overlap/conflict stress, DB reopen and offline browser study;
+- performance targets measured rather than guessed: PASS through executable raw-byte bundle budgets and a recorded local production-preview runtime baseline;
+- known limitations documented: PASS.
+
+Source-gated content boundary:
+- Grammar, Reading, Listening, JLPT practice, N4 and N3 remain specification-only because no new verified content set was introduced in Phase 4;
+- their absence is an intentional gate, not evidence that those learning stages were implemented;
+- no placeholder content was created to make the roadmap appear complete.
+
+Deferred boundaries carried into later work:
+- hardened Firestore rules are emulator-verified but NOT deployed to production;
+- current Dexie schema is still version 1, so there is no real schema migration to claim as tested;
+- Firefox/Safari and real two-physical-device behavior remain unverified;
+- GitHub Pages migration/live deployment has not started.
+
+Result: PASS — Phase 4 is VERIFIED for the implemented hardening scope and the currently verified/source-gated content contract.
+Next state: Phase 5 is PLANNED and requires a fresh owner review immediately before any production/destructive migration step.

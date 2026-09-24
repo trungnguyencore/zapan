@@ -97,10 +97,10 @@ describe('SessionPage identity integrity', () => {
       await user.click(screen.getByRole('button', { name: index === answers.length - 1 ? 'Xem kết quả' : 'Câu tiếp theo' }))
     }
 
+    expect(await screen.findByRole('heading', { name: 'Hoàn thành phiên học' })).toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('phiên học giữ nguyên hồ sơ ban đầu')
     expect(await accountLearning.listEvents()).toHaveLength(5)
     expect(await guestLearning.listEvents()).toHaveLength(0)
     expect((await accountLearning.listProgress()).filter((record) => record.attempts > 0)).toHaveLength(5)
-    expect(await screen.findByRole('heading', { name: 'Hoàn thành phiên học' })).toBeInTheDocument()
-    expect(screen.getByRole('status')).toHaveTextContent('phiên học giữ nguyên hồ sơ ban đầu')
   })
 })

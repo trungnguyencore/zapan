@@ -2,8 +2,8 @@
 
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
-Current phase: Phase 4 — Content expansion and hardening
-Current status: IMPLEMENTING
+Current phase: Phase 5 — Release engineering and production migration
+Current status: PLANNED — OWNER REVIEW REQUIRED
 Last verified: 2026-09-24
 
 ## Hard scope boundary
@@ -108,8 +108,8 @@ Verified Phase 3 scope:
 - git diff whitespace check: PASS after removing one trailing blank line detected by the first closeout attempt.
 See `PROJECT_EVIDENCE.md` E-045 for the exact final failures, corrections and reruns.
 
-## Phase 4 current work
-Phase 4 is IMPLEMENTING.
+## Phase 4 result
+Phase 4 hardening and the currently verified/source-gated content scope are VERIFIED.
 Verified hardening slices:
 - production builds emit a Vite manifest and `npm run check` includes a manifest-based JS bundle budget gate;
 - the core entry budget is 490.00 kB raw and every JS chunk has a 500.00 kB raw upper bound;
@@ -120,14 +120,31 @@ Verified hardening slices:
 - multi-device/offline/recovery stress is now verified: overlapping journals converge without duplicate shared events, conflicting same-event payloads fail closed, a 12-event offline journal survives IndexedDB close/reopen and later syncs, a missing progress snapshot rebuilds from the immutable event journal, and a loaded browser study session completes while network is offline. Emulator suite is 24/24 PASS, normal tests are 103/103 PASS, and the full Playwright matrix is 32 PASS / 8 intentional skips;
 - loading/error/recovery UX is now hardened: application render failures keep a reload recovery surface, learning-snapshot loading/errors hide stale or fake-zero metrics, failed local snapshots expose retry, profile/repository switches cannot flash the previous profile snapshot, content bootstrap failure exposes an explicit retry control, and session/stroke loading states are announced accessibly. Final gate is lint 0 warnings/errors, 108/108 normal tests PASS, production build + bundle budget PASS at core 486.05 kB, and Playwright 32 PASS / 8 intentional skips with visual baselines stable.
 
-Current remaining boundaries:
-- production Firestore rules deployment requires a fresh owner review immediately before execution;
+Deferred / intentionally gated beyond Phase 4 closeout:
+- hardened Firestore rules are emulator-verified but production deployment is a production change and requires a fresh owner review immediately before execution;
 - migration tests remain gated until a real Dexie/schema version change exists. Current local database schema is version 1, so no migration result is claimed;
 - Grammar, listening, reading, JLPT practice, N4 and N3 content expansion remains gated until real source/content is inspected, versioned and verified; no placeholder level is promoted into active learning content.
 
 Performance guard:
 - secondary/heavier routes remain lazy-loaded;
 - bundle budgets are now executable release gates rather than advisory observations: core <= 490.00 kB raw; every JS chunk <= 500.00 kB raw.
+
+## Final Phase 4 gate
+- lint: PASS, 0 warnings / 0 errors;
+- normal unit/component tests: PASS, 108/108 across 34 files;
+- TypeScript + production Vite build: PASS;
+- bundle budget: PASS, core 486.05 kB raw <= 490.00 kB and every JS chunk <= 500.00 kB;
+- Firebase Auth/Firestore emulator regression: PASS, 24/24 across auth, rules and sync/stress suites;
+- Playwright full Chromium desktop/mobile matrix: 32 PASS, 8 intentional project-specific skips; checked-in visual baselines remain PASS;
+- production dependency audit: PASS, 0 vulnerabilities;
+- git diff whitespace check: PASS and working tree clean after the integrated closeout command;
+- Phase 4 content gate: PASS by keeping unavailable Grammar/Reading/Listening/JLPT/N4/N3 inactive; no unsourced placeholder content was promoted.
+See `PROJECT_EVIDENCE.md` E-051 for the integrated closeout command and limitations.
+
+## Phase 5 next
+No Phase 5 production mutation has started.
+Before any Firebase production rule deployment, GitHub legacy working-tree replacement, push or live deployment, the owner must receive and approve a fresh migration/release review with exact scope and rollback path.
+The reviewed release sequence should cover production configuration/rules verification, rollback tag/branch, release-candidate regression, legacy working-tree replacement, push/deploy, live smoke tests and recorded rollback evidence.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

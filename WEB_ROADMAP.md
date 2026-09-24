@@ -74,7 +74,7 @@ Phase 3 quality gate:
 - Instagram desktop/mobile/a11y checks pass;
 - keyboard/touch and visual regression pass.
 ## Phase 4 — Content expansion and hardening
-Status: IMPLEMENTING — 2026-09-24
+Status: VERIFIED — 2026-09-24
 Goal: broaden learning value and stress the platform before release.
 Candidate deliverables, gated by real content:
 - grammar framework;
@@ -100,6 +100,7 @@ Phase 4 quality gate:
 - known limitations are documented.
 
 ## Phase 5 — Release engineering and production migration
+Status: PLANNED — OWNER REVIEW REQUIRED
 Goal: replace the legacy GitHub Pages application safely.
 Deliverables:
 - full regression suite;
