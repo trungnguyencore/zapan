@@ -116,3 +116,52 @@ test('Library searches the complete verified repository and filters content type
   await expect(page.getByText('一', { exact: true })).toBeVisible()
   await expect(page.getByText(/Hán Việt: Nhất/)).toBeVisible()
 })
+
+test('Custom Practice uses the canonical custom StudyEvent pipeline', async ({ page }) => {
+  await page.goto('/learn')
+  await page.getByRole('link', { name: 'Tạo Custom Practice' }).click()
+  await expect(page).toHaveURL(/\/practice\/custom$/)
+  await expect(page.getByRole('heading', { name: 'Tạo phiên Custom Practice' })).toBeVisible()
+
+  await page.getByLabel(/Hiragana/).check()
+  await page.getByLabel('Số câu').selectOption('5')
+  await expect(page.getByText('1 topic · 46 cards khả dụng')).toBeVisible()
+  await page.getByRole('button', { name: 'Bắt đầu Custom Practice' }).click()
+
+  await expect(page).toHaveURL(/\/session\/custom\?/)
+  await expect(page.locator('.question-glyph')).toHaveText('あ')
+
+  for (const answer of ['a', 'i', 'u', 'e', 'o']) {
+    await page.getByLabel('Câu trả lời').fill(answer)
+    await page.getByRole('button', { name: 'Kiểm tra' }).click()
+    await expect(page.getByRole('status')).toContainText('Đúng')
+    await page.getByRole('button', { name: answer === 'o' ? 'Xem kết quả' : 'Câu tiếp theo' }).click()
+  }
+
+  await expect(page.getByRole('heading', { name: 'Hoàn thành phiên học' })).toBeVisible()
+  await expect(page.getByText('5', { exact: true }).first()).toBeVisible()
+
+  const events = await page.evaluate(async () => {
+    const output: Array<{ mode: string; inputKind: string }> = []
+    for (const info of await indexedDB.databases()) {
+      if (!info.name?.startsWith('zapan-v2:')) continue
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open(info.name!)
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      if (!db.objectStoreNames.contains('events')) { db.close(); continue }
+      const rows = await new Promise<Array<{ mode: string; inputKind: string }>>((resolve, reject) => {
+        const request = db.transaction('events', 'readonly').objectStore('events').getAll()
+        request.onsuccess = () => resolve(request.result as Array<{ mode: string; inputKind: string }>)
+        request.onerror = () => reject(request.error)
+      })
+      output.push(...rows)
+      db.close()
+    }
+    return output
+  })
+
+  expect(events).toHaveLength(5)
+  expect(events.every((event) => event.mode === 'custom' && event.inputKind === 'typing')).toBe(true)
+})

@@ -3,7 +3,7 @@ import type { ContentCard } from '../content/types'
 import type { ProgressRecord } from '../learning/types'
 import { createCardId } from '../learning/cardId'
 import { createInitialProgress } from '../progress/progress'
-import { buildNewQueue, buildReviewQueue, buildTodayQueue } from './sessionBuilder'
+import { buildCustomPracticeQueue, buildNewQueue, buildReviewQueue, buildTodayQueue } from './sessionBuilder'
 
 const NOW = 20_000_000
 
@@ -62,5 +62,15 @@ describe('session queue builders', () => {
 
   it('respects zero limits', () => {
     expect(buildTodayQueue(cards, [], NOW, { reviewLimit: 0, newLimit: 0 })).toEqual([])
+  })
+
+  it('builds deterministic Custom Practice from selected topics and respects limit', () => {
+    const scoped = [cards[0], cards[1], { ...cards[2], topicId: 'other-topic' }, cards[3]]
+    expect(buildCustomPracticeQueue(scoped, ['test-topic'], 2).map((item) => item.cardId))
+      .toEqual([cards[0].cardId, cards[1].cardId])
+  })
+
+  it('does not build Custom Practice without an explicit topic selection', () => {
+    expect(buildCustomPracticeQueue(cards, [], 10)).toEqual([])
   })
 })

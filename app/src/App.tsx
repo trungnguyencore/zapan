@@ -6,6 +6,7 @@ import { HomePage } from './features/home/HomePage'
 import { LearnPage } from './features/learn/LearnPage'
 import { LibraryPage } from './features/library/LibraryPage'
 import { ProgressPage } from './features/progress/ProgressPage'
+import { CustomPracticePage } from './features/practice/CustomPracticePage'
 import { ReviewPage } from './features/review/ReviewPage'
 import { SessionPage } from './features/session/SessionPage'
 import './App.css'
@@ -19,6 +20,7 @@ export function AppRoutes() {
         <Route path="review" element={<ReviewPage />} />
         <Route path="library" element={<LibraryPage />} />
         <Route path="progress" element={<ProgressPage />} />
+        <Route path="practice/custom" element={<CustomPracticePage />} />
         <Route path="account" element={<AccountPage />} />
         <Route path="session/:sessionKind/:topicId?" element={<SessionPage />} />
       </Route>

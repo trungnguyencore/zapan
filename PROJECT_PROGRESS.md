@@ -82,11 +82,12 @@ Verified learning slice:
 See `PROJECT_EVIDENCE.md` for the production identity-race failures that were caught and corrected before this gate became green.
 
 ## Phase 3 current work
-Verified Phase 3 slice:
-- Library now searches the full verified 1,124-card repository across real Kana/Vocabulary/Kanji fields, filters by content type, and limits DOM rendering to the first 60 matches while preserving the complete match count.
+Verified Phase 3 slices:
+- Library searches the full verified 1,124-card repository across real Kana/Vocabulary/Kanji fields, filters by content type, and limits DOM rendering to the first 60 matches while preserving the complete match count;
+- Custom Practice supports explicit multi-topic selection with 5/10/20-card deterministic sessions, emits canonical `mode=custom` StudyEvents into the same SRS/progress pipeline, and is verified on desktop/mobile plus Firestore emulator sync.
 
 Current next slice:
-- implement Custom Practice selection/session flow on top of the canonical content repository and StudyEvent pipeline.
+- implement real activity metrics and expand Progress with measured study minutes, streak/day-boundary semantics, and heatmap data derived from persisted sessions/events.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

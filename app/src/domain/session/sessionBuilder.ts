@@ -33,6 +33,16 @@ export function buildNewQueue(
   return cards.filter((card) => !seen.has(card.cardId)).slice(0, Math.max(0, limit))
 }
 
+export function buildCustomPracticeQueue(
+  cards: readonly ContentCard[],
+  topicIds: readonly string[],
+  limit = 10,
+): ContentCard[] {
+  const selected = new Set(topicIds.filter(Boolean))
+  if (selected.size === 0 || limit <= 0) return []
+  return cards.filter((card) => selected.has(card.topicId)).slice(0, Math.floor(limit))
+}
+
 export function buildTodayQueue(
   cards: readonly ContentCard[],
   progress: readonly ProgressRecord[],

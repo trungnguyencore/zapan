@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useAppServices } from '../../app/AppServicesContext'
 import type { ContentCard } from '../../domain/content/types'
 import type { StudyMode } from '../../domain/learning/types'
 import { checkTypedAnswer } from '../../domain/session/answer'
-import { buildReviewQueue, buildTodayQueue } from '../../domain/session/sessionBuilder'
+import { buildCustomPracticeQueue, buildReviewQueue, buildTodayQueue } from '../../domain/session/sessionBuilder'
 
 interface Feedback {
   correct: boolean
@@ -22,6 +22,7 @@ function promptFor(card: ContentCard): string {
 function modeFor(kind: string | undefined): StudyMode {
   if (kind === 'review') return 'review'
   if (kind === 'today') return 'today'
+  if (kind === 'custom') return 'custom'
   return 'learn'
 }
 
@@ -38,6 +39,7 @@ function contentLabel(card: ContentCard | undefined): string {
 
 export function SessionPage() {
   const { sessionKind, topicId } = useParams()
+  const [searchParams] = useSearchParams()
   const { content, learning, identity, sync } = useAppServices()
   const [sessionScope] = useState(() => ({ content, learning, userId: identity.userId }))
   const sessionIdRef = useRef(`session-${crypto.randomUUID()}`)
@@ -52,17 +54,28 @@ export function SessionPage() {
   const [error, setError] = useState<string | null>(null)
   const [syncMessage, setSyncMessage] = useState<string | null>(null)
   const mode = useMemo(() => modeFor(sessionKind), [sessionKind])
+  const customQuery = searchParams.toString()
+  const customOptions = useMemo(() => {
+    const params = new URLSearchParams(customQuery)
+    const requestedLimit = Number(params.get('limit') ?? 10)
+    const limit = requestedLimit === 5 || requestedLimit === 10 || requestedLimit === 20 ? requestedLimit : 10
+    return { topicIds: params.getAll('topic').filter(Boolean), limit }
+  }, [customQuery])
+  const backPath = mode === 'review' ? '/review' : mode === 'custom' ? '/practice/custom' : '/learn'
 
   useEffect(() => {
     let active = true
     async function prepare() {
       try {
         const now = Date.now()
-        const allCards = topicId ? sessionScope.content.listByTopic(topicId) : sessionScope.content.listCards()
+        const allCards = sessionKind === 'custom'
+          ? sessionScope.content.listCards()
+          : topicId ? sessionScope.content.listByTopic(topicId) : sessionScope.content.listCards()
         const progress = await sessionScope.learning.listProgress()
         let queue: ContentCard[]
         if (sessionKind === 'review') queue = buildReviewQueue(allCards, progress, now, 20)
         else if (sessionKind === 'today') queue = buildTodayQueue(allCards, progress, now, { reviewLimit: 10, newLimit: 5 })
+        else if (sessionKind === 'custom') queue = buildCustomPracticeQueue(allCards, customOptions.topicIds, customOptions.limit)
         else queue = buildTodayQueue(allCards, progress, now, { reviewLimit: 5, newLimit: 5 })
 
         if (!active) return
@@ -81,7 +94,7 @@ export function SessionPage() {
     }
     void prepare()
     return () => { active = false }
-  }, [mode, sessionKind, sessionScope, topicId])
+  }, [customOptions, mode, sessionKind, sessionScope, topicId])
 
   const current = cards[index]
 
@@ -142,7 +155,7 @@ export function SessionPage() {
 
   if (status === 'loading') return <section className="page-stack"><p className="loading-copy">Đang chuẩn bị phiên học…</p></section>
   if (status === 'error') return <section className="page-stack"><div className="surface-card error-card"><h1>Không thể bắt đầu</h1><p>{error}</p><Link className="button secondary" to="/">Về Today</Link></div></section>
-  if (status === 'empty') return <section className="page-stack"><div className="surface-card empty-state"><div><h1>Không có thẻ phù hợp lúc này</h1><p>{sessionKind === 'review' ? 'Bạn chưa có thẻ đến hạn. Có thể học thẻ mới ở Learn.' : 'Topic này hiện không có thẻ mới hoặc review phù hợp.'}</p><Link className="button primary" to="/learn">Mở Learn</Link></div></div></section>
+  if (status === 'empty') return <section className="page-stack"><div className="surface-card empty-state"><div><h1>Không có thẻ phù hợp lúc này</h1><p>{sessionKind === 'review' ? 'Bạn chưa có thẻ đến hạn. Có thể học thẻ mới ở Learn.' : sessionKind === 'custom' ? 'Custom Practice chưa có topic hợp lệ hoặc không có card phù hợp.' : 'Topic này hiện không có thẻ mới hoặc review phù hợp.'}</p><Link className="button primary" to={backPath}>{sessionKind === 'custom' ? 'Chọn lại Custom Practice' : 'Mở Learn'}</Link></div></div></section>
 
   if (status === 'complete') {
     const accuracy = cards.length > 0 ? Math.round((correctCount / cards.length) * 100) : 0
@@ -152,7 +165,7 @@ export function SessionPage() {
   return (
     <section className="page-stack session-page">
       <div className="session-header">
-        <Link className="text-link" to={mode === 'review' ? '/review' : '/learn'}>← Thoát</Link>
+        <Link className="text-link" to={backPath}>← Thoát</Link>
         <span>{index + 1} / {cards.length}</span>
       </div>
       <div className="session-progress" aria-label={`Tiến độ ${index + 1} trên ${cards.length}`}><span style={{ width: `${((index + 1) / cards.length) * 100}%` }} /></div>

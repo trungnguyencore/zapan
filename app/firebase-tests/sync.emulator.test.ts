@@ -33,16 +33,16 @@ function makeRepo(): LocalLearningRepository {
   return new LocalLearningRepository(db)
 }
 
-function session(id: string): StudySession {
-  return { sessionId: id, userId: 'user-a', mode: 'today', startedAt: NOW, endedAt: null, eventIds: [], schemaVersion: 1 }
+function session(id: string, mode: StudySession['mode'] = 'today'): StudySession {
+  return { sessionId: id, userId: 'user-a', mode, startedAt: NOW, endedAt: null, eventIds: [], schemaVersion: 1 }
 }
 
-function event(id: string, sessionId: string, occurredAt: number, result: 'correct' | 'incorrect'): StudyEvent {
+function event(id: string, sessionId: string, occurredAt: number, result: 'correct' | 'incorrect', mode: StudyEvent['mode'] = 'today'): StudyEvent {
   return {
     eventId: id,
     sessionId,
     cardId,
-    mode: 'today',
+    mode,
     result,
     rating: result === 'correct' ? 'good' : 'again',
     responseTimeMs: result === 'correct' ? 900 : 1400,
@@ -97,5 +97,19 @@ describe('FirestoreEventSyncService convergence', () => {
 
     const cloud = await getDoc(doc(firestoreA, 'users/user-a/progress', cardId))
     expect(cloud.data()).toMatchObject({ attempts: 2, correctCount: 1, incorrectCount: 1 })
+  })
+
+  it('accepts and syncs canonical Custom Practice events', async () => {
+    const repo = makeRepo()
+    await repo.createSession(session('session-custom', 'custom'))
+    await repo.recordEvent(event('event-custom', 'session-custom', NOW + 3000, 'correct', 'custom'))
+
+    const firestore = testEnv.authenticatedContext('user-a').firestore()
+    const result = await new FirestoreEventSyncService(firestore, 'user-a', repo).sync()
+
+    expect(result.uploadedEvents).toBe(1)
+    expect(result.downloadedEvents).toBe(1)
+    const cloud = await getDoc(doc(firestore, 'users/user-a/events/event-custom'))
+    expect(cloud.data()).toMatchObject({ mode: 'custom', inputKind: 'typing', result: 'correct' })
   })
 })

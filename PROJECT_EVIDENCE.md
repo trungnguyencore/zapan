@@ -380,3 +380,18 @@ Focused domain tests: 4/4 PASS.
 Full static/unit/build gate: lint 0 warnings/errors; 75/75 tests PASS across 23 files; TypeScript + Vite production build PASS; largest core chunk observed 482.99 kB with no >500 kB warning.
 Browser Library gate: Chromium desktop PASS and Chromium mobile PASS. Verified 1,124 total results, Vocabulary search for `いつつ` -> `五つ` with audited Vietnamese meaning, Kanji filter 109 results, and Hán Việt search for `Nhất` -> `一`.
 Result: PASS.
+
+### E-038 — Phase 3 verified Custom Practice slice
+Date: 2026-09-24
+Scope: explicit multi-topic Custom Practice over the canonical verified repository.
+Domain behavior: `buildCustomPracticeQueue` selects only explicitly requested topics, preserves canonical repository order for deterministic behavior, respects the requested limit, and returns no queue when no topic is selected.
+UI behavior: user can select individual or whole Kana/Vocabulary/Kanji topic groups and choose 5/10/20 questions. Selection is serialized as repeated `topic=` query parameters plus `limit=`, so the session scope is URL-addressable and reload-safe.
+Learning behavior: SessionPage maps the route to canonical StudyMode `custom`; answers continue through the existing StudyEvent/SRS/Progress pipeline with no parallel mastery store.
+Focused domain queue tests: 7/7 PASS in `sessionBuilder.test.ts`.
+First mobile browser attempt failed only because the test selector for visible `あ` also matched the hidden desktop brand mark. Product behavior was correct; selector was scoped to `.question-glyph` and the gate was rerun.
+Corrected Custom Practice browser gate: desktop PASS and mobile PASS. Both completed five Hiragana questions and direct IndexedDB inspection verified exactly five events with `mode=custom` and `inputKind=typing`.
+Full regression: lint 0 warnings/errors; 77/77 normal tests PASS; TypeScript + Vite production build PASS; Playwright full matrix 10 executed PASS and 6 intentional environment-specific skips.
+Build note: core JS chunk observed at 487.97 kB, still below the Vite 500 kB warning threshold but close enough that further Phase 3 features should prefer route/capability splitting.
+Firebase emulator regression: 13/13 PASS; added direct verification that a canonical Custom Practice event is accepted by rules, uploaded, downloaded and preserved with `mode=custom`.
+Production dependency audit: 0 vulnerabilities. Git diff whitespace check: PASS.
+Result: PASS.

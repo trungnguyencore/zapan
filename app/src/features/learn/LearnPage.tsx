@@ -58,6 +58,10 @@ export function LearnPage() {
     <section className="page-stack">
       <PageIntro eyebrow="Learn" title="Học theo lộ trình" description="ZaPan hiện mở ba content pack đã qua audit: Kana cơ bản, N5 Vocabulary và N5 Kanji. Mỗi chủ đề dùng cùng StudyEvent/SRS/progress pipeline." />
       {error && <p className="inline-error" role="alert">{error}</p>}
+      <article className="surface-card custom-practice-callout">
+        <div><p className="card-kicker">PRACTICE</p><h2>Tự chọn nội dung cần luyện</h2><p>Ghép nhiều topic Kana, Vocabulary và Kanji vào một phiên nhưng vẫn dùng chung StudyEvent/SRS/progress.</p></div>
+        <Link className="button primary" to="/practice/custom">Tạo Custom Practice</Link>
+      </article>
       <TopicSection eyebrow="FOUNDATION" title="Kana" description="Nhận diện Hiragana và Katakana cơ bản trước khi mở rộng sang các nhóm biến âm." topics={KANA_TOPIC_CATALOG} cards={cards} progress={progress} now={capturedAt} loading={loading} accent="kana" />
       <TopicSection eyebrow="JLPT N5" title="Vocabulary" description="923 từ đã audit, chia thành 15 chủ đề. Phiên typing hiện kiểm tra cách đọc bằng kana." topics={VOCAB_N5_TOPIC_CATALOG} cards={cards} progress={progress} now={capturedAt} loading={loading} accent="vocab" />
       <TopicSection eyebrow="JLPT N5" title="Kanji" description="109 Kanji đã audit với readings, nghĩa, Hán Việt, stroke count và mnemonic memory aid." topics={KANJI_N5_TOPIC_CATALOG} cards={cards} progress={progress} now={capturedAt} loading={loading} accent="kanji" />
