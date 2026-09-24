@@ -408,3 +408,18 @@ Full gate: lint 0 warnings/errors; 81/81 normal tests PASS across 24 files; Type
 Build observation: core JS chunk reached 491.54 kB, still below the Vite 500 kB warning threshold but sufficiently close that further Phase 3 feature work must first reduce entry-bundle pressure.
 Git diff whitespace check: PASS.
 Result: PASS.
+
+### E-040 — Phase 3 route-level bundle split
+Date: 2026-09-24
+Trigger: after Library, Custom Practice and activity metrics, the measured core production JS chunk reached 491.54 kB, close to Vite's 500 kB warning threshold.
+Change: Library, Progress and Custom Practice routes now load through React lazy/Suspense boundaries. Today/Home, Learn, Review and Session remain eager because they are the primary learning loop.
+Measured production build after split:
+- core entry: 480.09 kB (down from 491.54 kB);
+- CustomPracticePage: 3.10 kB;
+- LibraryPage: 4.30 kB;
+- ProgressPage: 5.04 kB.
+Existing Vocab/Kanji/Auth/Sync capability chunks remain separate and no >500 kB Vite warning was emitted.
+Static/unit gate: lint 0 warnings/errors; 81/81 tests PASS; TypeScript + Vite build PASS.
+Full browser regression after lazy-route change: 10 executed PASS, 6 intentional environment-specific skips. Library, Progress activity/reload and Custom Practice lazy-route flows remained operational.
+Git diff whitespace check: PASS.
+Result: PASS.

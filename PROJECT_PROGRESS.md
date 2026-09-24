@@ -88,8 +88,11 @@ Verified Phase 3 slices:
 - Progress now derives measured active-study time, streak, active days, 7-day totals and a 28-day heatmap directly from persisted StudyEvents with explicit timezone/day-boundary semantics; desktop/mobile persisted-history flows are verified.
 
 Current next slice:
-- establish route-level code splitting before adding heavier Phase 3 Writing/Games because the current core JS chunk is 491.54 kB, close to the 500 kB warning threshold;
-- then implement Writing foundation and stroke-order fallback.
+- implement Writing foundation (Trace / Copy / Recall) using canonical `mode=writing`, `inputKind=drawing`, and no synthetic response time;
+- add stroke-order viewing with graceful offline/unavailable fallback.
+
+Performance guard:
+- secondary Phase 3 routes are now lazy-loaded; measured core production JS entry is 480.09 kB after splitting Library, Progress and Custom Practice.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

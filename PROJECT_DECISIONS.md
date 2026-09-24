@@ -227,3 +227,12 @@ Measured study time is the sum of StudyEvent `responseTimeMs` values that were a
 Calendar/streak semantics use the browser's resolved IANA timezone. A current streak is the consecutive sequence ending today, or ending yesterday if the learner has not studied yet today. If yesterday has no event, current streak is zero.
 Reason: event-derived metrics converge across local/cloud histories and preserve the project rule that synthetic timing must never be presented as measured behavior.
 Verification: deterministic timezone/activity unit tests plus desktop/mobile browser flows with persisted StudyEvents and reload checks.
+
+## DEC-027 — Secondary Phase 3 routes are code-split before heavier practice modes
+Status: ACCEPTED
+Date: 2026-09-24
+Problem: the measured core production JS chunk grew to 491.54 kB before Writing/Games were implemented, leaving little margin below the Vite 500 kB warning threshold.
+Decision: keep the primary learning loop (Today/Home, Learn, Review, Session) eager while lazy-loading secondary/heavier surfaces beginning with Library, Progress and Custom Practice behind a shared Suspense fallback.
+Reason: route-level splitting reduces initial bundle pressure without delaying the most frequent learning path.
+Verification: core entry decreased to 480.09 kB and full desktop/mobile browser regression stayed green.
+Consequence: new heavier Phase 3 practice surfaces should default to lazy route boundaries unless measured evidence shows eager loading is preferable.
