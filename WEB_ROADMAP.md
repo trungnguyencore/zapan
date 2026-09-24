@@ -100,7 +100,7 @@ Phase 4 quality gate:
 - known limitations are documented.
 
 ## Phase 5 — Release engineering and production migration
-Status: IMPLEMENTING — PRODUCTION BACKEND VERIFIED; REMOTE MAIN MIGRATION PENDING
+Status: VERIFIED — LIVE PRODUCTION — 2026-09-24
 Goal: replace the legacy GitHub Pages application safely.
 Deliverables:
 - full regression suite;

@@ -327,3 +327,10 @@ Date: 2026-09-24
 Decision: the production migration must not force-push over the legacy GitHub history. The verified v2 history will be connected to the legacy remote `main` with an unrelated-history merge that keeps the v2 working tree, after rollback refs are created at the legacy commit. GitHub Pages will deploy the built `app/dist` artifact through GitHub Actions rather than publishing the repository root.
 Reason: the local v2 rewrite and the existing GitHub application were developed as separate Git histories. A force-push would make the legacy line harder to recover, while branch-root Pages cannot directly publish the Vite source tree with its required build, `/zapan/` base and deep-route fallback.
 Consequence: Phase 5 creates/verifies a rollback tag and branch before changing `main`, configures Pages workflow deployment and Firebase web build variables, verifies the production artifact locally, then pushes only a non-force merge commit whose ancestry retains the legacy commit. Production execution remains gated on the approved Phase 5 sequence and actual green release evidence.
+
+## DEC-039 — Production rollback remains a first-class release invariant
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: the legacy production commit remains preserved through both `legacy/zapan-v1` and annotated tag `legacy-before-zapan-v2-2026-09-24`, while current `main` retains legacy ancestry through the non-force unrelated-history merge. Future release work must not delete/repoint these rollback refs or rewrite `main` history without explicit owner review.
+Reason: the v2 migration replaced the live tree but intentionally preserved recoverability and historical traceability. Force-push/rebase cleanup after release would destroy the safety property the migration was designed to create.
+Consequence: normal future development proceeds from current `main`; rollback refs are treated as protected release evidence, not clutter to clean up.

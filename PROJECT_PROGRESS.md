@@ -3,7 +3,7 @@
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
 Current phase: Phase 5 — Release engineering and production migration
-Current status: IMPLEMENTING — PRODUCTION BACKEND VERIFIED; REMOTE MAIN NOT YET MIGRATED
+Current status: VERIFIED — LIVE PRODUCTION
 Last verified: 2026-09-24
 
 ## Hard scope boundary
@@ -116,12 +116,12 @@ Verified hardening slices:
 - current production artifact after recovery hardening measures core 486.05 kB and largest non-entry chunk 434.97 kB;
 - the blocking path was exercised against generated `dist` output: a temporary +7 kB entry probe produced 490.97 kB and `check:bundle` failed as designed; rebuilding restored the clean artifact and the gate passed again;
 - reusable production-preview runtime profiler records cold-context local-lab baselines for Today, Learn, Progress, Roadmap, Writing setup and Match setup. On 2026-09-24, median FCP was 104–112 ms, task duration 143.11–162.19 ms and JS transfer 214.82–219.31 kB across those routes. No route showed enough separation in this 3-sample local run to justify a targeted optimization;
-- Firestore rules are locally hardened to deny unused root-user/preferences documents, enforce nonnegative timestamps/nonempty event references, and preserve canonical progress timing/streak invariants. Canonical Auth/Firestore emulator regression is 21/21 PASS and normal `npm run check` remains 102/102 PASS. These hardened rules are not yet deployed to production;
+- Firestore rules are locally hardened to deny unused root-user/preferences documents, enforce nonnegative timestamps/nonempty event references, and preserve canonical progress timing/streak invariants. Canonical Auth/Firestore emulator regression is 21/21 PASS and normal `npm run check` remains 102/102 PASS. At Phase 4 closeout these rules were not yet deployed; Phase 5 subsequently released the same verified ruleset to production;
 - multi-device/offline/recovery stress is now verified: overlapping journals converge without duplicate shared events, conflicting same-event payloads fail closed, a 12-event offline journal survives IndexedDB close/reopen and later syncs, a missing progress snapshot rebuilds from the immutable event journal, and a loaded browser study session completes while network is offline. Emulator suite is 24/24 PASS, normal tests are 103/103 PASS, and the full Playwright matrix is 32 PASS / 8 intentional skips;
 - loading/error/recovery UX is now hardened: application render failures keep a reload recovery surface, learning-snapshot loading/errors hide stale or fake-zero metrics, failed local snapshots expose retry, profile/repository switches cannot flash the previous profile snapshot, content bootstrap failure exposes an explicit retry control, and session/stroke loading states are announced accessibly. Final gate is lint 0 warnings/errors, 108/108 normal tests PASS, production build + bundle budget PASS at core 486.05 kB, and Playwright 32 PASS / 8 intentional skips with visual baselines stable.
 
 Deferred / intentionally gated beyond Phase 4 closeout:
-- hardened Firestore rules are emulator-verified but production deployment is a production change and requires a fresh owner review immediately before execution;
+- hardened Firestore rules required a fresh owner review before production deployment; that review was completed in Phase 5 and the verified ruleset is now released to production;
 - migration tests remain gated until a real Dexie/schema version change exists. Current local database schema is version 1, so no migration result is claimed;
 - Grammar, listening, reading, JLPT practice, N4 and N3 content expansion remains gated until real source/content is inspected, versioned and verified; no placeholder level is promoted into active learning content.
 
@@ -141,28 +141,33 @@ Performance guard:
 - Phase 4 content gate: PASS by keeping unavailable Grammar/Reading/Listening/JLPT/N4/N3 inactive; no unsourced placeholder content was promoted.
 See `PROJECT_EVIDENCE.md` E-051 for the integrated closeout command and limitations.
 
-## Phase 5 current state
-Owner review was approved on 2026-09-24. The local release candidate and production backend preflight are verified. Rollback refs, GitHub Pages workflow mode and Firebase web variables exist on the remote; hardened Firestore rules are released to `zapan-v2-trunk` and the real production cloud smoke/cleanup passes. Remote `main` is still the legacy commit and the live Pages site has not yet been migrated to the v2 tree.
+## Phase 5 result
+Phase 5 release engineering and production migration are VERIFIED. The live application is `https://trungnguyencore.github.io/zapan/`.
 
-Verified local release-candidate work:
-- corrected the local `origin` URL to the verified repository `trungnguyencore/zapan`; remote legacy `main` remains `a387e71351aa8266b6ae4751e89ae6be3e5ea1d9`;
-- production build/preview use `/zapan/`, BrowserRouter derives its basename from `BASE_URL`, and the build emits `dist/404.html` from the same artifact for GitHub Pages deep-route recovery; development mode remains rooted at `/`;
-- added a GitHub Pages Actions workflow, built-artifact release regression, production-preview routing updates, public/developer README refresh and two generated release screenshots;
-- GitHub-Pages-like desktop/mobile artifact regression is 4/4 PASS, including direct `/zapan/learn` + reload through a real 404 fallback;
-- final local integrated gate is lint 0/0, normal tests 108/108, build/bundle PASS with core 486.10 kB, Firebase emulator 24/24, Playwright 32 PASS / 8 intentional skips, Pages release smoke 4/4, audit 0 vulnerabilities and `git diff --check` PASS.
+Verified release/migration state:
+- local release candidate was verified with lint 0/0, normal tests 108/108, build/bundle PASS with core 486.10 kB, Firebase emulator 24/24, Playwright 32 PASS / 8 intentional skips, Pages artifact smoke 4/4, audit 0 vulnerabilities and `git diff --check` PASS;
+- rollback branch `legacy/zapan-v1` and annotated tag `legacy-before-zapan-v2-2026-09-24` both resolve to legacy commit `a387e71351aa8266b6ae4751e89ae6be3e5ea1d9`;
+- the unrelated legacy and v2 histories were connected by merge commit `a9dc8cdeeba5250414e5211033ca9a1b94d17d2c` using the `ours` strategy after verifying the v2 tree hash remained exactly `6bbd6cef6cb86f9f19960211c7c84c199d2fc7ae` before/after merge;
+- `main` was pushed without force; legacy history remains reachable through merge ancestry plus the rollback branch/tag;
+- GitHub Pages is deployed by Actions from the built `app/dist` artifact with production base `/zapan/`, BrowserRouter basename from `BASE_URL`, and a built `404.html` fallback;
+- final release-infrastructure commit `e04844f3fdfca487067afb610b7fdf4df91d46c1` upgraded the official Pages actions, added live-URL test harness support, and limited Pages deploy triggers to `app/**` or the workflow file so docs-only commits do not redeploy the app;
+- final GitHub Actions run `36007236330` completed SUCCESS with both build and deploy jobs successful. The previous Node 20 / ubuntu-latest warning strings were absent from that run log.
 
-Completed production pre-main steps:
-1. local release candidate checkpointed and release base/deep-link regression verified;
-2. rollback branch `legacy/zapan-v1` and annotated tag `legacy-before-zapan-v2-2026-09-24` both resolve to legacy commit `a387e71351aa8266b6ae4751e89ae6be3e5ea1d9`;
-3. all six Firebase web variables are present in GitHub and Pages is configured for workflow deployment;
-4. Firebase Auth authorized domains now include `trungnguyencore.github.io`;
-5. hardened Firestore rules were released to `zapan-v2-trunk`; Firebase reported the rules file already up to date and deployment completed successfully;
-6. real production cloud smoke PASS across two isolated browser contexts, followed by Firestore cleanup PASS and Auth cleanup PASS.
+Verified production backend:
+- GitHub repository variables contain all six `VITE_FIREBASE_*` values for the v2 Firebase web app;
+- Firebase Auth authorized domains include `trungnguyencore.github.io`;
+- hardened Firestore rules were released to project `zapan-v2-trunk`; Firebase reported the rules file already up to date and the scoped deployment completed successfully;
+- real production cloud smoke PASS across two isolated browser contexts with 5 canonical events, followed by `firestoreCleanup=PASS` and `authCleanup=PASS`.
 
-Next approved production sequence:
-1. merge the unrelated legacy history into v2 with a merge commit that preserves the v2 tree, then push `main` without force;
-2. wait for Pages deployment, run live-site root/deep-link/account/sync/mobile checks;
-3. record rollback evidence and only then close Phase 5 VERIFIED.
+Verified live-site behavior:
+- root URL returns HTTP 200 and serves the ZaPan v2 artifact;
+- direct `/zapan/learn` returns the expected GitHub Pages HTTP 404 while serving the same SPA fallback artifact;
+- live desktop/mobile Pages regression is 4/4 PASS, including direct deep-link load and reload;
+- live Email/Password Auth + two-browser cloud sync PASS on the actual `trungnguyencore.github.io` origin, followed by successful cleanup;
+- after the final infrastructure deployment, live Pages regression is again 4/4 PASS;
+- final live runtime asset names remained `/zapan/assets/index-Wv0eqMsX.js` and `/zapan/assets/index-63ptnRvu.css`, confirming the test/workflow-only closeout did not change the application runtime bundle.
+
+See `PROJECT_EVIDENCE.md` E-052 through E-055 for the local candidate, production preflight, merge/deploy and live verification trail.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.
@@ -174,8 +179,7 @@ It is not used by the application or final browser tests and is excluded from Gi
 It has not been deleted because project rules prohibit unapproved deletion.
 
 ## Deferred / unverified
-- remote `main` migration/push has not yet occurred;
-- production GitHub Pages v2 live behavior remains unverified until the workflow deploys the merged main;
 - current N5 Vocabulary/Kanji bundles are verified against the audited legacy reference and v2 invariants, but have not been independently benchmarked against an external canonical JLPT corpus;
 - N4/N3 learning content is not implemented;
-- Firefox/Safari support remains unverified.
+- a real Dexie schema migration remains untested because the production local database still uses schema version 1 and no migration exists yet;
+- Firefox/Safari support remains unverified; the release/browser gates currently cover Chromium desktop/mobile.

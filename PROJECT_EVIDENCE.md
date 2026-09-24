@@ -865,3 +865,45 @@ Safety state after verification:
 - no live GitHub Pages v2 smoke claim is made yet.
 
 Result: PASS — production backend and rollback prerequisites are verified; remote main migration remains the next gated step.
+
+### E-055 — Phase 5 production migration and live verification
+Date: 2026-09-24
+Scope: owner-approved legacy-main migration, GitHub Pages deployment and live production verification.
+
+Git history migration:
+- pre-merge v2 tree hash: `6bbd6cef6cb86f9f19960211c7c84c199d2fc7ae`;
+- unrelated-history merge commit: `a9dc8cdeeba5250414e5211033ca9a1b94d17d2c`;
+- merge parents: v2 `307a536e42574303ed05ad0526e889e7020dde51` and legacy `a387e71351aa8266b6ae4751e89ae6be3e5ea1d9`;
+- post-merge tree hash remained exactly `6bbd6cef6cb86f9f19960211c7c84c199d2fc7ae`;
+- remote `main` push was a normal fast-forward from legacy ancestry; no force push was used;
+- rollback branch `legacy/zapan-v1` and tag `legacy-before-zapan-v2-2026-09-24` remain at the legacy production commit.
+
+First v2 Pages deployment:
+- pushed merge SHA: `a9dc8cdeeba5250414e5211033ca9a1b94d17d2c`;
+- GitHub Actions run `36005852626`: build SUCCESS, deploy SUCCESS;
+- Pages URL: `https://trungnguyencore.github.io/zapan/`;
+- live root HTTP: 200;
+- direct `/zapan/learn`: expected GitHub Pages 404 status while returning the v2 SPA fallback artifact;
+- live desktop/mobile Pages regression: 4/4 PASS, including direct deep-link load and reload;
+- live Email/Password Auth on the GitHub Pages origin: PASS;
+- live two-browser cloud sync: PASS with 5 canonical events;
+- production smoke cleanup: `firestoreCleanup=PASS`, `authCleanup=PASS`.
+
+Final release-infrastructure hardening:
+- commit `e04844f3fdfca487067afb610b7fdf4df91d46c1` adds live-URL Playwright support and upgrades official GitHub Pages actions to current major releases;
+- Pages workflow now triggers on `app/**` or the workflow file, so docs-only commits do not redeploy unchanged runtime;
+- GitHub Actions run `36007236330`: completed SUCCESS with build and deploy jobs successful.
+
+Final deployment verification:
+- after final release-infrastructure commit `e04844f3fdfca487067afb610b7fdf4df91d46c1`, GitHub Actions run `36007236330` completed SUCCESS;
+- both workflow jobs, `build` and `deploy`, completed successfully;
+- final run log did not contain the earlier Node.js 20 deprecation or ubuntu-latest migration warning strings;
+- live desktop/mobile Pages regression was rerun after the final deployment and remained 4/4 PASS;
+- live HTML continued to reference `/zapan/assets/index-Wv0eqMsX.js` and `/zapan/assets/index-63ptnRvu.css`, so the final CI/test-only hardening did not change the application runtime bundle.
+
+Production backend state:
+- Firebase Auth authorized domains include `trungnguyencore.github.io`;
+- hardened Firestore rules are released to `zapan-v2-trunk`;
+- legacy Firebase project `zapan-app` was not modified by this release migration.
+
+Result: PASS — ZaPan v2 production migration is verified live with rollback history preserved.
