@@ -263,3 +263,13 @@ Date: 2026-09-24
 Decision: Phase 3 Confusables uses only the 15 groups explicitly present in the legacy ZaPan `gameData.js` reference. The migrated group set is versioned as `legacy-gd9-game-data-v1` and every character/romanization is validated against canonical v2 Kana before use.
 Reason: “characters that look confusing” is partly subjective. Adding new groups from model intuition would violate source-grounding and make the practice dataset unauditable.
 Consequence: future additions require an explicit source/provenance update and regression against canonical content rather than silently extending the list.
+
+## Implementation lesson 14 — Test fixtures must preserve audited content verbatim
+The first Match domain test shortened the audited Vietnamese meaning of `五つ`, creating a false failure. The correct response was to fix the test expectation, not normalize product data to fit the test. Future content assertions should source exact canonical values or explicitly test normalization logic where such logic is a product requirement.
+
+## DEC-031 — Practice interaction timing crosses an explicit clock boundary
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: newer practice components obtain epoch and monotonic timestamps through `services/time/clock.ts` rather than invoking clock APIs directly inside React component callbacks.
+Reason: the React purity gate flagged direct clock calls; a tiny boundary keeps timing provenance explicit, testable and compiler-friendly without suppressing lint.
+Consequence: timing still reflects real browser clocks; the service does not synthesize or estimate response time.
