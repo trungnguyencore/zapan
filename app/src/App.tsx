@@ -16,6 +16,7 @@ const WritingPracticePage = lazy(() => import('./features/writing/WritingPractic
 const ArcadePracticePage = lazy(() => import('./features/arcade/ArcadePracticePage').then((module) => ({ default: module.ArcadePracticePage })))
 const MatchPracticePage = lazy(() => import('./features/matching/MatchPracticePage').then((module) => ({ default: module.MatchPracticePage })))
 const ConfusablePracticePage = lazy(() => import('./features/confusable/ConfusablePracticePage').then((module) => ({ default: module.ConfusablePracticePage })))
+const RoadmapPage = lazy(() => import('./features/roadmap/RoadmapPage').then((module) => ({ default: module.RoadmapPage })))
 
 function DeferredRoute({ children }: { children: ReactNode }) {
   return <Suspense fallback={<section className="page-stack"><p className="loading-copy" role="status">Đang tải tính năng…</p></section>}>{children}</Suspense>
@@ -36,6 +37,7 @@ export function AppRoutes() {
         <Route path="practice/survival" element={<DeferredRoute><ArcadePracticePage mode="survival" /></DeferredRoute>} />
         <Route path="practice/match" element={<DeferredRoute><MatchPracticePage /></DeferredRoute>} />
         <Route path="practice/confusables" element={<DeferredRoute><ConfusablePracticePage /></DeferredRoute>} />
+        <Route path="roadmap" element={<DeferredRoute><RoadmapPage /></DeferredRoute>} />
         <Route path="account" element={<AccountPage />} />
         <Route path="session/:sessionKind/:topicId?" element={<SessionPage />} />
       </Route>

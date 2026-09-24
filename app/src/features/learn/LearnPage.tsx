@@ -58,6 +58,10 @@ export function LearnPage() {
     <section className="page-stack">
       <PageIntro eyebrow="Learn" title="Học theo lộ trình" description="ZaPan hiện mở ba content pack đã qua audit: Kana cơ bản, N5 Vocabulary và N5 Kanji. Mỗi chủ đề dùng cùng StudyEvent/SRS/progress pipeline." />
       {error && <p className="inline-error" role="alert">{error}</p>}
+      <article className="surface-card roadmap-entry-callout">
+        <div><p className="card-kicker">ROADMAP</p><h2>Xem stage nào đang thật sự tiến triển</h2><p>Roadmap dùng chính ProgressRecord hiện tại; stage chưa có verified content sẽ không được giả lập thành nội dung mở khóa.</p></div>
+        <Link className="button secondary" to="/roadmap">Mở Roadmap</Link>
+      </article>
       <article className="surface-card custom-practice-callout">
         <div><p className="card-kicker">PRACTICE</p><h2>Tự chọn nội dung cần luyện</h2><p>Ghép nhiều topic Kana, Vocabulary và Kanji vào một phiên nhưng vẫn dùng chung StudyEvent/SRS/progress.</p></div>
         <div className="practice-entry-actions"><Link className="button primary" to="/practice/custom">Tạo Custom Practice</Link><Link className="button secondary" to="/practice/writing">Luyện Writing</Link><Link className="button secondary" to="/practice/time-attack">Time Attack</Link><Link className="button secondary" to="/practice/survival">Survival</Link><Link className="button secondary" to="/practice/match">Match</Link><Link className="button secondary" to="/practice/confusables">Confusables</Link></div>

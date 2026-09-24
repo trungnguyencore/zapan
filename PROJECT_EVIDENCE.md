@@ -479,3 +479,18 @@ Firebase emulator: 16/16 PASS, including Match/Confusable event round-trip throu
 Production dependency audit: 0 vulnerabilities.
 Git diff whitespace check: PASS.
 Result: PASS.
+
+### E-044 — Phase 3 verified canonical Roadmap slice
+Date: 2026-09-24
+Learner-journey authority: `LEARNING_ROADMAP.md`. Current verified content authority: the v2 content repository/topic catalog.
+Active roadmap stages are intentionally restricted to content that exists and has been audited: Hiragana 46 cards, Katakana 46 cards, N5 Vocabulary 923 cards, N5 Kanji 109 cards; total 1,124.
+Roadmap semantics: stage metrics are derived from canonical ProgressRecord data through the existing learning-overview logic. Status is `not-started` until an eligible card has attempts, `in-progress` after study begins, and `complete` only when every card in that stage is currently `mastered`. The suggested stage is the first non-complete stage; this is guidance only and does not hard-lock other Learn content.
+Unavailable roadmap material: Grammar, Reading/Listening, N5 consolidation/exam and N4/N3 remain explicitly inactive because corresponding verified content/review flows do not exist. They are not rendered as active learning stages or unlock links.
+Focused domain tests: 3/3 PASS. Verified exact stage totals (46/46/923/109 = 1,124), that seeing/studying all Hiragana is insufficient when one card is not mastered, and that suggestion advances to Katakana only after all 46 Hiragana cards are mastered.
+Focused browser gate: fresh Roadmap PASS on Chromium desktop/mobile with exactly four active stage cards, 1,124 total cards and Hiragana suggested. Existing real five-answer Kana browser flow was extended and verified Roadmap shows 5 studied but 0/46 mastered, so Hiragana remains suggested.
+Full static/unit/build gate: lint 0 warnings/errors; 97/97 normal tests PASS across 29 files; TypeScript + Vite production build PASS.
+Bundle observation: Roadmap lazy chunk 5.11 kB; core entry 482.50 kB; no >500 kB warning.
+Full Playwright regression: 22 executed PASS, 6 intentional environment-specific skips.
+Production dependency audit: 0 vulnerabilities.
+Git diff whitespace check: PASS.
+Result: PASS.

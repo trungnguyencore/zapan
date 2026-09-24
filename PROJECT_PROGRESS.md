@@ -89,14 +89,15 @@ Verified Phase 3 slices:
 - Writing supports Trace / Copy / Recall for Kana/Kanji, explicit self-grade through canonical `mode=writing` / `inputKind=drawing` StudyEvents with no synthetic response time, and codepoint-based KanjiVG viewing with tested network-failure fallback;
 - local session creation is transactionally idempotent under concurrent StrictMode effects, with regression coverage;
 - Time Attack and Survival share one typed-practice foundation, write measured canonical StudyEvents (`mode=time-attack` / `mode=survival`) into the same SRS/progress pipeline, and keep timer/score/lives as presentation-only state. Both are verified on desktop/mobile and through Firestore emulator sync;
-- Match records measured `mode=match` / `inputKind=matching` events for both wrong and correct pair attempts; Confusables uses the 15 legacy verified Kana groups (31 canonical target entries), validated against v2 Kana data, and records measured `mode=confusable` / `inputKind=multiple-choice` events. Both are verified on desktop/mobile and through Firestore emulator sync.
+- Match records measured `mode=match` / `inputKind=matching` events for both wrong and correct pair attempts; Confusables uses the 15 legacy verified Kana groups (31 canonical target entries), validated against v2 Kana data, and records measured `mode=confusable` / `inputKind=multiple-choice` events. Both are verified on desktop/mobile and through Firestore emulator sync;
+- Roadmap exposes only four stages backed by currently verified content: Hiragana, Katakana, N5 Vocabulary and N5 Kanji. Stage state is derived from canonical ProgressRecord data; a stage completes only when all of its cards are mastered, and unavailable Grammar/Reading/Listening/N4/N3 content is explicitly kept inactive rather than rendered as fake unlocks.
 
 Current next slice:
-- implement canonical Roadmap based only on currently verified Kana/N5 Vocabulary/N5 Kanji content and ProgressRecord state;
-- then complete remaining Phase 3 UI/accessibility polish and final Phase 3 regression gate.
+- complete remaining Phase 3 UI/accessibility polish, especially keyboard/touch/focus behavior across the newly added practice surfaces and secondary routes;
+- run the final Phase 3 regression gate and only then mark Phase 3 VERIFIED.
 
 Performance guard:
-- secondary/heavier Phase 3 routes are lazy-loaded; Writing ~11.78 kB, Arcade ~8.96 kB, Match ~7.47 kB, Confusables ~8.80 kB, and measured core production JS entry remains ~481.80 kB.
+- secondary/heavier Phase 3 routes are lazy-loaded; Roadmap ~5.11 kB, Writing ~11.78 kB, Arcade ~8.96 kB, Match ~7.47 kB, Confusables ~8.80 kB, and measured core production JS entry remains ~482.50 kB.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

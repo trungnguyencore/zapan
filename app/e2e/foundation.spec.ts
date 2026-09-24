@@ -66,6 +66,12 @@ test('a real Kana session persists progress across reload', async ({ page }, tes
   await page.reload()
   await expect(page.getByText('5/1124')).toBeVisible()
   await expect(page.locator('.metric-card').filter({ hasText: 'Ngày streak hiện tại' })).toContainText('1')
+
+  await page.goto('/roadmap')
+  const hiraganaStage = page.locator('.roadmap-stage').filter({ has: page.getByRole('heading', { name: 'Hiragana' }) })
+  await expect(hiraganaStage).toContainText('0/46')
+  await expect(hiraganaStage).toContainText('5 đã học')
+  await expect(hiraganaStage).toContainText('Gợi ý tiếp theo')
 })
 
 test('verified N5 Vocabulary topic runs through the real study pipeline', async ({ page }, testInfo) => {
@@ -435,4 +441,55 @@ test('Confusables uses the verified legacy Kana groups with measured canonical e
   expect(events.filter((event) => event.result === 'correct')).toHaveLength(9)
   expect(events.every((event) => event.mode === 'confusable' && event.inputKind === 'multiple-choice')).toBe(true)
   expect(events.every((event) => typeof event.responseTimeMs === 'number' && Number(event.responseTimeMs) >= 0)).toBe(true)
+})
+
+test('Roadmap exposes only verified learner stages on desktop and mobile', async ({ page }) => {
+  await page.goto('/learn')
+  await page.getByRole('link', { name: 'Mở Roadmap' }).click()
+  await expect(page).toHaveURL(/\/roadmap$/)
+  await expect(page.getByRole('heading', { name: 'Lộ trình dựa trên mastery thật' })).toBeVisible()
+  await expect(page.locator('.roadmap-stage')).toHaveCount(4)
+  await expect(page.getByRole('heading', { name: '0/4 stage complete' })).toBeVisible()
+  await expect(page.getByText('1124 cards hiện có trong learner path.')).toBeVisible()
+
+  const hiraganaStage = page.locator('.roadmap-stage').filter({ has: page.getByRole('heading', { name: 'Hiragana' }) })
+  await expect(hiraganaStage).toContainText('Gợi ý tiếp theo')
+  await expect(hiraganaStage).toContainText('0/46')
+  await expect(page.locator('.roadmap-deferred')).toContainText('Grammar · Reading/Listening · N5 consolidation/exam · N4/N3')
+  await expect(page.locator('.roadmap-deferred').getByRole('link')).toHaveCount(0)
+})
+
+test('Roadmap exposes only verified stages and derives status from canonical progress', async ({ page }) => {
+  await page.goto('/roadmap')
+  await expect(page.getByRole('heading', { name: 'Lộ trình dựa trên mastery thật' })).toBeVisible()
+  await expect(page.getByText('0/4 stage complete')).toBeVisible()
+  await expect(page.getByText('1124 cards hiện có trong learner path.')).toBeVisible()
+  await expect(page.locator('.roadmap-stage')).toHaveCount(4)
+
+  const hiraganaStage = page.locator('.roadmap-stage').filter({ hasText: 'Hiragana' })
+  await expect(hiraganaStage).toContainText('Gợi ý tiếp theo')
+  await expect(hiraganaStage).toContainText('Chưa bắt đầu')
+  await expect(hiraganaStage).toContainText('0/46')
+  await expect(hiraganaStage).toContainText('0 đã học')
+  await expect(page.getByRole('heading', { name: 'Grammar · Reading/Listening · N5 consolidation/exam · N4/N3' })).toBeVisible()
+
+  await hiraganaStage.getByRole('link', { name: 'Bắt đầu stage' }).click()
+  await expect(page).toHaveURL(/\/session\/learn\/kana-hiragana-main$/)
+
+  for (const answer of ['a', 'i', 'u', 'e', 'o']) {
+    await page.getByLabel('Câu trả lời').fill(answer)
+    await page.getByRole('button', { name: 'Kiểm tra' }).click()
+    await expect(page.getByRole('status')).toContainText('Đúng')
+    await page.getByRole('button', { name: answer === 'o' ? 'Xem kết quả' : 'Câu tiếp theo' }).click()
+  }
+
+  await expect(page.getByRole('heading', { name: 'Hoàn thành phiên học' })).toBeVisible()
+  await page.goto('/roadmap')
+
+  const updatedHiragana = page.locator('.roadmap-stage').filter({ hasText: 'Hiragana' })
+  await expect(updatedHiragana).toContainText('Đang học')
+  await expect(updatedHiragana).toContainText('Gợi ý tiếp theo')
+  await expect(updatedHiragana).toContainText('5 đã học')
+  await expect(updatedHiragana).toContainText('0/46')
+  await expect(page.getByText('0/4 stage complete')).toBeVisible()
 })
