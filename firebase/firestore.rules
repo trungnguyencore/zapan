@@ -9,6 +9,14 @@ service cloud.firestore {
       return value is int && value >= 0;
     }
 
+    function nonEmptyString(value) {
+      return value is string && value.size() > 0;
+    }
+
+    function nonNegativeTimestamp(value) {
+      return value is int && value >= 0;
+    }
+
     function validSrs(srs) {
       return srs is map
         && srs.keys().hasAll(['algorithmVersion', 'level', 'intervalMinutes', 'lapses', 'lastReviewAt', 'dueAt'])
@@ -17,8 +25,8 @@ service cloud.firestore {
         && srs.level is int && srs.level >= 0 && srs.level <= 6
         && nonNegativeInt(srs.intervalMinutes)
         && nonNegativeInt(srs.lapses)
-        && (srs.lastReviewAt == null || srs.lastReviewAt is int)
-        && srs.dueAt is int;
+        && (srs.lastReviewAt == null || nonNegativeTimestamp(srs.lastReviewAt))
+        && nonNegativeTimestamp(srs.dueAt);
     }
 
     function validProgress(data, cardId) {
@@ -34,21 +42,25 @@ service cloud.firestore {
           'nextReviewAt', 'mastery', 'srs', 'updatedAt', 'schemaVersion'
         ])
         && data.cardId == cardId
+        && nonEmptyString(data.cardId)
         && data.schemaVersion == 1
         && nonNegativeInt(data.attempts)
         && nonNegativeInt(data.correctCount)
         && nonNegativeInt(data.incorrectCount)
         && data.correctCount + data.incorrectCount == data.attempts
         && nonNegativeInt(data.currentCorrectStreak)
+        && data.currentCorrectStreak <= data.correctCount
         && data.accuracy is number && data.accuracy >= 0 && data.accuracy <= 1
         && (data.averageResponseTimeMs == null || (data.averageResponseTimeMs is number && data.averageResponseTimeMs >= 0))
         && nonNegativeInt(data.responseTimeSampleCount)
         && data.responseTimeSampleCount <= data.attempts
-        && (data.lastReviewedAt == null || data.lastReviewedAt is int)
-        && data.nextReviewAt is int
-        && data.updatedAt is int
+        && (data.lastReviewedAt == null || nonNegativeTimestamp(data.lastReviewedAt))
+        && nonNegativeTimestamp(data.nextReviewAt)
+        && nonNegativeTimestamp(data.updatedAt)
         && data.mastery in ['unseen', 'learning', 'due', 'weak', 'mastered']
-        && validSrs(data.srs);
+        && validSrs(data.srs)
+        && data.nextReviewAt == data.srs.dueAt
+        && data.lastReviewedAt == data.srs.lastReviewAt;
     }
 
     function validEvent(data, eventId) {
@@ -56,12 +68,14 @@ service cloud.firestore {
         && data.keys().hasAll(['eventId', 'sessionId', 'cardId', 'mode', 'result', 'occurredAt', 'inputKind', 'schemaVersion'])
         && data.keys().hasOnly(['eventId', 'sessionId', 'cardId', 'mode', 'result', 'rating', 'responseTimeMs', 'occurredAt', 'inputKind', 'schemaVersion'])
         && data.eventId == eventId
-        && data.eventId is string && data.sessionId is string && data.cardId is string
+        && nonEmptyString(data.eventId)
+        && nonEmptyString(data.sessionId)
+        && nonEmptyString(data.cardId)
         && data.mode in ['today', 'learn', 'review', 'custom', 'writing', 'time-attack', 'survival', 'match', 'confusable']
         && data.result in ['correct', 'incorrect', 'skipped']
         && (!('rating' in data) || data.rating in ['again', 'hard', 'good', 'easy'])
         && (!('responseTimeMs' in data) || (data.responseTimeMs is number && data.responseTimeMs >= 0))
-        && data.occurredAt is int
+        && nonNegativeTimestamp(data.occurredAt)
         && data.inputKind in ['typing', 'multiple-choice', 'self-grade', 'matching', 'drawing']
         && data.schemaVersion == 1;
     }
@@ -72,16 +86,18 @@ service cloud.firestore {
         && data.keys().hasOnly(['sessionId', 'userId', 'mode', 'startedAt', 'endedAt', 'eventIds', 'schemaVersion'])
         && data.sessionId == sessionId
         && data.userId == userId
+        && nonEmptyString(data.sessionId)
+        && nonEmptyString(data.userId)
         && data.mode in ['today', 'learn', 'review', 'custom', 'writing', 'time-attack', 'survival', 'match', 'confusable']
-        && data.startedAt is int
+        && nonNegativeTimestamp(data.startedAt)
         && (data.endedAt == null || (data.endedAt is int && data.endedAt >= data.startedAt))
         && data.eventIds is list
         && data.schemaVersion == 1;
     }
 
     match /users/{userId} {
-      allow read, create, update: if owns(userId);
-      allow delete: if false;
+      // No root user document is part of the current cloud contract.
+      allow read, create, update, delete: if false;
 
       match /progress/{cardId} {
         allow read: if owns(userId);
@@ -101,8 +117,8 @@ service cloud.firestore {
       }
 
       match /preferences/{documentId} {
-        allow read, create, update: if owns(userId);
-        allow delete: if false;
+        // Preferences are local-only until a versioned cloud schema is implemented.
+        allow read, create, update, delete: if false;
       }
     }
   }

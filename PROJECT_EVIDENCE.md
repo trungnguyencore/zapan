@@ -607,3 +607,41 @@ Verification:
 
 Result: PASS — reproducible local runtime baseline established.
 Limitation: no production network latency, mobile hardware CPU, memory pressure, interaction latency, Core Web Vitals or hosted compression/CDN behavior is represented by this measurement.
+
+### E-048 — Phase 4 Firestore least-privilege/schema hardening (emulator verified)
+Date: 2026-09-24
+Scope: local Firestore rules and canonical emulator coverage. Production rules deployment was deliberately not performed in this slice.
+
+Source/use audit before rule changes:
+- production Firestore write call-sites under `app/src` are limited to `FirestoreEventSyncService`;
+- that service reads/writes only `users/{uid}/events/*` and `users/{uid}/progress/*`;
+- project-wide search found no `preferences/*` production usage;
+- root `users/{uid}` documents are not part of the current app cloud contract;
+- sessions remain a versioned rule/schema surface but are not uploaded by the current sync service;
+- the older `src/services/firebase/firestore.rules.emulator.test.ts` is outside `vitest.firebase.config.ts`; useful negative coverage was moved into the canonical `app/firebase-tests` suite without deleting the older file.
+
+Rule hardening:
+- root `users/{uid}` document read/write/delete denied until an explicit schema exists;
+- `preferences/*` read/write/delete denied until a versioned cloud preference schema exists;
+- SRS/progress/session/event timestamps required to be nonnegative where defined;
+- progress requires `currentCorrectStreak <= correctCount`;
+- progress requires `nextReviewAt == srs.dueAt` and `lastReviewedAt == srs.lastReviewAt`, matching the current canonical reducer;
+- StudyEvent `eventId/sessionId/cardId` must be non-empty strings and `occurredAt` nonnegative;
+- StudySession IDs remain path/user-bound and `startedAt` nonnegative; endedAt still cannot precede startedAt;
+- existing immutable-event and no-delete progress/session behavior is preserved.
+
+Canonical negative-path additions:
+- owner cannot read/write root user document or preferences;
+- nested valid progress still succeeds while deletion fails;
+- forged progress streak/timing linkage and negative review timestamps fail;
+- empty event session/card references, negative event timestamp and event deletion fail;
+- negative/backwards session timelines fail.
+
+Verification:
+- Firebase Auth/Firestore emulator suite: 21/21 PASS across 3 files (rules 13 tests, sync convergence 6 tests, auth 2 tests);
+- existing two-offline-client event-journal convergence remains PASS;
+- normal application gate after rules/tests: lint 0 warnings/errors, 102/102 unit/component tests PASS, TypeScript + production build PASS, bundle budget PASS;
+- `git diff --check`: PASS.
+
+Result: PASS — local/emulator security hardening verified.
+Deployment status: NOT DEPLOYED. Current production Firestore rules remain unchanged until a fresh owner-reviewed deployment step.

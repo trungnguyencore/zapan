@@ -299,3 +299,10 @@ Date: 2026-09-24
 Decision: Phase 4 keeps the first production-preview runtime profile as raw + median baseline evidence and does not create hard runtime thresholds from three localhost Chromium samples.
 Reason: local FCP/task/script timing contains machine/scheduler noise and is not equivalent to production Web Vitals. Bundle size remains a hard deterministic gate; runtime timing becomes a gate only after repeatable evidence and an explicit environment/target are defined.
 Consequence: do not refactor a route merely because one local sample is slower. Preserve the baseline artifact and compare future measured runs before making performance claims.
+
+## DEC-035 — Unused Firestore surfaces default to deny until their schema exists
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: Firestore root user documents and cloud preferences are denied by default because the current application has no production read/write contract for them. New cloud document families require an explicit versioned schema, ownership rules and emulator tests before they become writable.
+Reason: owner-only access is not sufficient reason to leave arbitrary-schema storage writable. Least privilege keeps the cloud contract limited to data the application currently understands and reconciles.
+Consequence: theme preference remains local-only; future profile/preferences features must deliberately open a validated rule surface rather than inheriting permissive access.

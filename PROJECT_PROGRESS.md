@@ -115,11 +115,12 @@ Verified hardening slices:
 - the core entry budget is 490.00 kB raw and every JS chunk has a 500.00 kB raw upper bound;
 - current production artifact measures core 483.97 kB and largest non-entry chunk 434.97 kB;
 - the blocking path was exercised against generated `dist` output: a temporary +7 kB entry probe produced 490.97 kB and `check:bundle` failed as designed; rebuilding restored the clean artifact and the gate passed again;
-- reusable production-preview runtime profiler now records cold-context local-lab baselines for Today, Learn, Progress, Roadmap, Writing setup and Match setup. On 2026-09-24, median FCP was 104–112 ms, task duration 143.11–162.19 ms and JS transfer 214.82–219.31 kB across those routes. No route showed enough separation in this 3-sample local run to justify a targeted optimization.
+- reusable production-preview runtime profiler records cold-context local-lab baselines for Today, Learn, Progress, Roadmap, Writing setup and Match setup. On 2026-09-24, median FCP was 104–112 ms, task duration 143.11–162.19 ms and JS transfer 214.82–219.31 kB across those routes. No route showed enough separation in this 3-sample local run to justify a targeted optimization;
+- Firestore rules are locally hardened to deny unused root-user/preferences documents, enforce nonnegative timestamps/nonempty event references, and preserve canonical progress timing/streak invariants. Canonical Auth/Firestore emulator regression is 21/21 PASS and normal `npm run check` remains 102/102 PASS. These hardened rules are not yet deployed to production.
 
 Current next slices:
-- perform security-rule review against the deployed/emulator schema and add missing negative-path coverage where evidence identifies gaps;
-- continue multi-device/offline stress, migration/recovery behavior and error/empty/loading-state hardening.
+- production Firestore rules deployment requires a fresh owner review before execution;
+- continue multi-device/offline stress, migration/recovery behavior and error/empty/loading-state hardening without waiting on that deployment.
 Grammar, listening, reading, JLPT practice, N4 and N3 remain gated until a real source/content set is inspected, versioned and verified; no placeholder level is to be promoted into active learning content.
 
 Performance guard:
