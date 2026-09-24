@@ -826,3 +826,42 @@ Observed:
 Reason: `command === 'build'` was sufficient for generated assets but did not describe production preview; `mode === 'production'` keeps build and preview on the same release base while development remains root-based.
 
 Result: PASS.
+
+### E-054 — Phase 5 production backend pre-main verification
+Date: 2026-09-24
+Scope: owner-approved production pre-main steps. Remote legacy main and live Pages content were intentionally left unchanged during this evidence slice.
+
+Firebase Auth:
+- public Identity Toolkit project configuration for the v2 web API key now lists `trungnguyencore.github.io` in authorized domains;
+- the two default v2 domains remain present.
+
+Remote rollback/release prerequisites:
+- verified repo: `trungnguyencore/zapan`;
+- remote legacy main remains `a387e71351aa8266b6ae4751e89ae6be3e5ea1d9`;
+- rollback branch `legacy/zapan-v1` resolves to that same legacy commit;
+- annotated tag `legacy-before-zapan-v2-2026-09-24` dereferences to that same legacy commit;
+- all six `VITE_FIREBASE_*` GitHub repository variables are present and point to the v2 Firebase web configuration supplied for CI;
+- GitHub Pages is configured with `build_type: workflow`.
+
+Firestore production rules:
+- command: `firebase deploy --only firestore:rules --project zapan-v2-trunk`;
+- local rules compiled successfully;
+- Firebase reported the latest rules file already up to date, skipped a redundant upload, released the rules to `cloud.firestore`, and exited 0;
+- no Hosting/Auth/index deployment was requested by this command.
+
+Real production cloud smoke:
+- `npm run test:e2e:production`: PASS;
+- production account remained stable across two isolated browser contexts;
+- local event count observed: 5 canonical events;
+- browser cloud-sync test: 1/1 PASS;
+- `productionBrowserSmoke=PASS`;
+- `firestoreCleanup=PASS`;
+- `authCleanup=PASS`;
+- command exit code 0.
+
+Safety state after verification:
+- local working tree was clean before this evidence update;
+- remote `main` was still legacy and had not been pushed/migrated;
+- no live GitHub Pages v2 smoke claim is made yet.
+
+Result: PASS — production backend and rollback prerequisites are verified; remote main migration remains the next gated step.

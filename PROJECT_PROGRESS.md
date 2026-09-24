@@ -3,7 +3,7 @@
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
 Current phase: Phase 5 — Release engineering and production migration
-Current status: IMPLEMENTING — LOCAL RELEASE CANDIDATE VERIFIED; PRODUCTION MUTATIONS PENDING
+Current status: IMPLEMENTING — PRODUCTION BACKEND VERIFIED; REMOTE MAIN NOT YET MIGRATED
 Last verified: 2026-09-24
 
 ## Hard scope boundary
@@ -142,7 +142,7 @@ Performance guard:
 See `PROJECT_EVIDENCE.md` E-051 for the integrated closeout command and limitations.
 
 ## Phase 5 current state
-Owner review was approved on 2026-09-24. The local release candidate is verified; no remote branch/tag, GitHub Pages setting, Firebase production rule, push or live-site mutation has been executed yet.
+Owner review was approved on 2026-09-24. The local release candidate and production backend preflight are verified. Rollback refs, GitHub Pages workflow mode and Firebase web variables exist on the remote; hardened Firestore rules are released to `zapan-v2-trunk` and the real production cloud smoke/cleanup passes. Remote `main` is still the legacy commit and the live Pages site has not yet been migrated to the v2 tree.
 
 Verified local release-candidate work:
 - corrected the local `origin` URL to the verified repository `trungnguyencore/zapan`; remote legacy `main` remains `a387e71351aa8266b6ae4751e89ae6be3e5ea1d9`;
@@ -151,13 +151,18 @@ Verified local release-candidate work:
 - GitHub-Pages-like desktop/mobile artifact regression is 4/4 PASS, including direct `/zapan/learn` + reload through a real 404 fallback;
 - final local integrated gate is lint 0/0, normal tests 108/108, build/bundle PASS with core 486.10 kB, Firebase emulator 24/24, Playwright 32 PASS / 8 intentional skips, Pages release smoke 4/4, audit 0 vulnerabilities and `git diff --check` PASS.
 
+Completed production pre-main steps:
+1. local release candidate checkpointed and release base/deep-link regression verified;
+2. rollback branch `legacy/zapan-v1` and annotated tag `legacy-before-zapan-v2-2026-09-24` both resolve to legacy commit `a387e71351aa8266b6ae4751e89ae6be3e5ea1d9`;
+3. all six Firebase web variables are present in GitHub and Pages is configured for workflow deployment;
+4. Firebase Auth authorized domains now include `trungnguyencore.github.io`;
+5. hardened Firestore rules were released to `zapan-v2-trunk`; Firebase reported the rules file already up to date and deployment completed successfully;
+6. real production cloud smoke PASS across two isolated browser contexts, followed by Firestore cleanup PASS and Auth cleanup PASS.
+
 Next approved production sequence:
-1. checkpoint this local release candidate;
-2. create and verify rollback branch/tag at the legacy remote commit;
-3. configure GitHub Actions Firebase web variables and switch Pages to workflow deployment;
-4. deploy only the hardened Firestore rules to `zapan-v2-trunk`, then run the real production cloud smoke and verify cleanup;
-5. merge the unrelated legacy history into v2 with a merge commit that preserves the v2 tree, then push `main` without force;
-6. wait for Pages deployment, run live-site smoke/deep-link/account/mobile checks, record rollback evidence and only then close Phase 5 VERIFIED.
+1. merge the unrelated legacy history into v2 with a merge commit that preserves the v2 tree, then push `main` without force;
+2. wait for Pages deployment, run live-site root/deep-link/account/sync/mobile checks;
+3. record rollback evidence and only then close Phase 5 VERIFIED.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.
@@ -169,8 +174,8 @@ It is not used by the application or final browser tests and is excluded from Gi
 It has not been deleted because project rules prohibit unapproved deletion.
 
 ## Deferred / unverified
-- GitHub push/deployment migration has not started;
-- production GitHub Pages configuration/live behavior remains unverified;
+- remote `main` migration/push has not yet occurred;
+- production GitHub Pages v2 live behavior remains unverified until the workflow deploys the merged main;
 - current N5 Vocabulary/Kanji bundles are verified against the audited legacy reference and v2 invariants, but have not been independently benchmarked against an external canonical JLPT corpus;
 - N4/N3 learning content is not implemented;
 - Firefox/Safari support remains unverified.
