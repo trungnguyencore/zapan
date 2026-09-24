@@ -146,7 +146,7 @@ Owner review was approved on 2026-09-24. The local release candidate is verified
 
 Verified local release-candidate work:
 - corrected the local `origin` URL to the verified repository `trungnguyencore/zapan`; remote legacy `main` remains `a387e71351aa8266b6ae4751e89ae6be3e5ea1d9`;
-- production builds use `/zapan/`, BrowserRouter derives its basename from `BASE_URL`, and the build emits `dist/404.html` from the same artifact for GitHub Pages deep-route recovery;
+- production build/preview use `/zapan/`, BrowserRouter derives its basename from `BASE_URL`, and the build emits `dist/404.html` from the same artifact for GitHub Pages deep-route recovery; development mode remains rooted at `/`;
 - added a GitHub Pages Actions workflow, built-artifact release regression, production-preview routing updates, public/developer README refresh and two generated release screenshots;
 - GitHub-Pages-like desktop/mobile artifact regression is 4/4 PASS, including direct `/zapan/learn` + reload through a real 404 fallback;
 - final local integrated gate is lint 0/0, normal tests 108/108, build/bundle PASS with core 486.10 kB, Firebase emulator 24/24, Playwright 32 PASS / 8 intentional skips, Pages release smoke 4/4, audit 0 vulnerabilities and `git diff --check` PASS.

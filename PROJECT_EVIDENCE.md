@@ -810,3 +810,19 @@ Final integrated local release gate on corrected source:
 - integrated command exit code: 0.
 
 Result: PASS — local Phase 5 release candidate is verified. Production Firestore rules, rollback refs, GitHub Pages workflow setting, GitHub variables, remote `main` and the live site remain unchanged at this evidence point.
+
+### E-053 — Production preview shares the GitHub Pages base
+Date: 2026-09-24
+Scope: follow-up verification of the release-candidate Vite base boundary.
+
+Observed:
+- Vite config now selects `/zapan/` by production mode rather than only by the build command;
+- normal development still starts at `http://127.0.0.1:4176/`;
+- after the verified production build, `vite preview` announced `http://127.0.0.1:4177/zapan/`;
+- GET `/zapan/` returned HTTP 200;
+- the served preview HTML referenced the entry JS and CSS through `/zapan/assets/...`;
+- the complete local release gate on this config remained PASS: lint 0/0, 108/108 normal tests, build/bundle core 486.10 kB PASS, emulator 24/24, Playwright 32/8, Pages artifact 4/4, audit 0 vulnerabilities, diff-check PASS.
+
+Reason: `command === 'build'` was sufficient for generated assets but did not describe production preview; `mode === 'production'` keeps build and preview on the same release base while development remains root-based.
+
+Result: PASS.
