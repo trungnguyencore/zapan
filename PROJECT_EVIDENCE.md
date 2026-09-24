@@ -951,3 +951,43 @@ Failures/corrections recorded:
 - Learn/Roadmap visual regressions failed because intended N4/N3 sections increased page height; semantic/mobile-overflow tests passed, then the four affected Learn/Roadmap baselines were regenerated and the full matrix passed.
 
 Result: PASS locally. Production Pages deployment/live N4/N3 verification remains pending before Phase 6 can be marked VERIFIED.
+
+### E-057 — Phase 6 live verification and local bootstrap follow-up
+Date: 2026-09-25
+Scope: read-only verification of the already-deployed Phase 6 content plus local follow-up performance/test-harness verification.
+
+Live production:
+- remote/main Phase 6 head observed at `94db52960c2ca771e8b9450100724715773d4371`;
+- GitHub Pages Actions run `36026433186` for that SHA completed with conclusion `success`;
+- live `https://trungnguyencore.github.io/zapan/` Pages regression: 6/6 PASS;
+- live regression includes root/project-base loading, GitHub Pages deep-route fallback, and direct N4/N3 study-session deep links on desktop and mobile;
+- no Firebase schema/rules mutation was required for this content deployment.
+
+Generator reproducibility:
+- pinned OpenJLPT source commit remains `c42fd9fa3777bfc1775446f7c418d549dfd6e4cf`;
+- generated modules + source manifest + deduplication report were SHA-256 hashed, regenerated, then hashed again;
+- result: `REPRODUCIBLE=True` across 38 generated/manifest files;
+- retained counts remain N4 709, N3 2,034, full learner repository 3,867.
+
+Local follow-up optimization:
+- `AppServices` now uses an empty `ContentRepository` placeholder and dynamically imports the verified content loader during bootstrap instead of pulling the concrete repository/loader into the core entry;
+- final local `npm run check`: lint 0 warnings/errors, 113/113 tests, TypeScript/build PASS, bundle budget PASS;
+- final local core entry: 390.48 kB raw <= 490.00 kB; all JS chunks <= 500.00 kB;
+- Firebase emulator regression: 24/24 PASS;
+- full Playwright matrix: 34 PASS / 10 intentional skips;
+- built Pages artifact regression: 6/6 PASS;
+- production dependency audit: 0 vulnerabilities.
+
+Runtime profile:
+- the profiler initially failed because it targeted preview root `/` while production Vite base is `/zapan/`; harness was corrected to use Vite's resolved preview URL;
+- Phase 6 profile artifact: `docs/testing/runtime-profile-phase6-2026-09-25.json`;
+- same local-lab methodology as `docs/testing/runtime-profile-2026-09-24.json`: Chromium 153, Node 22.23.2, cache disabled, 3 samples/route;
+- median FCP across Today/Learn/Progress/Roadmap/Writing/Match is 92–104 ms versus prior 104–112 ms;
+- JS transfer rises to roughly 338.9–344.9 kB from prior 214.8–219.3 kB and JS heap rises to roughly 6.52–7.64 MB from prior 5.06–5.73 MB because 2,743 additional sourced cards are available at bootstrap;
+- this is a localhost lab observation only, not production Web Vitals; the increased data-transfer/heap cost remains a future optimization candidate if real-user evidence warrants level/topic-on-demand loading.
+
+Current boundary:
+- live Phase 6 content is verified at `94db529`;
+- local follow-up commit `e4fb7928ee1906f2bf5527b20e4f419534969ad4` contains the verified bootstrap/profiler optimization and is intentionally not pushed in this evidence step.
+
+Result: PASS.

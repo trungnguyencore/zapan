@@ -3,8 +3,8 @@
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
 Current phase: Phase 6 — Sourced N4/N3 content expansion
-Current status: TESTING — LOCAL VERIFIED; PRODUCTION DEPLOY PENDING
-Last verified: 2026-09-24
+Current status: VERIFIED — LIVE PRODUCTION at `94db529`; LOCAL FOLLOW-UP `e4fb792` VERIFIED, PUSH PENDING
+Last verified: 2026-09-25
 
 ## Hard scope boundary
 All implementation writes are restricted to this project root.
@@ -190,7 +190,7 @@ Local Phase 6 integrated gate:
 - lint: PASS, 0 warnings / 0 errors;
 - normal unit/component tests: PASS, 113/113 across 35 files;
 - TypeScript + production build: PASS;
-- bundle budget: PASS, core 481.43 kB <= 490.00 kB; every JS chunk <= 500.00 kB;
+- bundle budget: PASS. The deployed Phase 6 slice passed its release budget; the current local follow-up further reduces the core entry to 390.48 kB <= 490.00 kB, with every JS chunk <= 500.00 kB;
 - Firebase Auth/Firestore emulator regression: PASS, 24/24;
 - Playwright Chromium desktop/mobile matrix: 34 PASS / 10 intentional project-specific skips;
 - built GitHub Pages artifact smoke: 6/6 PASS, including direct N4/N3 deep-link sessions on desktop/mobile;
@@ -201,14 +201,15 @@ Failures caught before the local gate became green:
 - raw OpenJLPT N4/N3 overlaps with existing lower-level prompts would have created duplicate SRS identities; generator now deduplicates with a deterministic lower-level-wins rule and records every exclusion;
 - first repository expectation incorrectly used pre-dedupe total 4,073; corrected verified total is 3,867;
 - TypeScript build caught an insufficient content-type narrowing in the new dataset test;
-- initial generated imports pushed core entry above budget (494.56–495.03 kB) and Vite reported ineffective dynamic imports; generated catalog/loader were split, Learn was lazy-loaded and bootstrap placeholder content was made empty, reducing core to 481.43 kB;
+- initial generated imports pushed core entry above budget (494.56–495.03 kB) and Vite reported ineffective dynamic imports; generated catalog/loader were split and Learn was lazy-loaded, first reducing core to 481.43 kB; the later async content-bootstrap follow-up removes the concrete repository/loader from the entry and reduces the current local core to 390.48 kB;
 - full-suite contention caused one identity test to hit the default 5s timeout although the focused test passed in ~1.3s; only that test received a 10s timeout and the full 113/113 suite then passed;
 - Learn/Roadmap visual baselines failed because the intentionally expanded pages became much taller; semantic/mobile-overflow checks passed, then only the affected Learn/Roadmap desktop/mobile baselines were regenerated and the full browser matrix passed.
 
 Production status:
-- current live site still represents the Phase 5 deployment until this Phase 6 commit is pushed and the Pages workflow succeeds;
+- Phase 6 content is live at commit `94db52960c2ca771e8b9450100724715773d4371`; GitHub Pages Actions run `36026433186` completed successfully and live Pages regression is 6/6 PASS including direct N4/N3 sessions on desktop/mobile;
 - Firebase schema/rules are unchanged by this slice;
-- no production cloud mutation is required for the content expansion itself.
+- local follow-up commit `e4fb7928ee1906f2bf5527b20e4f419534969ad4` contains the verified content-bootstrap/runtime-profiler optimization and is not yet pushed;
+- no additional production cloud mutation is required for that follow-up beyond the normal Pages deploy if/when it is approved for push.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

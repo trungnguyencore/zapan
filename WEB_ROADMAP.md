@@ -123,7 +123,7 @@ Phase 5 quality gate:
 - rollback path is documented.
 
 ## Phase 6 — Sourced N4/N3 content expansion
-Status: TESTING — LOCAL VERIFIED; PRODUCTION DEPLOY PENDING
+Status: VERIFIED — LIVE PRODUCTION at `94db529`; LOCAL FOLLOW-UP `e4fb792` PUSH PENDING
 Goal: expand beyond the audited N5 foundation without inventing JLPT content or fragmenting learner progress.
 
 Verified local deliverables:
@@ -140,16 +140,15 @@ Verified local deliverables:
 Phase 6 local quality gate:
 - lint 0 warnings/errors;
 - 113/113 normal tests;
-- build + bundle budget PASS at core 481.43 kB;
+- build + bundle budget PASS; current local follow-up core entry is 390.48 kB;
 - Firebase emulator 24/24;
 - Playwright 34 PASS / 10 intentional skips;
 - Pages artifact 6/6;
 - audit 0 vulnerabilities;
 - diff-check PASS.
 
-Production closeout still required:
-- checkpoint current source/evidence;
-- prove generator reproducibility from clean Git state;
-- push main and wait for GitHub Pages Actions SUCCESS;
-- rerun live Pages smoke including direct N4/N3 sessions;
-- only then mark Phase 6 VERIFIED — LIVE PRODUCTION.
+Production state:
+- Phase 6 content commit is already live and GitHub Pages Actions succeeded;
+- live Pages regression including direct N4/N3 sessions is 6/6 PASS;
+- generator reproducibility was rechecked across 38 generated/manifest files and returned `REPRODUCIBLE=True`;
+- local follow-up commit `e4fb792` contains the later bootstrap/runtime-profiler optimization; it remains unpushed and requires owner review before another Pages deployment.
