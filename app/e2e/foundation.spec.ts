@@ -97,3 +97,22 @@ test('verified N5 Kanji topic reveals audited metadata after answer', async ({ p
   await expect(feedback).toContainText('1 nét')
   await expect(feedback).toContainText('Gợi nhớ:')
 })
+
+test('Library searches the complete verified repository and filters content types', async ({ page }) => {
+  await page.goto('/library')
+  await expect(page.getByRole('heading', { name: 'Tra cứu nội dung đã xác minh' })).toBeVisible()
+  await expect(page.getByText('1124 kết quả')).toBeVisible()
+
+  const search = page.getByLabel('Tìm ký tự, từ, reading hoặc nghĩa')
+  await search.fill('いつつ')
+  await expect(page.getByText('1 kết quả')).toBeVisible()
+  await expect(page.getByText('五つ', { exact: true })).toBeVisible()
+  await expect(page.getByText(/năm cái/)).toBeVisible()
+
+  await search.fill('')
+  await page.getByRole('button', { name: 'Kanji' }).click()
+  await expect(page.getByText('109 kết quả')).toBeVisible()
+  await search.fill('Nhất')
+  await expect(page.getByText('一', { exact: true })).toBeVisible()
+  await expect(page.getByText(/Hán Việt: Nhất/)).toBeVisible()
+})

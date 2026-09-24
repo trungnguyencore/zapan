@@ -370,3 +370,13 @@ Production account/cloud-sync browser smoke and cleanup: PASS per E-035.
 Production dependency audit: `npm audit --omit=dev` => 0 vulnerabilities.
 Git whitespace/diff check: PASS.
 Result: PASS — Phase 2 is VERIFIED.
+
+### E-037 — Phase 3 verified Library search/filter slice
+Date: 2026-09-24
+Scope: real Library over the verified 1,124-card repository.
+Implementation: pure `filterLibraryCards` domain helper plus responsive Library UI. Search matches only fields present in audited bundles: Kana character/romanization metadata, Vocabulary term/readings/meanings, and Kanji character/readings/on/kun/meanings/Hán Việt. No AI-generated content is inserted.
+Rendering guard: filtering evaluates the complete repository, while the UI renders at most the first 60 matches and reports the complete result count.
+Focused domain tests: 4/4 PASS.
+Full static/unit/build gate: lint 0 warnings/errors; 75/75 tests PASS across 23 files; TypeScript + Vite production build PASS; largest core chunk observed 482.99 kB with no >500 kB warning.
+Browser Library gate: Chromium desktop PASS and Chromium mobile PASS. Verified 1,124 total results, Vocabulary search for `いつつ` -> `五つ` with audited Vietnamese meaning, Kanji filter 109 results, and Hán Việt search for `Nhất` -> `一`.
+Result: PASS.

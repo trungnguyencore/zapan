@@ -2,8 +2,8 @@
 
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
-Current phase: Phase 2 — Core learning product
-Current status: VERIFIED
+Current phase: Phase 3 — Advanced learning, UX, and practice
+Current status: IMPLEMENTING
 Last verified: 2026-09-24
 
 ## Hard scope boundary
@@ -81,9 +81,12 @@ Verified learning slice:
 - git diff whitespace check: PASS.
 See `PROJECT_EVIDENCE.md` for the production identity-race failures that were caught and corrected before this gate became green.
 
-## Next phase
-Phase 3 — Advanced learning, UX, and practice.
-Do not start Phase 3 until the owner reviews/continues from this verified checkpoint.
+## Phase 3 current work
+Verified Phase 3 slice:
+- Library now searches the full verified 1,124-card repository across real Kana/Vocabulary/Kanji fields, filters by content type, and limits DOM rendering to the first 60 matches while preserving the complete match count.
+
+Current next slice:
+- implement Custom Practice selection/session flow on top of the canonical content repository and StudyEvent pipeline.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

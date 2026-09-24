@@ -141,3 +141,33 @@
   .topic-grid { grid-template-columns: 1fr; }
   .topic-card { min-height: 0; }
 }
+
+.library-controls { display: grid; gap: 14px; box-shadow: none; }
+.library-controls label { color: var(--muted); font-size: .84rem; font-weight: 800; }
+.library-controls input { min-height: 52px; width: 100%; border: 1px solid var(--border); border-radius: 14px; background: var(--bg); color: var(--text); padding: 0 15px; font: inherit; }
+.library-filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-chip { min-height: 42px; padding: 0 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--muted); font: inherit; font-weight: 800; cursor: pointer; }
+.filter-chip:hover, .filter-chip.is-active { background: var(--brand-soft); color: var(--brand); border-color: color-mix(in srgb, var(--brand) 35%, var(--border)); }
+.library-result-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; color: var(--muted); }
+.library-result-meta strong { color: var(--text); }
+.library-result-meta span { font-size: .86rem; text-align: right; }
+.library-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.library-card { min-width: 0; min-height: 180px; padding: 20px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
+.library-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.library-glyph { font-size: 2.7rem; line-height: 1; font-family: "Yu Gothic", Meiryo, sans-serif; }
+.library-term { font-size: 1.55rem; line-height: 1.2; font-family: "Yu Gothic", Meiryo, sans-serif; overflow-wrap: anywhere; }
+.library-type { flex: 0 0 auto; padding: 5px 8px; border-radius: 999px; background: var(--surface-soft); color: var(--muted); font-size: .7rem; font-weight: 850; text-transform: uppercase; }
+.library-card strong { font-size: .98rem; overflow-wrap: anywhere; }
+.library-card p { margin: 0; color: var(--muted); line-height: 1.55; overflow-wrap: anywhere; }
+.library-card small { margin-top: auto; color: var(--muted); line-height: 1.4; }
+
+@media (max-width: 900px) {
+  .library-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .library-result-meta { align-items: flex-start; flex-direction: column; }
+  .library-result-meta span { text-align: left; }
+  .library-grid { grid-template-columns: 1fr; }
+  .filter-chip { min-height: 44px; }
+}
