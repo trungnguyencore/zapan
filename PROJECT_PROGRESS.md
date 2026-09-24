@@ -2,8 +2,8 @@
 
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
-Current phase: Phase 3 — Advanced learning, UX, and practice
-Current status: IMPLEMENTING
+Current phase: Phase 4 — Content expansion and hardening
+Current status: PLANNED
 Last verified: 2026-09-24
 
 ## Hard scope boundary
@@ -81,23 +81,40 @@ Verified learning slice:
 - git diff whitespace check: PASS.
 See `PROJECT_EVIDENCE.md` for the production identity-race failures that were caught and corrected before this gate became green.
 
-## Phase 3 current work
-Verified Phase 3 slices:
-- Library searches the full verified 1,124-card repository across real Kana/Vocabulary/Kanji fields, filters by content type, and limits DOM rendering to the first 60 matches while preserving the complete match count;
-- Custom Practice supports explicit multi-topic selection with 5/10/20-card deterministic sessions, emits canonical `mode=custom` StudyEvents into the same SRS/progress pipeline, and is verified on desktop/mobile plus Firestore emulator sync;
-- Progress derives measured active-study time, streak, active days, 7-day totals and a 28-day heatmap directly from persisted StudyEvents with explicit timezone/day-boundary semantics; desktop/mobile persisted-history flows are verified;
-- Writing supports Trace / Copy / Recall for Kana/Kanji, explicit self-grade through canonical `mode=writing` / `inputKind=drawing` StudyEvents with no synthetic response time, and codepoint-based KanjiVG viewing with tested network-failure fallback;
-- local session creation is transactionally idempotent under concurrent StrictMode effects, with regression coverage;
-- Time Attack and Survival share one typed-practice foundation, write measured canonical StudyEvents (`mode=time-attack` / `mode=survival`) into the same SRS/progress pipeline, and keep timer/score/lives as presentation-only state. Both are verified on desktop/mobile and through Firestore emulator sync;
-- Match records measured `mode=match` / `inputKind=matching` events for both wrong and correct pair attempts; Confusables uses the 15 legacy verified Kana groups (31 canonical target entries), validated against v2 Kana data, and records measured `mode=confusable` / `inputKind=multiple-choice` events. Both are verified on desktop/mobile and through Firestore emulator sync;
-- Roadmap exposes only four stages backed by currently verified content: Hiragana, Katakana, N5 Vocabulary and N5 Kanji. Stage state is derived from canonical ProgressRecord data; a stage completes only when all of its cards are mastered, and unavailable Grammar/Reading/Listening/N4/N3 content is explicitly kept inactive rather than rendered as fake unlocks.
+## Phase 3 result
+Phase 3 implementation and verification gates are complete.
+Verified Phase 3 scope:
+- Library searches the full verified 1,124-card repository across real Kana/Vocabulary/Kanji fields and caps DOM rendering without truncating result counts;
+- Custom Practice, Writing, Time Attack, Survival, Match and Confusables all emit canonical StudyEvents into the same SRS/progress model; measured timing is recorded only where a real interaction duration exists;
+- Progress derives measured study time, streak, active days, weekly totals and a 28-day heatmap from persisted StudyEvents;
+- Roadmap exposes only the four currently verified learner stages: Hiragana, Katakana, N5 Vocabulary and N5 Kanji; unavailable Grammar/Reading/Listening/N4/N3 remain inactive;
+- secondary/heavier routes are lazy-loaded to protect the core bundle;
+- explicit System/Light/Dark preference is persisted locally and applied before React render;
+- pathname navigation moves keyboard/screen-reader focus to main content while query-only practice transitions preserve interaction focus;
+- desktop/mobile Instagram ownership branding, 44px touch-target policy, mobile no-overflow checks, skip navigation, visible focus and reduced-motion behavior are verified;
+- eight checked-in visual baselines cover Learn, Roadmap, Match setup and Writing setup on desktop/mobile.
 
-Current next slice:
-- complete remaining Phase 3 UI/accessibility polish, especially keyboard/touch/focus behavior across the newly added practice surfaces and secondary routes;
-- run the final Phase 3 regression gate and only then mark Phase 3 VERIFIED.
+## Final Phase 3 gate
+- lint: PASS, 0 warnings / 0 errors;
+- normal unit/component tests: PASS, 102/102 across 31 files;
+- TypeScript + production Vite build: PASS;
+- core production JS entry: 483.96 kB, below the Vite 500 kB warning threshold; no chunk-size warning;
+- Playwright full matrix: 31 executed PASS, 7 intentional environment-specific skips;
+- visual regression: PASS on 8 baselines after introducing a strict 30-pixel full-page tolerance for theme-icon rasterization noise; baselines were not regenerated to hide the difference;
+- manual inspection of all 8 baseline PNGs: PASS for desktop/mobile layout, hierarchy and overflow;
+- mobile audit: all visible actionable controls on nine secondary routes satisfy the 44px-height gate and no horizontal overflow was observed;
+- Firebase Auth/Firestore emulator regression: PASS, 16/16;
+- production dependency audit: PASS, 0 vulnerabilities;
+- git diff whitespace check: PASS after removing one trailing blank line detected by the first closeout attempt.
+See `PROJECT_EVIDENCE.md` E-045 for the exact final failures, corrections and reruns.
+
+## Phase 4 next
+Phase 4 is PLANNED, not yet started.
+Hardening work can proceed from existing verified behavior: performance profiling, security-rule review, multi-device/offline stress, migration/recovery behavior and error/empty/loading states.
+Grammar, listening, reading, JLPT practice, N4 and N3 must remain gated until a real source/content set is inspected, versioned and verified; no placeholder level is to be promoted into active learning content.
 
 Performance guard:
-- secondary/heavier Phase 3 routes are lazy-loaded; Roadmap ~5.11 kB, Writing ~11.78 kB, Arcade ~8.96 kB, Match ~7.47 kB, Confusables ~8.80 kB, and measured core production JS entry remains ~482.50 kB.
+- secondary/heavier routes remain lazy-loaded; final measured core production JS entry after Phase 3 polish is 483.96 kB.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

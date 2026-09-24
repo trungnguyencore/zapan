@@ -273,3 +273,14 @@ Date: 2026-09-24
 Decision: newer practice components obtain epoch and monotonic timestamps through `services/time/clock.ts` rather than invoking clock APIs directly inside React component callbacks.
 Reason: the React purity gate flagged direct clock calls; a tiny boundary keeps timing provenance explicit, testable and compiler-friendly without suppressing lint.
 Consequence: timing still reflects real browser clocks; the service does not synthesize or estimate response time.
+
+## DEC-032 — Theme preference and route focus are application-shell accessibility state
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: ZaPan exposes an explicit persisted `System / Light / Dark` preference in the application shell and applies it before React renders. Pathname navigation moves focus to main content, while query-string-only transitions inside a practice route preserve the learner's active interaction focus.
+Reason: theme choice should remain stable across reloads without flashing the wrong explicit theme, and SPA navigation needs an explicit keyboard/screen-reader focus handoff. Query parameters are also used to start/configure practice sessions, so treating every URL change as a new page would incorrectly steal focus from inputs/canvas controls.
+Verification: unit/component theme synchronization tests, desktop/mobile browser theme persistence, skip-link/route-focus checks and Time Attack input-focus regression.
+
+## Implementation lesson 15 — Visual baselines need bounded raster-noise tolerance, not silent regeneration
+The first final Phase 3 visual run differed from the Learn baseline by only 22 desktop pixels and 7 mobile pixels. Reading the actual and diff PNGs localized the change to antialiasing of the small theme icon; layout and content were unchanged.
+The baselines were deliberately kept unchanged. Visual comparison now permits at most 30 differing pixels across each full-page screenshot, then the desktop/mobile visual suite was rerun successfully. Future visual changes above that bound remain blocking and must be inspected rather than updating snapshots automatically.

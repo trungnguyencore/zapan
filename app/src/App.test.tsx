@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
@@ -21,6 +21,7 @@ describe('ZaPan application shell', () => {
     renderApp()
     await user.click(screen.getAllByRole('link', { name: 'Learn' })[0])
     expect(screen.getByRole('heading', { name: 'Học theo lộ trình' })).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByRole('main')).toHaveFocus())
     await user.click(screen.getAllByRole('link', { name: 'Review' })[0])
     expect(screen.getByRole('heading', { name: 'Ôn đúng thứ cần ôn' })).toBeInTheDocument()
   })

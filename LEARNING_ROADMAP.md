@@ -5,6 +5,11 @@ This document defines the learner journey, not the software implementation roadm
 Numeric thresholds below are product heuristics until validated; they are not presented as scientific facts.
 A stage is complete only when its required skills are demonstrated by the product's real progress model.
 
+## Current product availability — verified 2026-09-24
+Active learner stages currently backed by verified ZaPan v2 content and canonical progress are Stage 1 Hiragana, Stage 2 Katakana, Stage 3 N5 core vocabulary and Stage 4 N5 core Kanji.
+The current verified repository contains 1,124 cards total: 46 Hiragana, 46 Katakana, 923 N5 Vocabulary and 109 N5 Kanji.
+Stage 5 Grammar and all later Reading/Listening, consolidation/exam, N4 and N3 stages remain roadmap specifications only. They are not active learning content until their own source/content and review flows are inspected, versioned and verified.
+
 ## Stage 0 — Setup and orientation
 Objectives:
 - understand ZaPan navigation and review model;

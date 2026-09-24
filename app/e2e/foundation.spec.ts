@@ -1,33 +1,71 @@
 import { expect, test } from '@playwright/test'
 
-test('desktop shell, navigation, and owner branding work', async ({ page }, testInfo) => {
+test('desktop shell, navigation, owner branding, theme and keyboard focus work', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'chromium-desktop', 'desktop-only smoke test')
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeVisible()
   await expect(page.locator('.sidebar')).toBeVisible()
-  const instagram = page.locator('.sidebar').getByRole('link', { name: 'Instagram của trunk.ng' })
+
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('link', { name: 'Bỏ qua điều hướng' })).toBeFocused()
+  await page.keyboard.press('Enter')
+  await expect(page.locator('#main-content')).toBeFocused()
+
+  const sidebar = page.locator('.sidebar')
+  const instagram = sidebar.getByRole('link', { name: 'Instagram của trunk.ng' })
   await expect(instagram).toHaveAttribute('href', 'https://www.instagram.com/trunk.ng/')
   await expect(instagram).toHaveAttribute('target', '_blank')
+
+  let theme = sidebar.getByRole('button', { name: /Giao diện: Theo hệ thống/ })
+  await theme.click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  theme = sidebar.getByRole('button', { name: /Giao diện: Sáng/ })
+  await theme.click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--bg').trim())).toBe('#10141d')
+
+  await page.reload()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await expect(sidebar.getByRole('button', { name: /Giao diện: Tối/ })).toBeVisible()
 
   await page.getByRole('navigation', { name: 'Điều hướng chính' }).getByRole('link', { name: 'Learn' }).click()
   await expect(page).toHaveURL(/\/learn$/)
   await expect(page.getByRole('heading', { name: 'Học theo lộ trình' })).toBeVisible()
+  await expect(page.locator('#main-content')).toBeFocused()
 
   await page.getByRole('navigation', { name: 'Điều hướng chính' }).getByRole('link', { name: 'Review' }).click()
   await expect(page.getByRole('heading', { name: 'Ôn đúng thứ cần ôn' })).toBeVisible()
+  await expect(page.locator('#main-content')).toBeFocused()
 })
 
-test('mobile shell uses bottom navigation without horizontal overflow', async ({ page }, testInfo) => {
+test('mobile shell uses touch-safe controls without horizontal overflow', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'chromium-mobile', 'mobile-only smoke test')
   await page.goto('/')
   await expect(page.locator('.sidebar')).toBeHidden()
   await expect(page.getByRole('navigation', { name: 'Điều hướng chính trên di động' })).toBeVisible()
-  const instagram = page.locator('.mobile-topbar').getByRole('link', { name: 'Instagram của trunk.ng' })
+
+  const topbar = page.locator('.mobile-topbar')
+  const instagram = topbar.getByRole('link', { name: 'Instagram của trunk.ng' })
+  const account = topbar.getByRole('link', { name: 'Account' })
+  const theme = topbar.getByRole('button', { name: /Giao diện: Theo hệ thống/ })
   await expect(instagram).toHaveAttribute('href', 'https://www.instagram.com/trunk.ng/')
+
+  for (const control of [instagram, account, theme]) {
+    const box = await control.boundingBox()
+    expect(box).not.toBeNull()
+    expect(box!.height).toBeGreaterThanOrEqual(44)
+    expect(box!.width).toBeGreaterThanOrEqual(44)
+  }
+
+  await theme.tap()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)
   expect(overflow).toBe(false)
-  await page.getByRole('navigation', { name: 'Điều hướng chính trên di động' }).getByRole('link', { name: 'Progress' }).click()
+
+  const progressLink = page.getByRole('navigation', { name: 'Điều hướng chính trên di động' }).getByRole('link', { name: 'Progress' })
+  await progressLink.tap()
   await expect(page.getByRole('heading', { name: 'Tiến độ từ dữ liệu thật' })).toBeVisible()
+  await expect(page.locator('#main-content')).toBeFocused()
 })
 
 test('account surface lazy-loads Firebase Auth without blocking Guest', async ({ page }, testInfo) => {
@@ -249,6 +287,7 @@ test('Time Attack records measured canonical events and ends on the real countdo
   await expect(page).toHaveURL(/\/practice\/time-attack\?/)
   await expect(page.locator('.question-glyph')).toHaveText('あ')
   await expect(page.getByText('30s', { exact: true })).toBeVisible()
+  await expect(page.getByLabel('Câu trả lời')).toBeFocused()
 
   await page.getByLabel('Câu trả lời').fill('a')
   await page.getByRole('button', { name: 'Trả lời' }).click()
@@ -492,4 +531,115 @@ test('Roadmap exposes only verified stages and derives status from canonical pro
   await expect(updatedHiragana).toContainText('5 đã học')
   await expect(updatedHiragana).toContainText('0/46')
   await expect(page.getByText('0/4 stage complete')).toBeVisible()
+})
+
+test('keyboard focus path exposes skip navigation and activates secondary routes', async ({ page }) => {
+  await page.goto('/learn')
+  const skipLink = page.getByRole('link', { name: 'Bỏ qua điều hướng' })
+  await skipLink.focus()
+  await expect(skipLink).toBeFocused()
+  await expect(skipLink).toBeVisible()
+  const skipOutline = await skipLink.evaluate((element) => getComputedStyle(element).outlineStyle)
+  expect(skipOutline).not.toBe('none')
+
+  await page.keyboard.press('Enter')
+  await expect(page.locator('#main-content')).toBeFocused()
+
+  const roadmapLink = page.getByRole('link', { name: 'Mở Roadmap' })
+  await roadmapLink.focus()
+  await expect(roadmapLink).toBeFocused()
+  const outline = await roadmapLink.evaluate((element) => getComputedStyle(element).outlineStyle)
+  expect(outline).not.toBe('none')
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(/\/roadmap$/)
+  await expect(page.getByRole('heading', { name: 'Lộ trình dựa trên mastery thật' })).toBeVisible()
+  await expect(page.locator('#main-content')).toBeFocused()
+})
+
+test('Phase 3 secondary routes stay within mobile viewport and expose 44px touch targets', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chromium-mobile', 'mobile touch/layout audit')
+
+  const routes = [
+    '/library',
+    '/progress',
+    '/roadmap',
+    '/practice/custom',
+    '/practice/writing',
+    '/practice/time-attack',
+    '/practice/survival',
+    '/practice/match',
+    '/practice/confusables',
+  ]
+
+  for (const route of routes) {
+    await page.goto(route)
+    await expect(page.locator('#main-content')).toBeVisible()
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(1)
+
+    const tooSmall = await page.evaluate(() => {
+      const selectors = [
+        'button:not([disabled])',
+        'a[href]:not(.skip-link)',
+        'select',
+        'input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"])',
+        'label:has(input[type="checkbox"])',
+        'label:has(input[type="radio"])',
+      ]
+      const elements = Array.from(document.querySelectorAll<HTMLElement>(selectors.join(',')))
+      return elements.flatMap((element) => {
+        const rect = element.getBoundingClientRect()
+        const style = getComputedStyle(element)
+        const visible = rect.width > 0 && rect.height > 0 &&
+          rect.bottom > 0 && rect.right > 0 && rect.top < window.innerHeight && rect.left < window.innerWidth &&
+          style.visibility !== 'hidden' && style.display !== 'none'
+        if (!visible || rect.height >= 44) return []
+        return [{
+          tag: element.tagName,
+          text: (element.textContent ?? element.getAttribute('aria-label') ?? '').trim().slice(0, 80),
+          height: Math.round(rect.height * 10) / 10,
+        }]
+      })
+    })
+
+    expect(tooSmall, route + ' has undersized touch targets').toEqual([])
+  }
+})
+
+test('Phase 3 visual baselines remain stable', async ({ page }) => {
+  const routes = [
+    ['/learn', 'learn-overview.png', 'Học theo lộ trình'],
+    ['/roadmap', 'roadmap.png', 'Lộ trình dựa trên mastery thật'],
+    ['/practice/match', 'match-setup.png', 'Ghép prompt với đáp án'],
+    ['/practice/writing', 'writing-setup.png', 'Trace · Copy · Recall'],
+  ] as const
+
+  for (const [route, snapshot, heading] of routes) {
+    await page.goto(route)
+    await expect(page.getByRole('heading', { name: heading })).toBeVisible()
+    await expect(page).toHaveScreenshot(snapshot, { fullPage: true, animations: 'disabled', maxDiffPixels: 30 })
+  }
+})
+
+test('theme preference cycles system light dark and persists across reload', async ({ page }) => {
+  await page.goto('/')
+  const toggle = page.locator('.theme-toggle:visible')
+  await expect(toggle).toHaveCount(1)
+  await expect(toggle).toHaveAttribute('aria-label', /Giao diện: Theo hệ thống/)
+
+  await toggle.click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  expect(await page.evaluate(() => localStorage.getItem('zapan-v2:theme'))).toBe('light')
+
+  await toggle.click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  expect(await page.evaluate(() => localStorage.getItem('zapan-v2:theme'))).toBe('dark')
+
+  await page.reload()
+  const reloadedToggle = page.locator('.theme-toggle:visible')
+  await expect(reloadedToggle).toHaveAttribute('aria-label', /Giao diện: Tối/)
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+
+  await reloadedToggle.click()
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme')
+  expect(await page.evaluate(() => localStorage.getItem('zapan-v2:theme'))).toBe('system')
 })

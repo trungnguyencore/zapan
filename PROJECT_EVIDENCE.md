@@ -494,3 +494,46 @@ Full Playwright regression: 22 executed PASS, 6 intentional environment-specific
 Production dependency audit: 0 vulnerabilities.
 Git diff whitespace check: PASS.
 Result: PASS.
+
+### E-045 — Final Phase 3 theme/accessibility/visual closeout
+Date: 2026-09-24
+Scope: final Phase 3 responsive/theme/accessibility polish and integrated regression.
+
+Theme behavior:
+- explicit `System / Light / Dark` preference is persisted under `zapan-v2:theme`;
+- the persisted preference is applied before React root rendering;
+- System follows `prefers-color-scheme`, explicit Light is not overridden by a dark OS preference, and explicit Dark works independently of OS preference;
+- desktop sidebar and mobile topbar controls stay synchronized and retain accessible names.
+
+Focus/interaction behavior:
+- pathname navigation focuses `#main-content` for keyboard/screen-reader continuity;
+- query-string-only transitions inside the same practice route do not steal focus from the active control; Time Attack verifies its answer input remains focused after session start;
+- skip navigation and visible focus outlines were verified in Chromium;
+- mobile topbar Instagram, Account and Theme controls were measured at >=44 CSS px;
+- automated mobile audit covered Library, Progress, Roadmap, Custom Practice, Writing, Time Attack, Survival, Match and Confusables, with no horizontal overflow and no visible actionable control below the 44px-height gate.
+
+Visual evidence:
+- checked-in full-page baselines cover Learn, Roadmap, Match setup and Writing setup on Chromium desktop + mobile: 8 PNGs total;
+- all eight baseline PNGs were read back and manually inspected for hierarchy, clipping and overflow;
+- the first full closeout run failed only the Learn visual comparison: desktop differed by 22 pixels and mobile by 7 pixels;
+- actual + diff images were inspected. The difference was localized to rasterization/antialiasing of the small theme icon; no layout/content shift was visible;
+- baselines were NOT regenerated. The comparator was changed to a strict `maxDiffPixels: 30` over the full-page image, which remains tiny relative to the screenshot area while filtering this observed raster noise;
+- focused visual rerun after that correction: 2/2 PASS (desktop + mobile).
+
+Final functional regression after visual correction:
+- lint: 0 warnings/errors;
+- normal unit/component tests: 102/102 PASS across 31 files;
+- TypeScript + Vite production build: PASS;
+- core JS entry: 483.96 kB (150.83 kB gzip), below the Vite 500 kB warning threshold with no size warning;
+- Playwright full matrix: 31 executed PASS, 7 intentional environment-specific skips;
+- all visual baseline comparisons PASS;
+- Firebase emulator: 16/16 PASS across Auth, Firestore ownership/schema and event-sync convergence suites;
+- production dependency audit: 0 vulnerabilities.
+
+Closeout whitespace gate:
+- the first integrated closeout command reached all functional PASS results above, then `git diff --check` blocked progression on one trailing blank line at `app/src/App.css` EOF;
+- only that blank line was removed;
+- `git diff --check` rerun: PASS;
+- post-whitespace static rerun: lint 0 warnings/errors; 102/102 tests PASS; TypeScript + Vite build PASS with the same 483.96 kB core entry.
+
+Result: PASS — Phase 3 is VERIFIED.

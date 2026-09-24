@@ -1,6 +1,8 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { InstagramLink } from '../components/ui/InstagramLink'
+import { ThemeControl } from '../components/ui/ThemeControl'
 import { primaryNavigation } from './navigation'
+import { RouteFocusManager } from './RouteFocusManager'
 
 function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
   return (
@@ -22,6 +24,7 @@ function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
 export function AppShell() {
   return (
     <div className="app-shell">
+      <RouteFocusManager />
       <a className="skip-link" href="#main-content">Bỏ qua điều hướng</a>
       <aside className="sidebar">
         <div className="brand-block">
@@ -31,13 +34,14 @@ export function AppShell() {
         <NavigationLinks />
         <div className="sidebar-meta">
           <p>ZaPan v2 · Core learning</p>
+          <ThemeControl />
           <NavLink className="account-link" to="/account">Account</NavLink>
           <InstagramLink />
         </div>
       </aside>
       <header className="mobile-topbar">
         <strong>ZaPan</strong>
-        <div className="mobile-topbar-actions"><NavLink className="account-link" to="/account">Account</NavLink><InstagramLink /></div>
+        <div className="mobile-topbar-actions"><ThemeControl /><NavLink className="account-link" to="/account">Account</NavLink><InstagramLink /></div>
       </header>
       <main id="main-content" className="main-content" tabIndex={-1}>
         <Outlet />

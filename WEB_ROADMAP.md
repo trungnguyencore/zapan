@@ -53,6 +53,7 @@ Phase 2 quality gate:
 - manual desktop/mobile regression passes.
 
 ## Phase 3 — Advanced learning, UX, practice
+Status: VERIFIED — 2026-09-24
 Goal: complete high-value practice without fragmenting progress.
 Deliverables:
 - Writing: Trace / Copy / Recall;
@@ -73,6 +74,7 @@ Phase 3 quality gate:
 - Instagram desktop/mobile/a11y checks pass;
 - keyboard/touch and visual regression pass.
 ## Phase 4 — Content expansion and hardening
+Status: PLANNED
 Goal: broaden learning value and stress the platform before release.
 Candidate deliverables, gated by real content:
 - grammar framework;
