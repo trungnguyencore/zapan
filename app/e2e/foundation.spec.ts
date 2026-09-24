@@ -643,3 +643,50 @@ test('theme preference cycles system light dark and persists across reload', asy
   await expect(page.locator('html')).not.toHaveAttribute('data-theme')
   expect(await page.evaluate(() => localStorage.getItem('zapan-v2:theme'))).toBe('system')
 })
+
+test('loaded study session remains local-first while the browser is offline', async ({ page, context }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chromium-desktop', 'desktop offline local-first stress')
+
+  await page.goto('/')
+  await page.getByRole('link', { name: 'Bắt đầu phiên hôm nay' }).click()
+  await expect(page).toHaveURL(/\/session\/today$/)
+  await expect(page.locator('.question-glyph')).toHaveText('あ')
+
+  await context.setOffline(true)
+
+  for (const answer of ['a', 'i', 'u', 'e', 'o']) {
+    await page.getByLabel('Câu trả lời').fill(answer)
+    await page.getByRole('button', { name: 'Kiểm tra' }).click()
+    await expect(page.getByRole('status')).toContainText('Đúng')
+    await page.getByRole('button', { name: answer === 'o' ? 'Xem kết quả' : 'Câu tiếp theo' }).click()
+  }
+
+  await expect(page.getByRole('heading', { name: 'Hoàn thành phiên học' })).toBeVisible()
+
+  const offlineEventCount = await page.evaluate(async () => {
+    let total = 0
+    for (const info of await indexedDB.databases()) {
+      if (!info.name?.startsWith('zapan-v2:')) continue
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open(info.name!)
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      if (!db.objectStoreNames.contains('events')) { db.close(); continue }
+      total += await new Promise<number>((resolve, reject) => {
+        const request = db.transaction('events', 'readonly').objectStore('events').count()
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      db.close()
+    }
+    return total
+  })
+
+  expect(offlineEventCount).toBe(5)
+
+  await context.setOffline(false)
+  await page.getByRole('link', { name: 'Về Today' }).click()
+  await page.getByRole('navigation', { name: 'Điều hướng chính' }).getByRole('link', { name: 'Progress' }).click()
+  await expect(page.getByText('5/1124')).toBeVisible()
+})

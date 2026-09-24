@@ -116,11 +116,13 @@ Verified hardening slices:
 - current production artifact measures core 483.97 kB and largest non-entry chunk 434.97 kB;
 - the blocking path was exercised against generated `dist` output: a temporary +7 kB entry probe produced 490.97 kB and `check:bundle` failed as designed; rebuilding restored the clean artifact and the gate passed again;
 - reusable production-preview runtime profiler records cold-context local-lab baselines for Today, Learn, Progress, Roadmap, Writing setup and Match setup. On 2026-09-24, median FCP was 104–112 ms, task duration 143.11–162.19 ms and JS transfer 214.82–219.31 kB across those routes. No route showed enough separation in this 3-sample local run to justify a targeted optimization;
-- Firestore rules are locally hardened to deny unused root-user/preferences documents, enforce nonnegative timestamps/nonempty event references, and preserve canonical progress timing/streak invariants. Canonical Auth/Firestore emulator regression is 21/21 PASS and normal `npm run check` remains 102/102 PASS. These hardened rules are not yet deployed to production.
+- Firestore rules are locally hardened to deny unused root-user/preferences documents, enforce nonnegative timestamps/nonempty event references, and preserve canonical progress timing/streak invariants. Canonical Auth/Firestore emulator regression is 21/21 PASS and normal `npm run check` remains 102/102 PASS. These hardened rules are not yet deployed to production;
+- multi-device/offline/recovery stress is now verified: overlapping journals converge without duplicate shared events, conflicting same-event payloads fail closed, a 12-event offline journal survives IndexedDB close/reopen and later syncs, a missing progress snapshot rebuilds from the immutable event journal, and a loaded browser study session completes while network is offline. Emulator suite is 24/24 PASS, normal tests are 103/103 PASS, and the full Playwright matrix is 32 PASS / 8 intentional skips.
 
 Current next slices:
 - production Firestore rules deployment requires a fresh owner review before execution;
-- continue multi-device/offline stress, migration/recovery behavior and error/empty/loading-state hardening without waiting on that deployment.
+- harden error/empty/loading states and recovery UX;
+- migration tests remain gated until a real Dexie/schema version change exists. Current local database schema is version 1, so no migration result is claimed.
 Grammar, listening, reading, JLPT practice, N4 and N3 remain gated until a real source/content set is inspected, versioned and verified; no placeholder level is to be promoted into active learning content.
 
 Performance guard:

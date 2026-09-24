@@ -645,3 +645,35 @@ Verification:
 
 Result: PASS — local/emulator security hardening verified.
 Deployment status: NOT DEPLOYED. Current production Firestore rules remain unchanged until a fresh owner-reviewed deployment step.
+
+### E-049 — Phase 4 multi-device, offline durability and journal recovery stress
+Date: 2026-09-24
+Scope: existing local-first/event-journal architecture under multi-device overlap, conflict, database reopen, snapshot loss and browser offline operation. No new product behavior was introduced.
+
+Local persistence/recovery coverage:
+- LocalLearningRepository focused suite increased to 12/12 PASS;
+- new recovery case records four canonical events, deletes only the derived progress snapshot, then rebuilds progress from the immutable event journal;
+- rebuilt result is 4 attempts / 3 correct / 1 incorrect while the four journal events remain intact.
+
+Firebase emulator stress:
+- canonical emulator suite increased from 21/21 to 24/24 PASS;
+- two devices with one shared event plus device-specific events converge to exactly three events on both clients, with the shared event treated idempotently rather than duplicated;
+- if two devices create the same eventId with different payloads, the second sync fails with `Cloud event conflict` and the already-uploaded cloud event is not overwritten;
+- a 12-event local journal survives IndexedDB database close/reopen, retains derived progress, then uploads/downloads all 12 events successfully; resulting cloud progress is 12 attempts / 8 correct / 4 incorrect.
+
+Real-browser offline path:
+- production-like Playwright flow loads the Today study session while online, switches the Chromium desktop context offline, completes all five Kana answers, verifies five events exist in the local IndexedDB journal while offline, restores network, then verifies Progress shows 5/1124;
+- focused offline browser run: desktop PASS; mobile intentionally skipped because the test is explicitly scoped to one desktop offline stress path.
+
+Full regression after stress additions:
+- `npm run check`: lint 0 warnings/errors; 103/103 unit/component tests PASS; TypeScript + production build PASS; bundle budget PASS at core 483.97 kB;
+- full Playwright matrix: 32 PASS / 8 intentional project-specific skips;
+- `git diff --check`: PASS.
+
+Migration boundary:
+- current Dexie database declares only `version(1)`;
+- no schema v2 or migration function exists, therefore no migration success/failure claim is made in this slice;
+- future schema-version changes must add explicit migration fixtures before claiming migration/recovery verification.
+
+Result: PASS — current local-first sync and immutable event-journal recovery paths are stress-verified within the tested emulator/Chromium scope.
+Limitations: this is not a real two-physical-device network test, does not simulate packet loss/latency beyond browser offline mode, and does not verify a nonexistent future database migration.

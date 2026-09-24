@@ -153,3 +153,34 @@ describe('LocalLearningRepository', () => {
     await expect(repo.mergeEvents([event({ result: 'incorrect' })])).rejects.toThrow('Conflicting eventId')
   })
 })
+
+describe('Phase 4 event-journal recovery', () => {
+  it('rebuilds a missing progress snapshot from the immutable local event journal', async () => {
+    db = createLocalDatabase('zapan-recovery-' + crypto.randomUUID())
+    const repo = new LocalLearningRepository(db)
+    await repo.createSession(session({ sessionId: 'session-recovery' }))
+
+    for (let i = 0; i < 4; i += 1) {
+      await repo.recordEvent(event({
+        eventId: 'event-recovery-' + (i + 1),
+        sessionId: 'session-recovery',
+        occurredAt: NOW + 1_000 + i,
+        result: i === 2 ? 'incorrect' : 'correct',
+      }))
+    }
+
+    const journal = await repo.listEvents()
+    expect(journal).toHaveLength(4)
+    await db.progress.delete(cardId)
+    expect(await repo.getProgress(cardId)).toBeUndefined()
+
+    const rebuilt = await repo.mergeEvents(journal)
+    expect(rebuilt).toHaveLength(1)
+    expect(await repo.getProgress(cardId)).toMatchObject({
+      attempts: 4,
+      correctCount: 3,
+      incorrectCount: 1,
+    })
+    expect(await repo.listEvents()).toHaveLength(4)
+  })
+})
