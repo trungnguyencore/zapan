@@ -444,3 +444,20 @@ Full gate:
 - production dependency audit: 0 vulnerabilities;
 - git diff whitespace check: PASS.
 Result: PASS.
+
+### E-042 — Phase 3 verified Time Attack + Survival slice
+Date: 2026-09-24
+Scope: two arcade practice surfaces over the canonical verified content repository.
+Shared domain behavior: deterministic topic queue, absolute-deadline countdown helper, and Survival life transition helper. Score, countdown and lives are presentation state only; neither creates a parallel mastery/progress store.
+Learning behavior: every answered arcade card uses the existing typed-answer validator and writes a canonical StudyEvent with measured `responseTimeMs`, `inputKind=typing`, and mode `time-attack` or `survival`. The same Progress/SRS reducer consumes those events.
+Time Attack UX: 30/60/120 second choices. Browser gate starts a 30-second session, answers one audited Hiragana card, advances the Playwright clock past the absolute deadline, and verifies the session ends by timer rather than queue exhaustion.
+Survival UX: starts with 3 lives, wrong answers decrement exactly one life, correct answers do not consume a life, and the session ends when lives reach zero or the bounded queue is exhausted.
+Focused domain tests: 3/3 PASS.
+Focused browser gate: 4/4 PASS across Chromium desktop/mobile (Time Attack + Survival on both viewports). Direct IndexedDB inspection verified Time Attack writes a measured correct event and Survival writes three measured incorrect events with canonical modes/input kind.
+Full static/unit/build gate: lint 0 warnings/errors; 88/88 normal tests PASS across 26 files; TypeScript + Vite production build PASS.
+Bundle observation: Arcade lazy route chunk 8.96 kB; core production entry 481.06 kB; no >500 kB warning.
+Full Playwright regression: 16 executed PASS, 6 intentional environment-specific skips.
+Firebase emulator regression: 15/15 PASS. Added cloud round-trip verification for measured Time Attack and Survival events through the same immutable event journal/rules.
+Production dependency audit: 0 vulnerabilities.
+Git diff whitespace check: PASS.
+Result: PASS.

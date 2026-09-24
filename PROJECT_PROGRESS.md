@@ -87,14 +87,15 @@ Verified Phase 3 slices:
 - Custom Practice supports explicit multi-topic selection with 5/10/20-card deterministic sessions, emits canonical `mode=custom` StudyEvents into the same SRS/progress pipeline, and is verified on desktop/mobile plus Firestore emulator sync;
 - Progress derives measured active-study time, streak, active days, 7-day totals and a 28-day heatmap directly from persisted StudyEvents with explicit timezone/day-boundary semantics; desktop/mobile persisted-history flows are verified;
 - Writing supports Trace / Copy / Recall for Kana/Kanji, explicit self-grade through canonical `mode=writing` / `inputKind=drawing` StudyEvents with no synthetic response time, and codepoint-based KanjiVG viewing with tested network-failure fallback;
-- local session creation is now transactionally idempotent under concurrent StrictMode effects, with regression coverage.
+- local session creation is transactionally idempotent under concurrent StrictMode effects, with regression coverage;
+- Time Attack and Survival share one typed-practice foundation, write measured canonical StudyEvents (`mode=time-attack` / `mode=survival`) into the same SRS/progress pipeline, and keep timer/score/lives as presentation-only state. Both are verified on desktop/mobile and through Firestore emulator sync.
 
 Current next slice:
-- implement Time Attack + Survival on a shared typed-practice foundation; both must emit canonical measured StudyEvents and keep score/lives as presentation state only;
-- then implement Match and Confusables, followed by canonical Roadmap and remaining Phase 3 UI/accessibility polish.
+- implement Match and Confusables on canonical StudyEvents without parallel mastery state;
+- then implement canonical Roadmap and remaining Phase 3 UI/accessibility polish.
 
 Performance guard:
-- secondary/heavier Phase 3 routes are lazy-loaded; Writing builds as an ~11.78 kB route chunk and measured core production JS entry remains ~480.53 kB.
+- secondary/heavier Phase 3 routes are lazy-loaded; Writing builds as an ~11.78 kB route chunk, Arcade as ~8.96 kB, and measured core production JS entry remains ~481.06 kB.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

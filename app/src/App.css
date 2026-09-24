@@ -280,3 +280,28 @@
   .writing-grade-panel > div { grid-column: auto; }
   .writing-grade-panel .button, .writing-controls .button { width: 100%; }
 }
+
+.arcade-setup { display: grid; gap: 18px; box-shadow: none; }
+.arcade-setup > label { color: var(--muted); font-size: .84rem; font-weight: 800; }
+.arcade-setup select { min-height: 50px; width: 100%; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); padding: 0 12px; font: inherit; }
+.arcade-duration-fieldset { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; border: 0; }
+.arcade-duration-fieldset legend { width: 100%; margin-bottom: 2px; color: var(--muted); font-size: .84rem; font-weight: 800; }
+.arcade-duration-fieldset label { min-width: 88px; min-height: 44px; padding: 0 14px; border: 1px solid var(--border); border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--bg); font-weight: 850; cursor: pointer; }
+.arcade-duration-fieldset label.is-selected { border-color: color-mix(in srgb, var(--brand) 45%, var(--border)); background: var(--brand-soft); color: var(--brand); }
+.arcade-duration-fieldset input { accent-color: var(--brand); }
+.arcade-rule-note { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-soft); }
+.arcade-rule-note strong { font-size: 1.2rem; }
+.arcade-rule-note span { color: var(--muted); }
+.arcade-session { max-width: 760px; }
+.arcade-hud { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.arcade-hud > div { padding: 16px 18px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.arcade-hud span { color: var(--muted); font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+.arcade-hud strong { font-size: 1.6rem; }
+.arcade-question { min-height: 310px; }
+.arcade-feedback { min-height: 48px; margin: 0; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-soft); color: var(--muted); font-weight: 800; }
+
+@media (max-width: 760px) {
+  .arcade-rule-note { align-items: flex-start; flex-direction: column; }
+  .arcade-hud strong { font-size: 1.35rem; }
+  .arcade-question { min-height: 260px; }
+}

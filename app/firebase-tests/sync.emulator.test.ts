@@ -136,4 +136,21 @@ describe('FirestoreEventSyncService convergence', () => {
     expect(cloud.data()).toMatchObject({ mode: 'writing', inputKind: 'drawing', result: 'correct' })
     expect(cloud.data()).not.toHaveProperty('responseTimeMs')
   })
+
+  it('syncs measured Time Attack and Survival events through the same journal', async () => {
+    const repo = makeRepo()
+    await repo.createSession(session('session-time-attack', 'time-attack'))
+    await repo.createSession(session('session-survival', 'survival'))
+    await repo.recordEvent(event('event-time-attack', 'session-time-attack', NOW + 5000, 'correct', 'time-attack'))
+    await repo.recordEvent(event('event-survival', 'session-survival', NOW + 6000, 'incorrect', 'survival'))
+
+    const firestore = testEnv.authenticatedContext('user-a').firestore()
+    const result = await new FirestoreEventSyncService(firestore, 'user-a', repo).sync()
+
+    expect(result.uploadedEvents).toBe(2)
+    const timeAttack = await getDoc(doc(firestore, 'users/user-a/events/event-time-attack'))
+    const survival = await getDoc(doc(firestore, 'users/user-a/events/event-survival'))
+    expect(timeAttack.data()).toMatchObject({ mode: 'time-attack', inputKind: 'typing', result: 'correct', responseTimeMs: 900 })
+    expect(survival.data()).toMatchObject({ mode: 'survival', inputKind: 'typing', result: 'incorrect', responseTimeMs: 1400 })
+  })
 })

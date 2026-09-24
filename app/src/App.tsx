@@ -13,6 +13,7 @@ const LibraryPage = lazy(() => import('./features/library/LibraryPage').then((mo
 const ProgressPage = lazy(() => import('./features/progress/ProgressPage').then((module) => ({ default: module.ProgressPage })))
 const CustomPracticePage = lazy(() => import('./features/practice/CustomPracticePage').then((module) => ({ default: module.CustomPracticePage })))
 const WritingPracticePage = lazy(() => import('./features/writing/WritingPracticePage').then((module) => ({ default: module.WritingPracticePage })))
+const ArcadePracticePage = lazy(() => import('./features/arcade/ArcadePracticePage').then((module) => ({ default: module.ArcadePracticePage })))
 
 function DeferredRoute({ children }: { children: ReactNode }) {
   return <Suspense fallback={<section className="page-stack"><p className="loading-copy" role="status">Đang tải tính năng…</p></section>}>{children}</Suspense>
@@ -29,6 +30,8 @@ export function AppRoutes() {
         <Route path="progress" element={<DeferredRoute><ProgressPage /></DeferredRoute>} />
         <Route path="practice/custom" element={<DeferredRoute><CustomPracticePage /></DeferredRoute>} />
         <Route path="practice/writing" element={<DeferredRoute><WritingPracticePage /></DeferredRoute>} />
+        <Route path="practice/time-attack" element={<DeferredRoute><ArcadePracticePage mode="time-attack" /></DeferredRoute>} />
+        <Route path="practice/survival" element={<DeferredRoute><ArcadePracticePage mode="survival" /></DeferredRoute>} />
         <Route path="account" element={<AccountPage />} />
         <Route path="session/:sessionKind/:topicId?" element={<SessionPage />} />
       </Route>

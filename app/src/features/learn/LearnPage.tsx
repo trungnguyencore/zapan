@@ -60,7 +60,7 @@ export function LearnPage() {
       {error && <p className="inline-error" role="alert">{error}</p>}
       <article className="surface-card custom-practice-callout">
         <div><p className="card-kicker">PRACTICE</p><h2>Tự chọn nội dung cần luyện</h2><p>Ghép nhiều topic Kana, Vocabulary và Kanji vào một phiên nhưng vẫn dùng chung StudyEvent/SRS/progress.</p></div>
-        <div className="practice-entry-actions"><Link className="button primary" to="/practice/custom">Tạo Custom Practice</Link><Link className="button secondary" to="/practice/writing">Luyện Writing</Link></div>
+        <div className="practice-entry-actions"><Link className="button primary" to="/practice/custom">Tạo Custom Practice</Link><Link className="button secondary" to="/practice/writing">Luyện Writing</Link><Link className="button secondary" to="/practice/time-attack">Time Attack</Link><Link className="button secondary" to="/practice/survival">Survival</Link></div>
       </article>
       <TopicSection eyebrow="FOUNDATION" title="Kana" description="Nhận diện Hiragana và Katakana cơ bản trước khi mở rộng sang các nhóm biến âm." topics={KANA_TOPIC_CATALOG} cards={cards} progress={progress} now={capturedAt} loading={loading} accent="kana" />
       <TopicSection eyebrow="JLPT N5" title="Vocabulary" description="923 từ đã audit, chia thành 15 chủ đề. Phiên typing hiện kiểm tra cách đọc bằng kana." topics={VOCAB_N5_TOPIC_CATALOG} cards={cards} progress={progress} now={capturedAt} loading={loading} accent="vocab" />

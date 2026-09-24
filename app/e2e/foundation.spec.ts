@@ -230,3 +230,99 @@ test('Writing Recall records self-grade drawing events and survives stroke-order
   expect(events[0]).toMatchObject({ mode: 'writing', inputKind: 'drawing', result: 'correct' })
   expect(events[0]).not.toHaveProperty('responseTimeMs')
 })
+
+test('Time Attack records measured canonical events and ends on the real countdown', async ({ page }) => {
+  await page.clock.install()
+  await page.goto('/learn')
+  await page.getByRole('link', { name: 'Time Attack' }).click()
+  await expect(page).toHaveURL(/\/practice\/time-attack$/)
+  await expect(page.getByRole('heading', { name: 'Time Attack' })).toBeVisible()
+
+  await page.getByLabel('30s').check()
+  await page.getByRole('button', { name: 'Bắt đầu Time Attack' }).click()
+  await expect(page).toHaveURL(/\/practice\/time-attack\?/)
+  await expect(page.locator('.question-glyph')).toHaveText('あ')
+  await expect(page.getByText('30s', { exact: true })).toBeVisible()
+
+  await page.getByLabel('Câu trả lời').fill('a')
+  await page.getByRole('button', { name: 'Trả lời' }).click()
+  await expect(page.getByRole('status')).toContainText('Đúng')
+  await expect(page.locator('.question-glyph')).toHaveText('い')
+
+  await page.clock.runFor(31_000)
+  await expect(page.getByRole('heading', { name: 'Time Attack kết thúc' })).toBeVisible()
+
+  const events = await page.evaluate(async () => {
+    const output: Array<Record<string, unknown>> = []
+    for (const info of await indexedDB.databases()) {
+      if (!info.name?.startsWith('zapan-v2:')) continue
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open(info.name!)
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      if (!db.objectStoreNames.contains('events')) { db.close(); continue }
+      const rows = await new Promise<Array<Record<string, unknown>>>((resolve, reject) => {
+        const request = db.transaction('events', 'readonly').objectStore('events').getAll()
+        request.onsuccess = () => resolve(request.result as Array<Record<string, unknown>>)
+        request.onerror = () => reject(request.error)
+      })
+      output.push(...rows)
+      db.close()
+    }
+    return output
+  })
+
+  expect(events).toHaveLength(1)
+  expect(events[0]).toMatchObject({ mode: 'time-attack', inputKind: 'typing', result: 'correct' })
+  expect(typeof events[0].responseTimeMs).toBe('number')
+  expect(events[0].responseTimeMs).toBeGreaterThanOrEqual(0)
+})
+
+test('Survival consumes lives on mistakes and records canonical measured events', async ({ page }) => {
+  await page.goto('/learn')
+  await page.getByRole('link', { name: 'Survival' }).click()
+  await expect(page).toHaveURL(/\/practice\/survival$/)
+  await expect(page.getByRole('heading', { name: 'Survival' })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Bắt đầu Survival' }).click()
+  await expect(page).toHaveURL(/\/practice\/survival\?/)
+  await expect(page.getByText('♥♥♥', { exact: true })).toBeVisible()
+
+  for (const expectedLives of ['♥♥♡', '♥♡♡']) {
+    await page.getByLabel('Câu trả lời').fill('x')
+    await page.getByRole('button', { name: 'Trả lời' }).click()
+    await expect(page.getByRole('status')).toContainText('Sai')
+    await expect(page.getByText(expectedLives, { exact: true })).toBeVisible()
+  }
+
+  await page.getByLabel('Câu trả lời').fill('x')
+  await page.getByRole('button', { name: 'Trả lời' }).click()
+  await expect(page.getByRole('heading', { name: 'Survival kết thúc' })).toBeVisible()
+  await expect(page.getByText('3', { exact: true }).first()).toBeVisible()
+
+  const events = await page.evaluate(async () => {
+    const output: Array<Record<string, unknown>> = []
+    for (const info of await indexedDB.databases()) {
+      if (!info.name?.startsWith('zapan-v2:')) continue
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open(info.name!)
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      if (!db.objectStoreNames.contains('events')) { db.close(); continue }
+      const rows = await new Promise<Array<Record<string, unknown>>>((resolve, reject) => {
+        const request = db.transaction('events', 'readonly').objectStore('events').getAll()
+        request.onsuccess = () => resolve(request.result as Array<Record<string, unknown>>)
+        request.onerror = () => reject(request.error)
+      })
+      output.push(...rows)
+      db.close()
+    }
+    return output
+  })
+
+  expect(events).toHaveLength(3)
+  expect(events.every((event) => event.mode === 'survival' && event.inputKind === 'typing' && event.result === 'incorrect')).toBe(true)
+  expect(events.every((event) => typeof event.responseTimeMs === 'number' && Number(event.responseTimeMs) >= 0)).toBe(true)
+})
