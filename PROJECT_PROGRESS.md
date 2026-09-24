@@ -3,7 +3,7 @@
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
 Current phase: Phase 4 — Content expansion and hardening
-Current status: PLANNED
+Current status: IMPLEMENTING
 Last verified: 2026-09-24
 
 ## Hard scope boundary
@@ -108,13 +108,22 @@ Verified Phase 3 scope:
 - git diff whitespace check: PASS after removing one trailing blank line detected by the first closeout attempt.
 See `PROJECT_EVIDENCE.md` E-045 for the exact final failures, corrections and reruns.
 
-## Phase 4 next
-Phase 4 is PLANNED, not yet started.
-Hardening work can proceed from existing verified behavior: performance profiling, security-rule review, multi-device/offline stress, migration/recovery behavior and error/empty/loading states.
-Grammar, listening, reading, JLPT practice, N4 and N3 must remain gated until a real source/content set is inspected, versioned and verified; no placeholder level is to be promoted into active learning content.
+## Phase 4 current work
+Phase 4 is IMPLEMENTING.
+Verified hardening slice:
+- production builds now emit a Vite manifest and `npm run check` includes a manifest-based JS bundle budget gate;
+- the core entry budget is 490.00 kB raw and every JS chunk has a 500.00 kB raw upper bound;
+- current production artifact measures core 483.97 kB and largest non-entry chunk 434.97 kB;
+- the blocking path was exercised against generated `dist` output: a temporary +7 kB entry probe produced 490.97 kB and `check:bundle` failed as designed; rebuilding restored the clean artifact and the gate passed again.
+
+Current next slices:
+- perform actual runtime performance profiling before making any optimization claim beyond bundle size;
+- continue security-rule review, multi-device/offline stress, migration/recovery behavior and error/empty/loading-state hardening.
+Grammar, listening, reading, JLPT practice, N4 and N3 remain gated until a real source/content set is inspected, versioned and verified; no placeholder level is to be promoted into active learning content.
 
 Performance guard:
-- secondary/heavier routes remain lazy-loaded; final measured core production JS entry after Phase 3 polish is 483.96 kB.
+- secondary/heavier routes remain lazy-loaded;
+- bundle budgets are now executable release gates rather than advisory observations: core <= 490.00 kB raw; every JS chunk <= 500.00 kB raw.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

@@ -537,3 +537,31 @@ Closeout whitespace gate:
 - post-whitespace static rerun: lint 0 warnings/errors; 102/102 tests PASS; TypeScript + Vite build PASS with the same 483.96 kB core entry.
 
 Result: PASS — Phase 3 is VERIFIED.
+
+### E-046 — Phase 4 executable production bundle budget
+Date: 2026-09-24
+Scope: first Phase 4 hardening slice; production JS size guard only. This is not runtime CPU/network profiling.
+
+Implementation:
+- Vite production build emits `dist/.vite/manifest.json`.
+- `app/scripts/check-bundle-budget.mjs` resolves JS files from the manifest, requires exactly one JS entry, measures raw file bytes from `dist`, and fails when the entry exceeds 490,000 bytes or any JS chunk exceeds 500,000 bytes.
+- `npm run check` now runs lint -> normal tests -> production build -> bundle budget.
+
+Observed clean production artifact:
+- manifest contains exactly one `isEntry: true` JS entry and dynamic entries for the existing content/Firebase/secondary-route splits;
+- core entry: 483.97 kB raw;
+- largest non-entry JS chunk: `syncInfrastructure` 434.97 kB raw;
+- all observed JS chunks are <= 500.00 kB;
+- `npm run check`: PASS with lint 0 warnings/errors, 102/102 normal tests PASS, production build PASS, bundle budget PASS.
+
+Blocking-path probe:
+- generated `dist` only was modified; project source was not altered;
+- exactly 7,000 bytes were temporarily appended to the generated core entry;
+- measured core became 490.97 kB;
+- `npm run check:bundle` returned FAILED with `core entry 490.97 kB > 490.00 kB budget`;
+- production build was immediately rerun, regenerating clean `dist`;
+- post-rebuild `check:bundle`: PASS again at core 483.97 kB;
+- `git diff --check`: PASS; only the intended source/config/docs for this slice remain tracked as changes.
+
+Result: PASS — bundle-size regression is now an executable gate.
+Limitation: no claim is made yet about runtime parse/execute time, network transfer under real hosting, Web Vitals, memory use, or device CPU performance.

@@ -74,7 +74,7 @@ Phase 3 quality gate:
 - Instagram desktop/mobile/a11y checks pass;
 - keyboard/touch and visual regression pass.
 ## Phase 4 — Content expansion and hardening
-Status: PLANNED
+Status: IMPLEMENTING — 2026-09-24
 Goal: broaden learning value and stress the platform before release.
 Candidate deliverables, gated by real content:
 - grammar framework;

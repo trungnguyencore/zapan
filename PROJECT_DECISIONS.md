@@ -284,3 +284,11 @@ Verification: unit/component theme synchronization tests, desktop/mobile browser
 ## Implementation lesson 15 — Visual baselines need bounded raster-noise tolerance, not silent regeneration
 The first final Phase 3 visual run differed from the Learn baseline by only 22 desktop pixels and 7 mobile pixels. Reading the actual and diff PNGs localized the change to antialiasing of the small theme icon; layout and content were unchanged.
 The baselines were deliberately kept unchanged. Visual comparison now permits at most 30 differing pixels across each full-page screenshot, then the desktop/mobile visual suite was rerun successfully. Future visual changes above that bound remain blocking and must be inspected rather than updating snapshots automatically.
+
+## DEC-033 — Production bundle limits are executable build gates
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: production builds emit a Vite manifest and `npm run check` must fail when the single core JS entry exceeds 490,000 raw bytes or any JS chunk exceeds 500,000 raw bytes.
+Reason: Phase 3 repeatedly approached Vite's 500 kB warning threshold. A measured guard prevents future feature work from silently consuming the remaining core-entry margin or hiding a new oversized dynamic chunk.
+Verification: current build passes at 483.97 kB core; a controlled +7,000-byte mutation of generated `dist` raised the core to 490.97 kB and the budget command failed, then a clean rebuild restored the passing artifact.
+Consequence: bundle size is now a release/check invariant. These limits are not a substitute for Phase 4 runtime performance profiling.
