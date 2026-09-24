@@ -256,3 +256,10 @@ Verification: desktop/mobile Playwright Writing gate deliberately aborts the Kan
 ## Implementation lesson 13 — Session creation must be atomic under StrictMode
 The first Writing browser gate exposed a real persistence race: React StrictMode could start two identical session-creation effects concurrently, and the repository's previous get-then-add sequence allowed both to observe a missing key before one add caused a ConstraintError.
 The fix belongs in the repository, not in individual UI effects. `createSession` now performs the idempotency check and add in one IndexedDB transaction, with a concurrent Promise.all regression test.
+
+## DEC-030 — Confusables are source-versioned practice metadata, not invented linguistic truth
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: Phase 3 Confusables uses only the 15 groups explicitly present in the legacy ZaPan `gameData.js` reference. The migrated group set is versioned as `legacy-gd9-game-data-v1` and every character/romanization is validated against canonical v2 Kana before use.
+Reason: “characters that look confusing” is partly subjective. Adding new groups from model intuition would violate source-grounding and make the practice dataset unauditable.
+Consequence: future additions require an explicit source/provenance update and regression against canonical content rather than silently extending the list.

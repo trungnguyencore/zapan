@@ -37,7 +37,14 @@ function session(id: string, mode: StudySession['mode'] = 'today'): StudySession
   return { sessionId: id, userId: 'user-a', mode, startedAt: NOW, endedAt: null, eventIds: [], schemaVersion: 1 }
 }
 
-function event(id: string, sessionId: string, occurredAt: number, result: 'correct' | 'incorrect', mode: StudyEvent['mode'] = 'today'): StudyEvent {
+function event(
+  id: string,
+  sessionId: string,
+  occurredAt: number,
+  result: 'correct' | 'incorrect',
+  mode: StudyEvent['mode'] = 'today',
+  inputKind: StudyEvent['inputKind'] = 'typing',
+): StudyEvent {
   return {
     eventId: id,
     sessionId,
@@ -47,7 +54,7 @@ function event(id: string, sessionId: string, occurredAt: number, result: 'corre
     rating: result === 'correct' ? 'good' : 'again',
     responseTimeMs: result === 'correct' ? 900 : 1400,
     occurredAt,
-    inputKind: 'typing',
+    inputKind,
     schemaVersion: 1,
   }
 }
@@ -152,5 +159,22 @@ describe('FirestoreEventSyncService convergence', () => {
     const survival = await getDoc(doc(firestore, 'users/user-a/events/event-survival'))
     expect(timeAttack.data()).toMatchObject({ mode: 'time-attack', inputKind: 'typing', result: 'correct', responseTimeMs: 900 })
     expect(survival.data()).toMatchObject({ mode: 'survival', inputKind: 'typing', result: 'incorrect', responseTimeMs: 1400 })
+  })
+
+  it('syncs measured Match and Confusable events through the same journal', async () => {
+    const repo = makeRepo()
+    await repo.createSession(session('session-match', 'match'))
+    await repo.createSession(session('session-confusable', 'confusable'))
+    await repo.recordEvent(event('event-match', 'session-match', NOW + 7000, 'correct', 'match', 'matching'))
+    await repo.recordEvent(event('event-confusable', 'session-confusable', NOW + 8000, 'incorrect', 'confusable', 'multiple-choice'))
+
+    const firestore = testEnv.authenticatedContext('user-a').firestore()
+    const result = await new FirestoreEventSyncService(firestore, 'user-a', repo).sync()
+
+    expect(result.uploadedEvents).toBe(2)
+    const matchEvent = await getDoc(doc(firestore, 'users/user-a/events/event-match'))
+    const confusableEvent = await getDoc(doc(firestore, 'users/user-a/events/event-confusable'))
+    expect(matchEvent.data()).toMatchObject({ mode: 'match', inputKind: 'matching', result: 'correct', responseTimeMs: 900 })
+    expect(confusableEvent.data()).toMatchObject({ mode: 'confusable', inputKind: 'multiple-choice', result: 'incorrect', responseTimeMs: 1400 })
   })
 })

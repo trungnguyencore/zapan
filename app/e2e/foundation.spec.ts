@@ -326,3 +326,113 @@ test('Survival consumes lives on mistakes and records canonical measured events'
   expect(events.every((event) => event.mode === 'survival' && event.inputKind === 'typing' && event.result === 'incorrect')).toBe(true)
   expect(events.every((event) => typeof event.responseTimeMs === 'number' && Number(event.responseTimeMs) >= 0)).toBe(true)
 })
+
+test('Match records wrong and correct pair attempts in the canonical matching pipeline', async ({ page }) => {
+  await page.goto('/learn')
+  await page.getByRole('link', { name: 'Match' }).click()
+  await expect(page).toHaveURL(/\/practice\/match$/)
+  await expect(page.getByRole('heading', { name: 'Ghép prompt với đáp án' })).toBeVisible()
+  await page.getByRole('button', { name: 'Bắt đầu Match' }).click()
+  await expect(page).toHaveURL(/\/practice\/match\?/)
+
+  await page.getByRole('button', { name: 'Prompt あ' }).click()
+  await page.getByRole('button', { name: 'Đáp án u' }).click()
+  await expect(page.getByRole('status')).toContainText('Chưa đúng')
+
+  for (const [prompt, answer] of [['あ', 'a'], ['い', 'i'], ['う', 'u'], ['え', 'e'], ['お', 'o'], ['か', 'ka']]) {
+    await page.getByRole('button', { name: 'Prompt ' + prompt }).click()
+    await page.getByRole('button', { name: 'Đáp án ' + answer }).click()
+    if (prompt !== 'か') await expect(page.getByRole('status')).toContainText('Ghép đúng')
+  }
+
+  await expect(page.getByRole('heading', { name: 'Hoàn thành Match' })).toBeVisible()
+  const events = await page.evaluate(async () => {
+    const output: Array<Record<string, unknown>> = []
+    for (const info of await indexedDB.databases()) {
+      if (!info.name?.startsWith('zapan-v2:')) continue
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open(info.name!)
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      if (!db.objectStoreNames.contains('events')) { db.close(); continue }
+      const rows = await new Promise<Array<Record<string, unknown>>>((resolve, reject) => {
+        const request = db.transaction('events', 'readonly').objectStore('events').getAll()
+        request.onsuccess = () => resolve(request.result as Array<Record<string, unknown>>)
+        request.onerror = () => reject(request.error)
+      })
+      output.push(...rows)
+      db.close()
+    }
+    return output
+  })
+
+  expect(events).toHaveLength(7)
+  expect(events.filter((event) => event.result === 'incorrect')).toHaveLength(1)
+  expect(events.filter((event) => event.result === 'correct')).toHaveLength(6)
+  expect(events.every((event) => event.mode === 'match' && event.inputKind === 'matching')).toBe(true)
+  expect(events.every((event) => typeof event.responseTimeMs === 'number' && Number(event.responseTimeMs) >= 0)).toBe(true)
+})
+
+test('Confusables uses the verified legacy Kana groups with measured canonical events', async ({ page }) => {
+  await page.goto('/learn')
+  await page.getByRole('link', { name: 'Confusables' }).click()
+  await expect(page).toHaveURL(/\/practice\/confusables$/)
+  await expect(page.getByRole('heading', { name: 'Phân biệt Kana dễ nhầm' })).toBeVisible()
+  await page.getByRole('button', { name: 'Bắt đầu Confusables · 10 câu' }).click()
+  await expect(page).toHaveURL(/\/practice\/confusables\?/)
+  await expect(page.getByText('shi', { exact: true })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Chọn ツ' }).click()
+  await expect(page.getByRole('status')).toContainText('Đáp án: シ (shi)')
+  await page.getByRole('button', { name: 'Câu tiếp theo' }).click()
+
+  const remainingTargets = [
+    ['tsu', 'ツ'],
+    ['so', 'ソ'],
+    ['n', 'ン'],
+    ['a', 'ア'],
+    ['ya', 'ヤ'],
+    ['u', 'ウ'],
+    ['wa', 'ワ'],
+    ['ku', 'ク'],
+    ['ta', 'タ'],
+  ] as const
+
+  for (const [romaji, character] of remainingTargets) {
+    await expect(page.getByText(romaji, { exact: true })).toBeVisible()
+    await page.getByRole('button', { name: 'Chọn ' + character }).click()
+    await expect(page.getByRole('status')).toContainText('Đúng')
+    await page.getByRole('button', { name: romaji === 'ta' ? 'Xem kết quả' : 'Câu tiếp theo' }).click()
+  }
+
+  await expect(page.getByRole('heading', { name: 'Hoàn thành Confusables' })).toBeVisible()
+  await expect(page.getByText('90%')).toBeVisible()
+
+  const events = await page.evaluate(async () => {
+    const output: Array<Record<string, unknown>> = []
+    for (const info of await indexedDB.databases()) {
+      if (!info.name?.startsWith('zapan-v2:')) continue
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open(info.name!)
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      if (!db.objectStoreNames.contains('events')) { db.close(); continue }
+      const rows = await new Promise<Array<Record<string, unknown>>>((resolve, reject) => {
+        const request = db.transaction('events', 'readonly').objectStore('events').getAll()
+        request.onsuccess = () => resolve(request.result as Array<Record<string, unknown>>)
+        request.onerror = () => reject(request.error)
+      })
+      output.push(...rows)
+      db.close()
+    }
+    return output
+  })
+
+  expect(events).toHaveLength(10)
+  expect(events.filter((event) => event.result === 'incorrect')).toHaveLength(1)
+  expect(events.filter((event) => event.result === 'correct')).toHaveLength(9)
+  expect(events.every((event) => event.mode === 'confusable' && event.inputKind === 'multiple-choice')).toBe(true)
+  expect(events.every((event) => typeof event.responseTimeMs === 'number' && Number(event.responseTimeMs) >= 0)).toBe(true)
+})

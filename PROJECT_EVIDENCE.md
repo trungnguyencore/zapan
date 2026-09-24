@@ -461,3 +461,21 @@ Firebase emulator regression: 15/15 PASS. Added cloud round-trip verification fo
 Production dependency audit: 0 vulnerabilities.
 Git diff whitespace check: PASS.
 Result: PASS.
+
+### E-043 — Phase 3 verified Match + Confusables slice
+Date: 2026-09-24
+Scope: canonical Match and Confusables practice modes with no parallel mastery state.
+
+Confusables provenance: the exact 15 group definitions were migrated from read-only legacy source `D:\STUDY\JAPANESE\WEB\gd9\src\data\gameData.js` as source version `legacy-gd9-game-data-v1`. No additional “confusable” groups were invented. The migrated data contains 31 target entries total: 16 Katakana and 15 Hiragana.
+Canonical integrity: domain construction resolves every legacy character back to the verified v2 Kana repository and requires the legacy romanization to be present in the canonical card. Missing/mismatched data throws instead of silently accepting a divergent source. Domain tests verified all 31 entries.
+Match behavior: builds up to six deterministic topic pairs from canonical card fields only and skips duplicate answer labels to avoid ambiguous answer tiles. Kana uses canonical primary romaji; Vocabulary/Kanji use the audited Vietnamese meaning already present in the v2 bundle.
+Initial Match unit gate failed because the new test incorrectly shortened canonical `五つ` meaning to `năm cái`; inspected v2 source is `năm cái ( đếm đồ vật nói chung)`. The test expectation was corrected to the source value; production content was not rewritten.
+Initial React static gate then found six purity warnings from direct component-level `Date.now()` / `performance.now()` access. A minimal `services/time/clock.ts` boundary was introduced and the new practice pages use explicit epoch/monotonic clock functions; no lint suppression was added. Corrected lint gate: 0 warnings/errors.
+Match browser gate: deliberately records one wrong pairing for あ, then six correct pairs. Desktop + mobile PASS. Direct IndexedDB inspection observed 7 events: 1 incorrect + 6 correct, all `mode=match`, `inputKind=matching`, with nonnegative measured `responseTimeMs`.
+Confusables browser gate: first verified target is シ/shi; test deliberately chooses ツ once, then completes the remaining first-ten deterministic targets correctly. Desktop + mobile PASS with 90% result. IndexedDB observed 10 events: 1 incorrect + 9 correct, all `mode=confusable`, `inputKind=multiple-choice`, with nonnegative measured timing.
+Full static/unit/build gate: 94/94 normal tests PASS across 28 files; TypeScript + Vite build PASS. Lazy chunks: Match 7.47 kB, Confusables 8.80 kB; core entry 481.80 kB; no >500 kB warning.
+Full Playwright matrix: 20 executed PASS, 6 intentional environment-specific skips.
+Firebase emulator: 16/16 PASS, including Match/Confusable event round-trip through existing ownership/schema rules and immutable journal.
+Production dependency audit: 0 vulnerabilities.
+Git diff whitespace check: PASS.
+Result: PASS.

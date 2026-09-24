@@ -88,14 +88,15 @@ Verified Phase 3 slices:
 - Progress derives measured active-study time, streak, active days, 7-day totals and a 28-day heatmap directly from persisted StudyEvents with explicit timezone/day-boundary semantics; desktop/mobile persisted-history flows are verified;
 - Writing supports Trace / Copy / Recall for Kana/Kanji, explicit self-grade through canonical `mode=writing` / `inputKind=drawing` StudyEvents with no synthetic response time, and codepoint-based KanjiVG viewing with tested network-failure fallback;
 - local session creation is transactionally idempotent under concurrent StrictMode effects, with regression coverage;
-- Time Attack and Survival share one typed-practice foundation, write measured canonical StudyEvents (`mode=time-attack` / `mode=survival`) into the same SRS/progress pipeline, and keep timer/score/lives as presentation-only state. Both are verified on desktop/mobile and through Firestore emulator sync.
+- Time Attack and Survival share one typed-practice foundation, write measured canonical StudyEvents (`mode=time-attack` / `mode=survival`) into the same SRS/progress pipeline, and keep timer/score/lives as presentation-only state. Both are verified on desktop/mobile and through Firestore emulator sync;
+- Match records measured `mode=match` / `inputKind=matching` events for both wrong and correct pair attempts; Confusables uses the 15 legacy verified Kana groups (31 canonical target entries), validated against v2 Kana data, and records measured `mode=confusable` / `inputKind=multiple-choice` events. Both are verified on desktop/mobile and through Firestore emulator sync.
 
 Current next slice:
-- implement Match and Confusables on canonical StudyEvents without parallel mastery state;
-- then implement canonical Roadmap and remaining Phase 3 UI/accessibility polish.
+- implement canonical Roadmap based only on currently verified Kana/N5 Vocabulary/N5 Kanji content and ProgressRecord state;
+- then complete remaining Phase 3 UI/accessibility polish and final Phase 3 regression gate.
 
 Performance guard:
-- secondary/heavier Phase 3 routes are lazy-loaded; Writing builds as an ~11.78 kB route chunk, Arcade as ~8.96 kB, and measured core production JS entry remains ~481.06 kB.
+- secondary/heavier Phase 3 routes are lazy-loaded; Writing ~11.78 kB, Arcade ~8.96 kB, Match ~7.47 kB, Confusables ~8.80 kB, and measured core production JS entry remains ~481.80 kB.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.
