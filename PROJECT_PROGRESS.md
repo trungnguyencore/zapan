@@ -113,17 +113,17 @@ Phase 4 is IMPLEMENTING.
 Verified hardening slices:
 - production builds emit a Vite manifest and `npm run check` includes a manifest-based JS bundle budget gate;
 - the core entry budget is 490.00 kB raw and every JS chunk has a 500.00 kB raw upper bound;
-- current production artifact measures core 483.97 kB and largest non-entry chunk 434.97 kB;
+- current production artifact after recovery hardening measures core 486.05 kB and largest non-entry chunk 434.97 kB;
 - the blocking path was exercised against generated `dist` output: a temporary +7 kB entry probe produced 490.97 kB and `check:bundle` failed as designed; rebuilding restored the clean artifact and the gate passed again;
 - reusable production-preview runtime profiler records cold-context local-lab baselines for Today, Learn, Progress, Roadmap, Writing setup and Match setup. On 2026-09-24, median FCP was 104–112 ms, task duration 143.11–162.19 ms and JS transfer 214.82–219.31 kB across those routes. No route showed enough separation in this 3-sample local run to justify a targeted optimization;
 - Firestore rules are locally hardened to deny unused root-user/preferences documents, enforce nonnegative timestamps/nonempty event references, and preserve canonical progress timing/streak invariants. Canonical Auth/Firestore emulator regression is 21/21 PASS and normal `npm run check` remains 102/102 PASS. These hardened rules are not yet deployed to production;
-- multi-device/offline/recovery stress is now verified: overlapping journals converge without duplicate shared events, conflicting same-event payloads fail closed, a 12-event offline journal survives IndexedDB close/reopen and later syncs, a missing progress snapshot rebuilds from the immutable event journal, and a loaded browser study session completes while network is offline. Emulator suite is 24/24 PASS, normal tests are 103/103 PASS, and the full Playwright matrix is 32 PASS / 8 intentional skips.
+- multi-device/offline/recovery stress is now verified: overlapping journals converge without duplicate shared events, conflicting same-event payloads fail closed, a 12-event offline journal survives IndexedDB close/reopen and later syncs, a missing progress snapshot rebuilds from the immutable event journal, and a loaded browser study session completes while network is offline. Emulator suite is 24/24 PASS, normal tests are 103/103 PASS, and the full Playwright matrix is 32 PASS / 8 intentional skips;
+- loading/error/recovery UX is now hardened: application render failures keep a reload recovery surface, learning-snapshot loading/errors hide stale or fake-zero metrics, failed local snapshots expose retry, profile/repository switches cannot flash the previous profile snapshot, content bootstrap failure exposes an explicit retry control, and session/stroke loading states are announced accessibly. Final gate is lint 0 warnings/errors, 108/108 normal tests PASS, production build + bundle budget PASS at core 486.05 kB, and Playwright 32 PASS / 8 intentional skips with visual baselines stable.
 
-Current next slices:
-- production Firestore rules deployment requires a fresh owner review before execution;
-- harden error/empty/loading states and recovery UX;
-- migration tests remain gated until a real Dexie/schema version change exists. Current local database schema is version 1, so no migration result is claimed.
-Grammar, listening, reading, JLPT practice, N4 and N3 remain gated until a real source/content set is inspected, versioned and verified; no placeholder level is to be promoted into active learning content.
+Current remaining boundaries:
+- production Firestore rules deployment requires a fresh owner review immediately before execution;
+- migration tests remain gated until a real Dexie/schema version change exists. Current local database schema is version 1, so no migration result is claimed;
+- Grammar, listening, reading, JLPT practice, N4 and N3 content expansion remains gated until real source/content is inspected, versioned and verified; no placeholder level is promoted into active learning content.
 
 Performance guard:
 - secondary/heavier routes remain lazy-loaded;

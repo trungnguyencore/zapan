@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { LearningDataBoundary } from '../../components/ui/LearningDataBoundary'
 import { PageIntro } from '../../components/ui/PageIntro'
 import type { ContentCard } from '../../domain/content/types'
 import type { ProgressRecord } from '../../domain/learning/types'
@@ -53,11 +54,12 @@ function TopicSection({ eyebrow, title, description, topics, cards, progress, no
 }
 
 export function LearnPage() {
-  const { loading, error, cards, progress, capturedAt } = useLearningData()
+  const { loading, error, cards, progress, capturedAt, refresh } = useLearningData()
   return (
     <section className="page-stack">
       <PageIntro eyebrow="Learn" title="Học theo lộ trình" description="ZaPan hiện mở ba content pack đã qua audit: Kana cơ bản, N5 Vocabulary và N5 Kanji. Mỗi chủ đề dùng cùng StudyEvent/SRS/progress pipeline." />
-      {error && <p className="inline-error" role="alert">{error}</p>}
+      <LearningDataBoundary loading={loading} error={error} onRetry={refresh}>
+        <>
       <article className="surface-card roadmap-entry-callout">
         <div><p className="card-kicker">ROADMAP</p><h2>Xem stage nào đang thật sự tiến triển</h2><p>Roadmap dùng chính ProgressRecord hiện tại; stage chưa có verified content sẽ không được giả lập thành nội dung mở khóa.</p></div>
         <Link className="button secondary" to="/roadmap">Mở Roadmap</Link>
@@ -69,6 +71,8 @@ export function LearnPage() {
       <TopicSection eyebrow="FOUNDATION" title="Kana" description="Nhận diện Hiragana và Katakana cơ bản trước khi mở rộng sang các nhóm biến âm." topics={KANA_TOPIC_CATALOG} cards={cards} progress={progress} now={capturedAt} loading={loading} accent="kana" />
       <TopicSection eyebrow="JLPT N5" title="Vocabulary" description="923 từ đã audit, chia thành 15 chủ đề. Phiên typing hiện kiểm tra cách đọc bằng kana." topics={VOCAB_N5_TOPIC_CATALOG} cards={cards} progress={progress} now={capturedAt} loading={loading} accent="vocab" />
       <TopicSection eyebrow="JLPT N5" title="Kanji" description="109 Kanji đã audit với readings, nghĩa, Hán Việt, stroke count và mnemonic memory aid." topics={KANJI_N5_TOPIC_CATALOG} cards={cards} progress={progress} now={capturedAt} loading={loading} accent="kanji" />
+        </>
+      </LearningDataBoundary>
     </section>
   )
 }

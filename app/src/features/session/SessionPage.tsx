@@ -153,7 +153,7 @@ export function SessionPage() {
     questionStartedAt.current = performance.now()
   }
 
-  if (status === 'loading') return <section className="page-stack"><p className="loading-copy">Đang chuẩn bị phiên học…</p></section>
+  if (status === 'loading') return <section className="page-stack"><p className="loading-copy" role="status">Đang chuẩn bị phiên học…</p></section>
   if (status === 'error') return <section className="page-stack"><div className="surface-card error-card"><h1>Không thể bắt đầu</h1><p>{error}</p><Link className="button secondary" to="/">Về Today</Link></div></section>
   if (status === 'empty') return <section className="page-stack"><div className="surface-card empty-state"><div><h1>Không có thẻ phù hợp lúc này</h1><p>{sessionKind === 'review' ? 'Bạn chưa có thẻ đến hạn. Có thể học thẻ mới ở Learn.' : sessionKind === 'custom' ? 'Custom Practice chưa có topic hợp lệ hoặc không có card phù hợp.' : 'Topic này hiện không có thẻ mới hoặc review phù hợp.'}</p><Link className="button primary" to={backPath}>{sessionKind === 'custom' ? 'Chọn lại Custom Practice' : 'Mở Learn'}</Link></div></div></section>
 

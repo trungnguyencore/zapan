@@ -57,6 +57,7 @@ export function AppServicesProvider({ children, services }: { children: ReactNod
   const [contentReady, setContentReady] = useState(() => Boolean(services) || import.meta.env.MODE === 'test')
   const [authReady, setAuthReady] = useState(() => Boolean(services) || import.meta.env.MODE === 'test')
   const [contentError, setContentError] = useState<string | null>(null)
+  const [contentAttempt, setContentAttempt] = useState(0)
 
   useEffect(() => {
     if (services || import.meta.env.MODE === 'test') return undefined
@@ -75,7 +76,7 @@ export function AppServicesProvider({ children, services }: { children: ReactNod
       })
 
     return () => { cancelled = true }
-  }, [base, services])
+  }, [base, contentAttempt, services])
 
   useEffect(() => {
     if (services || import.meta.env.MODE === 'test') return undefined
@@ -132,6 +133,7 @@ export function AppServicesProvider({ children, services }: { children: ReactNod
         <div>
           <strong>{contentError ? 'Không thể tải nội dung học' : 'Đang tải ZaPan…'}</strong>
           <p>{bootstrapMessage}</p>
+          {contentError && <button className="button secondary" type="button" onClick={() => { setContentError(null); setContentAttempt((value) => value + 1) }}>Thử tải lại nội dung</button>}
         </div>
       </div>
     )

@@ -10,10 +10,10 @@ function renderApp() {
 }
 
 describe('ZaPan application shell', () => {
-  it('renders Today from the real-data shell', () => {
+  it('renders Today from the real-data shell', async () => {
     renderApp()
     expect(screen.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Bắt đầu phiên hôm nay' })).toBeInTheDocument()
+    expect(await screen.findByRole('link', { name: 'Bắt đầu phiên hôm nay' })).toBeInTheDocument()
   })
 
   it('navigates through primary learning destinations', async () => {

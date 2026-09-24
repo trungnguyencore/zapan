@@ -1,5 +1,6 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { LearningDataBoundary } from '../../components/ui/LearningDataBoundary'
 import { PageIntro } from '../../components/ui/PageIntro'
 import {
   KANA_TOPIC_CATALOG,
@@ -19,7 +20,7 @@ const GROUPS: Array<{ title: string; eyebrow: string; topics: readonly LearningT
 
 export function CustomPracticePage() {
   const navigate = useNavigate()
-  const { cards, loading, error } = useLearningData()
+  const { cards, loading, error, refresh } = useLearningData()
   const [selectedTopics, setSelectedTopics] = useState<string[]>([])
   const [limit, setLimit] = useState<PracticeLimit>('10')
 
@@ -59,8 +60,7 @@ export function CustomPracticePage() {
         title="Tạo phiên Custom Practice"
         description="Chọn đúng các topic bạn muốn luyện. Phiên custom dùng chung StudyEvent, SRS và progress với Learn/Review; nó không tạo hệ thống điểm riêng."
       />
-      {error && <p className="inline-error" role="alert">{error}</p>}
-
+      <LearningDataBoundary loading={loading} error={error} onRetry={refresh}>
       <form className="custom-practice-form" onSubmit={submit}>
         {GROUPS.map((group) => {
           const groupIds = group.topics.map((topic) => topic.topicId)
@@ -110,6 +110,7 @@ export function CustomPracticePage() {
           </button>
         </section>
       </form>
+      </LearningDataBoundary>
     </section>
   )
 }

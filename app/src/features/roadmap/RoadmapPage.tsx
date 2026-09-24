@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { LearningDataBoundary } from '../../components/ui/LearningDataBoundary'
 import { PageIntro } from '../../components/ui/PageIntro'
 import { VERIFIED_ROADMAP_STAGES, VERIFIED_ROADMAP_TOTAL } from '../../data/roadmap/verifiedStages'
 import { deriveRoadmap, type RoadmapStageSnapshot, type RoadmapStageStatus } from '../../domain/roadmap/roadmap'
@@ -46,7 +47,7 @@ function RoadmapStageCard({ stage, suggested }: { stage: RoadmapStageSnapshot; s
 }
 
 export function RoadmapPage() {
-  const { cards, progress, capturedAt, loading, error } = useLearningData()
+  const { cards, progress, capturedAt, loading, error, refresh } = useLearningData()
   const roadmap = deriveRoadmap(cards, progress, capturedAt, VERIFIED_ROADMAP_STAGES)
 
   return <section className="page-stack">
@@ -55,8 +56,8 @@ export function RoadmapPage() {
       title="Lộ trình dựa trên mastery thật"
       description="Roadmap chỉ mở các stage đang có content đã xác minh. Seen không đồng nghĩa learned: một stage chỉ complete khi toàn bộ cards của stage đang ở trạng thái mastered."
     />
-    {error && <p className="inline-error" role="alert">{error}</p>}
-
+    <LearningDataBoundary loading={loading} error={error} onRetry={refresh}>
+      <>
     <article className="surface-card roadmap-summary">
       <div>
         <p className="card-kicker">VERIFIED PATH</p>
@@ -77,5 +78,7 @@ export function RoadmapPage() {
       <h2>Grammar · Reading/Listening · N5 consolidation/exam · N4/N3</h2>
       <p>Các stage này có trong learner-journey specification nhưng chưa được mở thành learning stage vì ZaPan v2 chưa có content + review flow đã xác minh tương ứng. Chúng sẽ không xuất hiện như nội dung khả dụng chỉ để làm roadmap trông đầy hơn.</p>
     </article>
+      </>
+    </LearningDataBoundary>
   </section>
 }

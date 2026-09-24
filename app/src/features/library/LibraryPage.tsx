@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { LearningDataBoundary } from '../../components/ui/LearningDataBoundary'
 import { PageIntro } from '../../components/ui/PageIntro'
 import { filterLibraryCards, type LibraryContentFilter } from '../../domain/content/libraryFilter'
 import type { ContentCard } from '../../domain/content/types'
@@ -70,7 +71,7 @@ function LibraryCard({ card }: { card: ContentCard }) {
 }
 
 export function LibraryPage() {
-  const { cards, loading, error } = useLearningData()
+  const { cards, loading, error, refresh } = useLearningData()
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<LibraryContentFilter>('all')
 
@@ -85,8 +86,8 @@ export function LibraryPage() {
         description="Tìm trong toàn bộ Kana, N5 Vocabulary và N5 Kanji hiện đã được audit. Library chỉ hiển thị dữ liệu có thật trong content bundle, không tự bổ sung nghĩa hoặc reading."
       />
 
-      {error && <p className="inline-error" role="alert">{error}</p>}
-
+      <LearningDataBoundary loading={loading} error={error} onRetry={refresh}>
+        <>
       <section className="library-controls surface-card" aria-label="Bộ lọc thư viện">
         <label htmlFor="library-search">Tìm ký tự, từ, reading hoặc nghĩa</label>
         <input
@@ -127,6 +128,8 @@ export function LibraryPage() {
           {visible.map((card) => <LibraryCard key={card.cardId} card={card} />)}
         </div>
       )}
+        </>
+      </LearningDataBoundary>
     </section>
   )
 }

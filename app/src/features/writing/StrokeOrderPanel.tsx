@@ -23,7 +23,7 @@ export function StrokeOrderPanel({ character, visible }: { character: string; vi
         <span className="status-pill">KanjiVG</span>
       </div>
       <div className="stroke-asset-frame">
-        {state === 'loading' && <p className="loading-copy">Đang tải thứ tự nét…</p>}
+        {state === 'loading' && <p className="loading-copy" role="status">Đang tải thứ tự nét…</p>}
         {state === 'error' && <div className="stroke-fallback"><strong>Không tải được thứ tự nét</strong><p>Canvas luyện viết vẫn hoạt động. Có thể thử lại khi có mạng.</p></div>}
         <img
           key={character}

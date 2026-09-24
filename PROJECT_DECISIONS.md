@@ -306,3 +306,10 @@ Date: 2026-09-24
 Decision: Firestore root user documents and cloud preferences are denied by default because the current application has no production read/write contract for them. New cloud document families require an explicit versioned schema, ownership rules and emulator tests before they become writable.
 Reason: owner-only access is not sufficient reason to leave arbitrary-schema storage writable. Least privilege keeps the cloud contract limited to data the application currently understands and reconciles.
 Consequence: theme preference remains local-only; future profile/preferences features must deliberately open a validated rule surface rather than inheriting permissive access.
+
+## DEC-036 — Learning snapshot failures fail closed instead of rendering stale or fake-zero progress
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: snapshot-dependent learning pages must hide their data/action surface while the active repository is loading or has failed, expose an explicit retry on read failure, and never reuse a snapshot produced by a different Guest/account repository.
+Reason: zero values and previous-profile values are plausible-looking data, so showing them after an IndexedDB failure or identity switch is more misleading than a visible loading/error state.
+Consequence: Home, Learn, Review, Library, Progress, Roadmap and Custom Practice share a recovery boundary; switching repositories shows loading until the matching snapshot resolves. Recovery retries reads only and does not reset local progress.

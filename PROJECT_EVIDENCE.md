@@ -677,3 +677,50 @@ Migration boundary:
 
 Result: PASS — current local-first sync and immutable event-journal recovery paths are stress-verified within the tested emulator/Chromium scope.
 Limitations: this is not a real two-physical-device network test, does not simulate packet loss/latency beyond browser offline mode, and does not verify a nonexistent future database migration.
+
+### E-050 — Phase 4 loading/error/recovery UX hardening
+Date: 2026-09-24
+Scope: failure-state and recovery UX only. No SRS, StudyEvent semantics, sync algorithm, content schema or backend deployment was changed.
+
+Audit findings before implementation:
+- content bootstrap failure could leave ZaPan on an error screen with no retry action;
+- lazy/render exceptions had no top-level React error boundary;
+- `useLearningData()` exposed an internal refresh function, but snapshot-dependent pages did not provide a consistent retry surface;
+- a failed learning snapshot could leave zero/previous values visible on some pages, and a Guest/account repository switch could briefly expose the prior repository snapshot while the next snapshot was still loading;
+- Session and stroke-order loading copy were not consistently announced with `role=status`.
+
+Implemented recovery behavior:
+- `AppErrorBoundary` wraps the application surface and keeps a deterministic reload recovery UI visible for render/lazy-route exceptions instead of dropping the entire interface;
+- `LearningDataBoundary` gives snapshot-dependent pages one fail-closed contract: loading shows an accessible status, error shows an alert plus retry, and children are not rendered while their data is unavailable;
+- Home, Review, Progress, Learn, Library, Custom Practice and Roadmap use that shared boundary;
+- `useLearningData` tracks the repository that produced the current snapshot. When the active repository changes, cards/progress/events/overview from the previous identity are withheld until the new snapshot resolves;
+- manual retry marks the snapshot loading, clears the prior error, and rereads the same local repository without deleting/resetting progress;
+- content bootstrap failure exposes `Thử tải lại nội dung`, which starts a new verified-content load attempt;
+- Session and StrokeOrder loading messages now expose `role=status`.
+
+Focused regression:
+- AppErrorBoundary render-crash fallback: PASS;
+- LearningDataBoundary loading/error/retry behavior: 2/2 PASS;
+- failed IndexedDB snapshot -> retry -> normal Home state: PASS;
+- repository/profile switch -> previous snapshot hidden -> loading -> new snapshot: PASS;
+- focused recovery suite: 5/5 PASS.
+
+Failures caught during integration:
+1. First full gate produced two `react(set-state-in-effect)` lint warnings from synchronous error/loading resets inside effects, and the old App shell test expected the Today action before the new asynchronous snapshot guard resolved.
+   Correction: synchronous effect state writes were removed; retry remains event-driven, repository mismatch is derived during render, and the App test now waits for the real snapshot-dependent action.
+2. The next full gate had 107/107 Vitest tests PASS but TypeScript rejected the test-only crashing component because its inferred return type was `void`.
+   Correction: the test component was explicitly typed as `ReactNode`; production code was unchanged by that correction.
+
+Final verification on corrected source:
+- lint: PASS, 0 warnings / 0 errors;
+- normal unit/component suite: 108/108 PASS across 34 files;
+- TypeScript + Vite production build: PASS;
+- production bundle budget: PASS; core entry 486.05 kB raw <= 490.00 kB, largest non-entry chunk 434.97 kB raw;
+- full Playwright matrix: 32 PASS / 8 intentional project-specific skips;
+- checked-in Phase 3 visual baseline comparisons remain PASS;
+- `git diff --check`: PASS.
+
+Result: PASS — current loading/error/snapshot-recovery behavior is verified within unit/component and Chromium regression scope.
+Limitations:
+- the content-bootstrap retry control is source-reviewed and included in the normal browser application path, but this slice did not inject a synthetic production dynamic-import/content-chunk failure in Playwright;
+- this does not deploy the pending hardened Firestore rules, test a nonexistent Dexie v2 migration, or establish Firefox/Safari failure behavior.

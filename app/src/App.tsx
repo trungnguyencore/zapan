@@ -1,5 +1,6 @@
 import { lazy, Suspense, type ReactNode } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { AppErrorBoundary } from './app/AppErrorBoundary'
 import { AppShell } from './app/AppShell'
 import { AppServicesProvider } from './app/AppServices'
 import { AccountPage } from './features/account/AccountPage'
@@ -46,5 +47,5 @@ export function AppRoutes() {
 }
 
 export default function App() {
-  return <BrowserRouter><AppServicesProvider><AppRoutes /></AppServicesProvider></BrowserRouter>
+  return <BrowserRouter><AppErrorBoundary><AppServicesProvider><AppRoutes /></AppServicesProvider></AppErrorBoundary></BrowserRouter>
 }
