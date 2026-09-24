@@ -132,7 +132,8 @@ const server = await preview({
 const browser = await chromium.launch({ headless: true })
 
 try {
-  const baseUrl = `http://${host}:${port}`
+  const resolvedPreviewUrl = server.resolvedUrls?.local?.[0] ?? `http://${host}:${port}/zapan/`
+  const baseUrl = resolvedPreviewUrl.replace(/\/$/, '')
   const routeResults = []
 
   for (const route of routes) {

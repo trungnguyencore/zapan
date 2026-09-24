@@ -1,18 +1,24 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import type { AccountAuthService } from '../domain/auth/ports'
 import type { ActiveIdentity } from '../domain/auth/types'
+import type { ContentRepository } from '../domain/content/ports'
 import type { LearningRepository } from '../domain/learning/ports'
 import { getBrowserGuestIdentity } from '../services/auth/guestIdentity'
-import { StaticContentRepository } from '../services/content/StaticContentRepository'
-import { loadVerifiedContentRepository } from '../services/content/loadVerifiedContentRepository'
 import { createLocalDatabase } from '../services/persistence/database'
 import { LocalLearningRepository } from '../services/persistence/LocalLearningRepository'
 import { databaseNameForUser } from '../services/persistence/profileDatabase'
 import type { FirestoreEventSyncService } from '../services/sync/FirestoreEventSyncService'
 import { AppServicesContext, type AppServices } from './AppServicesContext'
 
+const EMPTY_CONTENT_REPOSITORY: ContentRepository = {
+  getCard: () => undefined,
+  listCards: () => [],
+  listByTopic: () => [],
+  listByType: () => [],
+}
+
 interface BrowserInfrastructure {
-  content: StaticContentRepository
+  content: ContentRepository
   guest: AppServices['guest']
   accountAuth: AccountAuthService | null
   repositories: Map<string, LearningRepository>
@@ -28,7 +34,7 @@ function repositoryFor(base: BrowserInfrastructure, userId: string): LearningRep
 
 function createBrowserInfrastructure(): BrowserInfrastructure {
   return {
-    content: new StaticContentRepository([]),
+    content: EMPTY_CONTENT_REPOSITORY,
     guest: getBrowserGuestIdentity(),
     accountAuth: null,
     repositories: new Map(),
@@ -62,7 +68,8 @@ export function AppServicesProvider({ children, services }: { children: ReactNod
     if (services || import.meta.env.MODE === 'test') return undefined
     let cancelled = false
 
-    void loadVerifiedContentRepository()
+    void import('../services/content/loadVerifiedContentRepository')
+      .then(({ loadVerifiedContentRepository }) => loadVerifiedContentRepository())
       .then((content) => {
         if (cancelled) return
         base.content = content
