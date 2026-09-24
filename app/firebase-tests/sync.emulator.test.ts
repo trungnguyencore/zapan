@@ -53,6 +53,25 @@ function event(id: string, sessionId: string, occurredAt: number, result: 'corre
 }
 
 describe('FirestoreEventSyncService convergence', () => {
+  it('uploads and downloads a five-event local journal in one sync cycle', async () => {
+    const repoA = makeRepo()
+    const repoB = makeRepo()
+    await repoA.createSession(session('session-five'))
+    for (let i = 0; i < 5; i += 1) {
+      await repoA.recordEvent(event(`event-five-${i + 1}`, 'session-five', NOW + 1000 + i, 'correct'))
+    }
+
+    const firestoreA = testEnv.authenticatedContext('user-a').firestore()
+    const firestoreB = testEnv.authenticatedContext('user-a').firestore()
+    const firstResult = await new FirestoreEventSyncService(firestoreA, 'user-a', repoA).sync()
+    const secondResult = await new FirestoreEventSyncService(firestoreB, 'user-a', repoB).sync()
+
+    expect(firstResult.uploadedEvents).toBe(5)
+    expect(firstResult.downloadedEvents).toBe(5)
+    expect(secondResult.downloadedEvents).toBe(5)
+    expect(await repoB.listEvents()).toHaveLength(5)
+  })
+
   it('converges two offline clients through the immutable event journal', async () => {
     const repoA = makeRepo()
     const repoB = makeRepo()

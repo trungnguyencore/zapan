@@ -195,3 +195,26 @@ Verification: repository integration test confirms 1,124 unique cards; productio
 
 ## Implementation lesson 11 — Accessible-name selectors need exactness when topic labels overlap
 The first Kanji browser test used accessible name `Học Số đếm`, which also matched Vocabulary `Học Số đếm & Lượng từ` under Playwright substring semantics. The app behavior was correct, but the quality gate failed. The selector now uses exact matching and the full E2E matrix passes.
+
+## DEC-024 — A StudySession owns one immutable local identity/repository scope
+Status: ACCEPTED
+Date: 2026-09-24
+Problem: a production cloud-sync smoke showed one five-answer session split across account and Guest IndexedDB stores when AppServices changed identity during the session.
+Decision: when a StudySession starts, ZaPan pins its content repository, LearningRepository and userId for the full session lifetime. Every event and completion write stays in that pinned repository.
+Cloud sync may run automatically at completion only if the current authenticated identity still matches the pinned session owner.
+Reason: a StudySession must be an internally coherent journal; identity transitions cannot silently move later events into another person's/local profile store.
+Verification: regression test switches AppServices from account to Guest after question 2; all five events remain in the account repository and none enter Guest.
+
+## DEC-025 — Initial Firebase Auth restoration is an application boot prerequisite
+Status: ACCEPTED
+Date: 2026-09-24
+Problem: after full-page navigation/reload, ZaPan briefly rendered Guest learning before Firebase Auth restored a persisted account. A session started inside that window was correctly pinned by DEC-024, but to the wrong Guest identity.
+Decision: when Firebase is configured, the learning application shell is not exposed until the initial Auth observer resolves authenticated or signed-out state. Content readiness and Auth readiness are independent boot gates and both must be ready.
+Reason: persisted authentication is part of selecting the correct local IndexedDB and cloud capability; rendering a temporary Guest state creates cross-profile data hazards.
+Verification: final production smoke retained all five events in the authenticated account database across a full-page learning navigation and converged to a second isolated browser context.
+
+## Implementation lesson 12 — Emulator convergence was necessary but not sufficient
+The event-journal emulator tests proved deterministic multi-device reconciliation, but they did not reproduce the browser-level Auth restoration race.
+The production browser gate first exposed a 3-event cloud result. Diagnostic inspection found a 3-account / 2-Guest local split; after session pinning, a second diagnostic found all 5 events in Guest after reload, which isolated the Auth boot race.
+Both failed production runs executed cleanup successfully before further changes.
+Conclusion: cross-layer production browser smoke remains a release-critical gate for identity/persistence/sync behavior; passing unit and emulator tests must not be treated as proof of browser lifecycle correctness.

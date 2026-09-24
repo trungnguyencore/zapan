@@ -3,7 +3,7 @@
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
 Current phase: Phase 2 — Core learning product
-Current status: IMPLEMENTING
+Current status: VERIFIED
 Last verified: 2026-09-24
 
 ## Hard scope boundary
@@ -41,8 +41,8 @@ No Firebase backend, real learning content, GitHub push or deployment was perfor
 - evidence updated: PASS.
 See `PROJECT_EVIDENCE.md` for exact failures, corrections and observed output.
 
-## Current task
-Phase 2 implementation is active.
+## Phase 2 result
+Phase 2 implementation and verification gates are complete.
 Verified Phase 2 slices:
 - local-first IndexedDB persistence;
 - versioned content pipeline with 92 audited basic Kana cards.
@@ -67,12 +67,23 @@ Verified learning slice:
 - Learn exposes all verified Kana/Vocabulary/Kanji topics with real per-topic progress;
 - Vocabulary/Kanji typed-reading sessions write to the same StudyEvent/SRS pipeline and reveal audited metadata only after answering.
 
-## Current next slice
-Run a production browser account + Firestore cloud-sync smoke using a temporary account, verify cross-context convergence, and clean up all temporary cloud data.
+## Final Phase 2 gate
+- verified content repository: 1,124 cards total (92 Kana + 923 N5 Vocabulary + 109 N5 Kanji);
+- lint: PASS, 0 warnings / 0 errors;
+- normal unit/component tests: PASS, 71/71;
+- TypeScript + production Vite build: PASS with no >500 kB chunk warning;
+- local Playwright desktop/mobile matrix: 6 executed PASS, 6 intentional environment-specific skips;
+- Firebase Auth/Firestore emulator integration: PASS, 12/12;
+- production account/cloud-sync browser smoke: PASS across two isolated browser contexts;
+- temporary production test Firestore data cleanup: PASS;
+- temporary production test Auth account cleanup: PASS;
+- production dependency audit: PASS, 0 vulnerabilities;
+- git diff whitespace check: PASS.
+See `PROJECT_EVIDENCE.md` for the production identity-race failures that were caught and corrected before this gate became green.
 
-## Phase 2 remaining work
-1. run a production browser account + cloud-sync smoke with temporary-account/data cleanup;
-2. run the complete Phase 2 regression gate and only then mark Phase 2 VERIFIED.
+## Next phase
+Phase 3 — Advanced learning, UX, and practice.
+Do not start Phase 3 until the owner reviews/continues from this verified checkpoint.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.
@@ -86,7 +97,6 @@ It has not been deleted because project rules prohibit unapproved deletion.
 ## Deferred / unverified
 - GitHub push/deployment migration has not started;
 - production GitHub Pages configuration/live behavior remains unverified;
-- N5 Vocabulary/Kanji content completeness remains under audit;
+- current N5 Vocabulary/Kanji bundles are verified against the audited legacy reference and v2 invariants, but have not been independently benchmarked against an external canonical JLPT corpus;
 - N4/N3 learning content is not implemented;
-- production multi-device cloud-sync smoke is still pending (emulator convergence is verified);
 - Firefox/Safari support remains unverified.

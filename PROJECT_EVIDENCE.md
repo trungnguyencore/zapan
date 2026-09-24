@@ -321,3 +321,52 @@ Production chunk sizes observed after runtime wiring: core 479.17 kB, Vocab 220.
 First Playwright run: all non-Kanji flows passed; Kanji test failed only because a non-exact accessible-name selector matched both `Học Số đếm` and `Học Số đếm & Lượng từ`. Progression was blocked and the selector was corrected to exact matching.
 Corrected Playwright matrix: 6 executed tests PASS, 6 environment-specific skips. Verified desktop/mobile shell, Account lazy-loading, Kana persistence across reload with total `5/1124`, N5 Vocabulary reading/meaning flow, and N5 Kanji reading/Hán Việt/stroke/mnemonic flow.
 Result: PASS.
+
+### E-033 — Production cloud-sync smoke exposed cross-identity session split
+Date: 2026-09-24
+Production test target: Firebase project `zapan-v2-trunk`; temporary random account only.
+Initial production browser smoke: FAIL. Browser A completed five real Hiragana answers, but browser B downloaded only 3 cloud events.
+The cleanup path still completed: Firestore cleanup PASS and Auth cleanup PASS.
+A diagnostic rerun inspected IndexedDB before cloud sync and found the five local StudyEvents split across two identity databases: 3 events in the authenticated account database and 2 events in the Guest database.
+Conclusion: events were not lost by Firestore; one StudySession was writing across different local identity repositories.
+Progression remained blocked.
+Result: FAIL — root cause isolated to session/identity lifetime handling; temporary production data was cleaned.
+
+### E-034 — Session owner pinning and initial Auth restoration gate
+Date: 2026-09-24
+Correction 1: `SessionPage` now pins content, LearningRepository and userId at session start. createSession/recordEvent/completeSession use the pinned repository for the lifetime of that session. Automatic cloud sync is permitted only when the current identity still matches the session owner.
+Focused regression: a five-question account session was forced to receive Guest AppServices after question 2. Expected/observed: account repository retained all 5 events, Guest repository retained 0. Test PASS.
+A second production diagnostic then showed all five events in the Guest database after a full-page navigation, proving a deeper boot race: the UI could render Guest learning before Firebase restored the persisted account on page reload.
+Correction 2: `AppServicesProvider` now gates the learning UI on both verified-content readiness and the initial Firebase Auth state. On reload, ZaPan waits for authenticated/signed-out resolution before exposing a learning route.
+Post-correction local gate: lint 0 warnings/errors; 71/71 normal tests PASS; TypeScript + Vite build PASS; Playwright desktop/mobile matrix 6 executed PASS with 6 intentional environment-specific skips.
+Result: PASS.
+
+### E-035 — Final production account/cloud-sync convergence gate
+Date: 2026-09-24
+Production browser smoke used a new random temporary Email/Password account and two isolated Chromium contexts.
+Observed before sync: account state remained stable after reload; the active account IndexedDB contained exactly 5 StudyEvents and no identity split.
+Browser A: completed five audited Hiragana questions and auto-synced to production Firestore.
+Browser B: signed into the same temporary account in an isolated context, manually synced, received all 5 cloud events, and Progress reflected the synced study history.
+Playwright production result: 1/1 PASS.
+Cleanup verification after the test:
+- temporary Firestore user subtree cleanup: PASS;
+- temporary Firebase Auth account cleanup: PASS.
+No temporary production test account/data remained according to the cleanup verification.
+Result: PASS.
+
+### E-036 — Final Phase 2 closeout gate
+Date: 2026-09-24
+Verified runtime content: 1,124 cards = 92 Kana + 923 N5 Vocabulary + 109 N5 Kanji.
+Final normal regression after identity fixes:
+- lint: 0 warnings/errors;
+- unit/component tests: 71/71 PASS across 22 files;
+- TypeScript + Vite production build: PASS;
+- largest observed production chunks remained below the Vite 500 kB warning threshold;
+- local Playwright desktop/mobile: 6 executed PASS, 6 intentional environment-specific skips.
+Final Firebase emulator rerun:
+- Auth + Firestore rules + sync suites: 12/12 PASS;
+- includes five-event upload/download and two-offline-client convergence.
+Production account/cloud-sync browser smoke and cleanup: PASS per E-035.
+Production dependency audit: `npm audit --omit=dev` => 0 vulnerabilities.
+Git whitespace/diff check: PASS.
+Result: PASS — Phase 2 is VERIFIED.

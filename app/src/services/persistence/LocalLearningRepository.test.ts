@@ -125,6 +125,18 @@ describe('LocalLearningRepository', () => {
     expect((await repo.listEvents()).map((item) => item.eventId).sort()).toEqual(['event-early', 'event-late'])
   })
 
+  it('retains all five sequential study events before session completion', async () => {
+    db = createLocalDatabase(`zapan-test-${crypto.randomUUID()}`)
+    const repo = new LocalLearningRepository(db)
+    await repo.createSession(session())
+    for (let i = 0; i < 5; i += 1) {
+      await repo.recordEvent(event({ eventId: `event-${i + 1}`, occurredAt: NOW + 1000 + i }))
+    }
+    await repo.completeSession('session-1', NOW + 10_000)
+    expect(await repo.listEvents()).toHaveLength(5)
+    expect((await repo.getSession('session-1'))?.eventIds).toHaveLength(5)
+  })
+
   it('rejects conflicting remote payload for an existing event id', async () => {
     db = createLocalDatabase(`zapan-test-${crypto.randomUUID()}`)
     const repo = new LocalLearningRepository(db)

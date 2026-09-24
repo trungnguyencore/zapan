@@ -39,6 +39,7 @@ function contentLabel(card: ContentCard | undefined): string {
 export function SessionPage() {
   const { sessionKind, topicId } = useParams()
   const { content, learning, identity, sync } = useAppServices()
+  const [sessionScope] = useState(() => ({ content, learning, userId: identity.userId }))
   const sessionIdRef = useRef(`session-${crypto.randomUUID()}`)
   const questionStartedAt = useRef(0)
   const [status, setStatus] = useState<SessionStatus>('loading')
@@ -57,8 +58,8 @@ export function SessionPage() {
     async function prepare() {
       try {
         const now = Date.now()
-        const allCards = topicId ? content.listByTopic(topicId) : content.listCards()
-        const progress = await learning.listProgress()
+        const allCards = topicId ? sessionScope.content.listByTopic(topicId) : sessionScope.content.listCards()
+        const progress = await sessionScope.learning.listProgress()
         let queue: ContentCard[]
         if (sessionKind === 'review') queue = buildReviewQueue(allCards, progress, now, 20)
         else if (sessionKind === 'today') queue = buildTodayQueue(allCards, progress, now, { reviewLimit: 10, newLimit: 5 })
@@ -67,7 +68,7 @@ export function SessionPage() {
         if (!active) return
         if (queue.length === 0) { setStatus('empty'); return }
         const sessionId = sessionIdRef.current
-        await learning.createSession({ sessionId, userId: identity.userId, mode, startedAt: now, endedAt: null, eventIds: [], schemaVersion: 1 })
+        await sessionScope.learning.createSession({ sessionId, userId: sessionScope.userId, mode, startedAt: now, endedAt: null, eventIds: [], schemaVersion: 1 })
         if (!active) return
         setCards(queue)
         questionStartedAt.current = performance.now()
@@ -80,7 +81,7 @@ export function SessionPage() {
     }
     void prepare()
     return () => { active = false }
-  }, [content, identity.userId, learning, mode, sessionKind, topicId])
+  }, [mode, sessionKind, sessionScope, topicId])
 
   const current = cards[index]
 
@@ -91,7 +92,7 @@ export function SessionPage() {
     setSaving(true)
     try {
       const occurredAt = Date.now()
-      await learning.recordEvent({
+      await sessionScope.learning.recordEvent({
         eventId: `event-${crypto.randomUUID()}`,
         sessionId: sessionIdRef.current,
         cardId: current.cardId,
@@ -117,11 +118,13 @@ export function SessionPage() {
     if (index >= cards.length - 1) {
       setSaving(true)
       try {
-        await learning.completeSession(sessionIdRef.current, Date.now())
+        await sessionScope.learning.completeSession(sessionIdRef.current, Date.now())
         setStatus('complete')
-        if (sync) {
+        if (sync && identity.userId === sessionScope.userId) {
           setSyncMessage('Đã lưu local · đang đồng bộ…')
           void sync.sync().then(() => setSyncMessage('Đã đồng bộ với cloud')).catch(() => setSyncMessage('Đã lưu local · cloud sync đang chờ thử lại'))
+        } else if (identity.userId !== sessionScope.userId) {
+          setSyncMessage('Đã lưu local · phiên học giữ nguyên hồ sơ ban đầu, cloud sync sẽ chờ đúng tài khoản')
         }
       } catch (reason) {
         setError(reason instanceof Error ? reason.message : 'Không thể kết thúc phiên học.')

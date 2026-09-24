@@ -55,6 +55,7 @@ export function AppServicesProvider({ children, services }: { children: ReactNod
   const [base] = useState<BrowserInfrastructure>(() => createBrowserInfrastructure())
   const [value, setValue] = useState<AppServices>(() => services ?? guestServices(base))
   const [contentReady, setContentReady] = useState(() => Boolean(services) || import.meta.env.MODE === 'test')
+  const [authReady, setAuthReady] = useState(() => Boolean(services) || import.meta.env.MODE === 'test')
   const [contentError, setContentError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -85,9 +86,13 @@ export function AppServicesProvider({ children, services }: { children: ReactNod
     void import('../services/firebase/accountInfrastructure').then(({ createAccountInfrastructure }) => {
       if (cancelled) return
       const cloud = createAccountInfrastructure()
-      if (!cloud) return
+      if (!cloud) {
+        setAuthReady(true)
+        return
+      }
       base.accountAuth = cloud.accountAuth
       unsubscribe = cloud.accountAuth.subscribe((state) => {
+        setAuthReady(true)
         if (state.kind === 'signed-out') {
           activeUid = null
           setValue(guestServices(base))
@@ -106,7 +111,10 @@ export function AppServicesProvider({ children, services }: { children: ReactNod
         }).catch(() => undefined)
       })
     }).catch(() => {
-      if (!cancelled) setValue(guestServices(base))
+      if (!cancelled) {
+        setValue(guestServices(base))
+        setAuthReady(true)
+      }
     })
 
     return () => {
@@ -115,13 +123,15 @@ export function AppServicesProvider({ children, services }: { children: ReactNod
     }
   }, [base, services])
 
-  if (!services && !contentReady) {
+  if (!services && (!contentReady || !authReady)) {
+    const bootstrapMessage = contentError
+      ?? (!contentReady ? 'Đang kiểm tra và nạp các content bundle đã được xác minh.' : 'Đang khôi phục trạng thái đăng nhập an toàn.')
     return (
       <div className="content-bootstrap" role={contentError ? 'alert' : 'status'}>
         <div className="brand-mark" aria-hidden="true">あ</div>
         <div>
           <strong>{contentError ? 'Không thể tải nội dung học' : 'Đang tải ZaPan…'}</strong>
-          <p>{contentError ?? 'Đang kiểm tra và nạp các content bundle đã được xác minh.'}</p>
+          <p>{bootstrapMessage}</p>
         </div>
       </div>
     )

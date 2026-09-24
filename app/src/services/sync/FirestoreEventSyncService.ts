@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, setDoc, type Firestore } from 'firebase/firestore'
+import { collection, doc, getDocFromServer, getDocsFromServer, setDoc, waitForPendingWrites, type Firestore } from 'firebase/firestore'
 import type { LearningRepository } from '../../domain/learning/ports'
 import type { StudyEvent } from '../../domain/learning/types'
 import { parseCloudStudyEvent, serializeStudyEvent } from '../firebase/firestoreSchemas'
@@ -34,7 +34,7 @@ export class FirestoreEventSyncService {
 
     for (const event of localEvents) {
       const ref = doc(this.firestore, 'users', this.userId, 'events', event.eventId)
-      const snapshot = await getDoc(ref)
+      const snapshot = await getDocFromServer(ref)
       if (snapshot.exists()) {
         const cloudEvent = parseCloudStudyEvent(snapshot.data())
         if (!sameEvent(cloudEvent, event)) throw new Error(`Cloud event conflict: ${event.eventId}`)
@@ -45,7 +45,8 @@ export class FirestoreEventSyncService {
       }
     }
 
-    const cloudSnapshot = await getDocs(collection(this.firestore, 'users', this.userId, 'events'))
+    await waitForPendingWrites(this.firestore)
+    const cloudSnapshot = await getDocsFromServer(collection(this.firestore, 'users', this.userId, 'events'))
     const cloudEvents = cloudSnapshot.docs.map((item) => parseCloudStudyEvent(item.data()))
     const rebuilt = await this.local.mergeEvents(cloudEvents)
     const progress = await this.local.listProgress()

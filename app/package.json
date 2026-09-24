@@ -11,6 +11,7 @@
     "test:watch": "vitest",
     "playwright:install": "cross-env PLAYWRIGHT_BROWSERS_PATH=0 playwright install chromium",
     "test:e2e": "cross-env PLAYWRIGHT_BROWSERS_PATH=0 playwright test",
+    "test:e2e:production": "powershell -NoProfile -ExecutionPolicy Bypass -File ../firebase/requests/run-production-cloud-smoke.ps1",
     "test:firebase": "vitest run --config vitest.firebase.config.ts",
     "test:firebase:emulated": "powershell -NoProfile -ExecutionPolicy Bypass -File ../firebase/requests/run-firestore-tests.ps1",
     "check": "npm run lint && npm run test && npm run build",
