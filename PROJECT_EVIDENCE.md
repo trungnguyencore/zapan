@@ -395,3 +395,16 @@ Build note: core JS chunk observed at 487.97 kB, still below the Vite 500 kB war
 Firebase emulator regression: 13/13 PASS; added direct verification that a canonical Custom Practice event is accepted by rules, uploaded, downloaded and preserved with `mode=custom`.
 Production dependency audit: 0 vulnerabilities. Git diff whitespace check: PASS.
 Result: PASS.
+
+### E-039 — Phase 3 verified activity metrics and Progress dashboard slice
+Date: 2026-09-24
+Source of truth: immutable persisted StudyEvents; no synthetic activity records were added.
+Measured-study-time semantics: only real `responseTimeMs` values present on StudyEvents are summed. Events without measured response time contribute to event/day/streak counts but add zero measured time. Session wall-clock duration is intentionally not presented as active study time because it can include idle time and is not the cloud reconciliation authority.
+Calendar semantics: day keys use the browser-resolved IANA timezone. Current streak counts consecutive active calendar days ending today, or ending yesterday when today has not yet been studied; a fully missed yesterday resets current streak to zero.
+Domain tests: 4/4 PASS, including Asia/Ho_Chi_Minh midnight boundary, leap-day calendar arithmetic, measured-time-only aggregation, today/yesterday streak behavior and 28-day heatmap generation.
+Progress UI now shows canonical mastery metrics plus measured study minutes, current streak, active days, 7-day event count, 28-day StudyEvent heatmap and explicit timezone explanation.
+Browser verification: the persisted five-answer Kana flow produced one active heatmap day with exactly 5 events and streak=1 before and after reload. Custom Practice browser tests verify the same Progress activity behavior on both desktop and mobile after five canonical custom events.
+Full gate: lint 0 warnings/errors; 81/81 normal tests PASS across 24 files; TypeScript + Vite production build PASS; Playwright full matrix 10 executed PASS and 6 intentional environment-specific skips.
+Build observation: core JS chunk reached 491.54 kB, still below the Vite 500 kB warning threshold but sufficiently close that further Phase 3 feature work must first reduce entry-bundle pressure.
+Git diff whitespace check: PASS.
+Result: PASS.

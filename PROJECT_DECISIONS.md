@@ -218,3 +218,12 @@ The event-journal emulator tests proved deterministic multi-device reconciliatio
 The production browser gate first exposed a 3-event cloud result. Diagnostic inspection found a 3-account / 2-Guest local split; after session pinning, a second diagnostic found all 5 events in Guest after reload, which isolated the Auth boot race.
 Both failed production runs executed cleanup successfully before further changes.
 Conclusion: cross-layer production browser smoke remains a release-critical gate for identity/persistence/sync behavior; passing unit and emulator tests must not be treated as proof of browser lifecycle correctness.
+
+## DEC-026 — Activity metrics derive from immutable StudyEvents
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: Progress activity analytics derive from the same persisted StudyEvent journal used for learning reconciliation. No separate activity counter/database is introduced.
+Measured study time is the sum of StudyEvent `responseTimeMs` values that were actually measured; missing timing contributes zero rather than receiving a synthetic estimate. Session open duration is not labeled as active study time.
+Calendar/streak semantics use the browser's resolved IANA timezone. A current streak is the consecutive sequence ending today, or ending yesterday if the learner has not studied yet today. If yesterday has no event, current streak is zero.
+Reason: event-derived metrics converge across local/cloud histories and preserve the project rule that synthetic timing must never be presented as measured behavior.
+Verification: deterministic timezone/activity unit tests plus desktop/mobile browser flows with persisted StudyEvents and reload checks.

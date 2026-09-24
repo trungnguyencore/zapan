@@ -84,10 +84,12 @@ See `PROJECT_EVIDENCE.md` for the production identity-race failures that were ca
 ## Phase 3 current work
 Verified Phase 3 slices:
 - Library searches the full verified 1,124-card repository across real Kana/Vocabulary/Kanji fields, filters by content type, and limits DOM rendering to the first 60 matches while preserving the complete match count;
-- Custom Practice supports explicit multi-topic selection with 5/10/20-card deterministic sessions, emits canonical `mode=custom` StudyEvents into the same SRS/progress pipeline, and is verified on desktop/mobile plus Firestore emulator sync.
+- Custom Practice supports explicit multi-topic selection with 5/10/20-card deterministic sessions, emits canonical `mode=custom` StudyEvents into the same SRS/progress pipeline, and is verified on desktop/mobile plus Firestore emulator sync;
+- Progress now derives measured active-study time, streak, active days, 7-day totals and a 28-day heatmap directly from persisted StudyEvents with explicit timezone/day-boundary semantics; desktop/mobile persisted-history flows are verified.
 
 Current next slice:
-- implement real activity metrics and expand Progress with measured study minutes, streak/day-boundary semantics, and heatmap data derived from persisted sessions/events.
+- establish route-level code splitting before adding heavier Phase 3 Writing/Games because the current core JS chunk is 491.54 kB, close to the 500 kB warning threshold;
+- then implement Writing foundation and stroke-order fallback.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

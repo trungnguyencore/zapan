@@ -205,3 +205,19 @@
   .practice-launch-card > div { grid-column: auto; }
   .practice-launch-card .button { width: 100%; }
 }
+
+.activity-card { display: grid; gap: 20px; box-shadow: none; }
+.activity-card code { padding: 2px 6px; border-radius: 7px; background: var(--surface-soft); color: var(--text); font-size: .86em; }
+.activity-heatmap { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+.heat-cell { aspect-ratio: 1; min-height: 18px; border: 1px solid var(--border); border-radius: 7px; background: var(--surface-soft); }
+.heat-level-1 { background: color-mix(in srgb, var(--brand) 18%, var(--surface)); }
+.heat-level-2 { background: color-mix(in srgb, var(--brand) 36%, var(--surface)); }
+.heat-level-3 { background: color-mix(in srgb, var(--brand) 58%, var(--surface)); }
+.heat-level-4 { background: color-mix(in srgb, var(--brand) 82%, var(--surface)); }
+.activity-summary-row { display: flex; flex-wrap: wrap; gap: 12px 24px; color: var(--muted); font-size: .9rem; }
+.activity-summary-row strong { color: var(--text); }
+
+@media (max-width: 760px) {
+  .activity-heatmap { gap: 6px; }
+  .heat-cell { border-radius: 6px; }
+}

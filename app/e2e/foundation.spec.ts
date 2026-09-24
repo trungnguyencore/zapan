@@ -60,8 +60,12 @@ test('a real Kana session persists progress across reload', async ({ page }, tes
   await page.getByRole('link', { name: 'Về Today' }).click()
   await page.getByRole('navigation', { name: 'Điều hướng chính' }).getByRole('link', { name: 'Progress' }).click()
   await expect(page.getByText('5/1124')).toBeVisible()
+  await expect(page.locator('.metric-card').filter({ hasText: 'Ngày streak hiện tại' })).toContainText('1')
+  await expect(page.locator('.heat-cell.has-activity')).toHaveCount(1)
+  await expect(page.locator('.heat-cell.has-activity')).toHaveAttribute('aria-label', /5 lượt/)
   await page.reload()
   await expect(page.getByText('5/1124')).toBeVisible()
+  await expect(page.locator('.metric-card').filter({ hasText: 'Ngày streak hiện tại' })).toContainText('1')
 })
 
 test('verified N5 Vocabulary topic runs through the real study pipeline', async ({ page }, testInfo) => {
@@ -164,4 +168,9 @@ test('Custom Practice uses the canonical custom StudyEvent pipeline', async ({ p
 
   expect(events).toHaveLength(5)
   expect(events.every((event) => event.mode === 'custom' && event.inputKind === 'typing')).toBe(true)
+
+  await page.goto('/progress')
+  await expect(page.locator('.metric-card').filter({ hasText: 'Ngày streak hiện tại' })).toContainText('1')
+  await expect(page.locator('.heat-cell.has-activity')).toHaveCount(1)
+  await expect(page.locator('.heat-cell.has-activity')).toHaveAttribute('aria-label', /5 lượt/)
 })
