@@ -5,7 +5,7 @@ import { deriveLearningOverview } from '../progress/overview'
 export type RoadmapStageStatus = 'not-started' | 'in-progress' | 'complete'
 
 export interface RoadmapStageDefinition {
-  stageId: 'hiragana' | 'katakana' | 'n5-vocabulary' | 'n5-kanji'
+  stageId: 'hiragana' | 'katakana' | 'n5-vocabulary' | 'n5-kanji' | 'n4-open-study' | 'n3-open-study'
   order: number
   eyebrow: string
   title: string

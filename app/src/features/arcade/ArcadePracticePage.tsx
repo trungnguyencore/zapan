@@ -5,9 +5,10 @@ import { PageIntro } from '../../components/ui/PageIntro'
 import { buildArcadeQueue, nextSurvivalLives, remainingSeconds, type ArcadeMode, type TimeAttackDuration } from '../../domain/arcade/arcade'
 import type { ContentCard } from '../../domain/content/types'
 import { checkTypedAnswer } from '../../domain/session/answer'
+import { KANJI_N3_TOPIC_CATALOG, KANJI_N4_TOPIC_CATALOG, VOCAB_N3_TOPIC_CATALOG, VOCAB_N4_TOPIC_CATALOG } from '../../data/openjlpt/generated/catalog'
 import { KANA_TOPIC_CATALOG, KANJI_N5_TOPIC_CATALOG, VOCAB_N5_TOPIC_CATALOG, type LearningTopicMeta } from '../../data/n5/topicCatalog'
 
-const TOPICS: readonly LearningTopicMeta[] = [...KANA_TOPIC_CATALOG, ...VOCAB_N5_TOPIC_CATALOG, ...KANJI_N5_TOPIC_CATALOG]
+const TOPICS: readonly LearningTopicMeta[] = [...KANA_TOPIC_CATALOG, ...VOCAB_N5_TOPIC_CATALOG, ...KANJI_N5_TOPIC_CATALOG, ...VOCAB_N4_TOPIC_CATALOG, ...KANJI_N4_TOPIC_CATALOG, ...VOCAB_N3_TOPIC_CATALOG, ...KANJI_N3_TOPIC_CATALOG]
 const DURATIONS: TimeAttackDuration[] = [30, 60, 120]
 
 function promptFor(card: ContentCard): string {
@@ -38,6 +39,10 @@ function ArcadeSetup({ mode, onStart }: { mode: ArcadeMode; onStart: (topicId: s
         <optgroup label="Kana">{KANA_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
         <optgroup label="Vocabulary N5">{VOCAB_N5_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
         <optgroup label="Kanji N5">{KANJI_N5_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
+        <optgroup label="Vocabulary N4 · Open study set">{VOCAB_N4_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
+        <optgroup label="Kanji N4 · Open study set">{KANJI_N4_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
+        <optgroup label="Vocabulary N3 · Open study set">{VOCAB_N3_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
+        <optgroup label="Kanji N3 · Open study set">{KANJI_N3_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
       </select>
       {mode === 'time-attack' && <fieldset className="arcade-duration-fieldset"><legend>Thời lượng</legend>{DURATIONS.map((value) => <label key={value} className={duration === value ? 'is-selected' : ''}><input type="radio" name="arcade-duration" checked={duration === value} onChange={() => setDuration(value)} />{value}s</label>)}</fieldset>}
       {mode === 'survival' && <div className="arcade-rule-note"><strong>3 lives</strong><span>Không timer · tối đa 20 cards · sai mới mất life</span></div>}

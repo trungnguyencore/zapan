@@ -1,3 +1,4 @@
+import { primaryMeaning } from '../content/meaning'
 import type { ContentCard } from '../content/types'
 
 export interface MatchPair {
@@ -8,8 +9,8 @@ export interface MatchPair {
 
 function labelsFor(card: ContentCard): { prompt: string; answer: string } {
   if (card.contentType === 'kana') return { prompt: card.character, answer: card.romanizations[0] ?? '' }
-  if (card.contentType === 'vocabulary') return { prompt: card.term, answer: card.meanings.vi }
-  if (card.contentType === 'kanji') return { prompt: card.character, answer: card.meanings.vi }
+  if (card.contentType === 'vocabulary') return { prompt: card.term, answer: primaryMeaning(card) }
+  if (card.contentType === 'kanji') return { prompt: card.character, answer: primaryMeaning(card) }
   throw new Error('Match supports Kana, Vocabulary and Kanji cards only')
 }
 

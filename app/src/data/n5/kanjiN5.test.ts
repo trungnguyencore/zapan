@@ -26,7 +26,7 @@ describe('KANJI_N5_BUNDLE', () => {
       if (card.contentType !== 'kanji') continue
       expect(Array.from(card.character)).toHaveLength(1)
       expect(card.readings.length).toBeGreaterThan(0)
-      expect(card.meanings.vi.trim().length).toBeGreaterThan(0)
+      expect(card.meanings.vi?.trim().length ?? 0).toBeGreaterThan(0)
       expect(card.meanings.en?.trim().length ?? 0).toBeGreaterThan(0)
       expect(card.hanViet?.trim().length ?? 0).toBeGreaterThan(0)
       expect(card.mnemonic?.trim().length ?? 0).toBeGreaterThan(0)

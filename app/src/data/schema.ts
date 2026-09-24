@@ -1,6 +1,13 @@
 import { z } from 'zod'
 import type { ContentBundle } from '../domain/content/types'
 
+const meaningSchema = z.object({
+  vi: z.string().min(1).optional(),
+  en: z.string().min(1).optional(),
+}).refine((value) => Boolean(value.vi?.trim() || value.en?.trim()), {
+  message: 'At least one meaning language is required',
+})
+
 const baseCardSchema = z.object({
   cardId: z.string().min(1),
   schemaVersion: z.literal(1),
@@ -21,7 +28,7 @@ export const vocabularyCardSchema = baseCardSchema.extend({
   contentType: z.literal('vocabulary'),
   term: z.string().min(1),
   readings: z.array(z.string().min(1)).min(1),
-  meanings: z.object({ vi: z.string().min(1), en: z.string().min(1).optional() }),
+  meanings: meaningSchema,
 })
 
 export const kanjiCardSchema = baseCardSchema.extend({
@@ -30,7 +37,7 @@ export const kanjiCardSchema = baseCardSchema.extend({
   readings: z.array(z.string().min(1)).min(1),
   onYomi: z.string(),
   kunYomi: z.string(),
-  meanings: z.object({ vi: z.string().min(1), en: z.string().min(1).optional() }),
+  meanings: meaningSchema,
   hanViet: z.string().optional(),
   strokeCount: z.number().int().positive(),
   mnemonic: z.string().optional(),

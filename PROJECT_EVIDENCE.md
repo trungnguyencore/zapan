@@ -907,3 +907,47 @@ Production backend state:
 - legacy Firebase project `zapan-app` was not modified by this release migration.
 
 Result: PASS — ZaPan v2 production migration is verified live with rollback history preserved.
+
+### E-056 — Phase 6 sourced N4/N3 local verification
+Date: 2026-09-24
+Scope: OpenJLPT N4/N3 Vocabulary + Kanji ingestion, identity deduplication, product integration and local release gates.
+
+Source/provenance:
+- upstream snapshot commit: `c42fd9fa3777bfc1775446f7c418d549dfd6e4cf`;
+- upstream NOTICE and CC BY-SA 4.0 LICENSE are preserved under `app/content-sources/openjlpt/`;
+- `SOURCE_MANIFEST.json` records SHA-256/byte/raw/retained/excluded metadata;
+- `DEDUPLICATION_REPORT.json` records every excluded higher-level duplicate prompt;
+- raw records: N4 798, N3 2,151;
+- retained: N4 709 (569 Vocabulary + 140 Kanji), N3 2,034 (1,668 Vocabulary + 366 Kanji);
+- excluded higher-level duplicate prompts: 206;
+- full learner repository: 3,867 cards.
+
+Functional verification:
+- generated OpenJLPT contract/repository targeted tests PASS;
+- N4 Vocabulary browser session PASS with source-backed English meaning;
+- N3 Kanji browser session PASS with source-backed meaning/stroke metadata;
+- Library result counts verify 3,867 total / 615 Kanji;
+- Roadmap verifies six active sourced stages;
+- built Pages artifact direct-deep-link smoke verifies N4/N3 sessions on desktop and mobile.
+
+Integrated local gate:
+- lint: 0 warnings / 0 errors;
+- normal tests: 113/113 across 35 files;
+- TypeScript + Vite production build: PASS;
+- bundle budget: core 481.43 kB <= 490.00 kB; all JS chunks <= 500.00 kB;
+- Firebase Auth/Firestore emulator: 24/24 PASS;
+- Playwright: 34 PASS / 10 intentional skips;
+- Pages artifact smoke: 6/6 PASS;
+- production dependency audit: found 0 vulnerabilities;
+- `git diff --check`: PASS;
+- integrated command exit code: 0.
+
+Failures/corrections recorded:
+- source overlap analysis found N5↔N4, N5↔N3 and N4↔N3 prompt collisions; generator now enforces lower-level-prompt-wins and preserves exclusions;
+- first repository test used raw/pre-dedupe total 4,073 and failed against actual 3,867; expectation was corrected only after the dedupe policy was established;
+- TypeScript build caught insufficient narrowing in the dataset test;
+- initial content wiring exceeded core bundle budget at 494.56–495.03 kB and Vite flagged ineffective dynamic import; generated catalog/loader were split, Learn was lazy-loaded, and the bootstrap placeholder repository was made empty, reducing core to 481.43 kB;
+- full-suite contention caused the identity test to hit the default 5s timeout while focused execution passed; only that test received a 10s timeout and full suite reran green;
+- Learn/Roadmap visual regressions failed because intended N4/N3 sections increased page height; semantic/mobile-overflow tests passed, then the four affected Learn/Roadmap baselines were regenerated and the full matrix passed.
+
+Result: PASS locally. Production Pages deployment/live N4/N3 verification remains pending before Phase 6 can be marked VERIFIED.

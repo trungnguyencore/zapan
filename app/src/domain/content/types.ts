@@ -20,7 +20,7 @@ export interface VocabularyContentCard extends BaseContentCard {
   contentType: 'vocabulary'
   term: string
   readings: string[]
-  meanings: { vi: string; en?: string }
+  meanings: { vi?: string; en?: string }
 }
 
 export interface KanjiContentCard extends BaseContentCard {
@@ -29,7 +29,7 @@ export interface KanjiContentCard extends BaseContentCard {
   readings: string[]
   onYomi: string
   kunYomi: string
-  meanings: { vi: string; en?: string }
+  meanings: { vi?: string; en?: string }
   hanViet?: string
   strokeCount: number
   mnemonic?: string

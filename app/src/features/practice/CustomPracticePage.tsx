@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { LearningDataBoundary } from '../../components/ui/LearningDataBoundary'
 import { PageIntro } from '../../components/ui/PageIntro'
 import {
+  KANJI_N3_TOPIC_CATALOG,
+  KANJI_N4_TOPIC_CATALOG,
+  VOCAB_N3_TOPIC_CATALOG,
+  VOCAB_N4_TOPIC_CATALOG,
+} from '../../data/openjlpt/generated/catalog'
+import {
   KANA_TOPIC_CATALOG,
   KANJI_N5_TOPIC_CATALOG,
   type LearningTopicMeta,
@@ -14,8 +20,12 @@ type PracticeLimit = '5' | '10' | '20'
 
 const GROUPS: Array<{ title: string; eyebrow: string; topics: readonly LearningTopicMeta[] }> = [
   { title: 'Kana', eyebrow: 'FOUNDATION', topics: KANA_TOPIC_CATALOG },
-  { title: 'Vocabulary', eyebrow: 'JLPT N5', topics: VOCAB_N5_TOPIC_CATALOG },
-  { title: 'Kanji', eyebrow: 'JLPT N5', topics: KANJI_N5_TOPIC_CATALOG },
+  { title: 'N5 Vocabulary', eyebrow: 'JLPT N5 · AUDITED', topics: VOCAB_N5_TOPIC_CATALOG },
+  { title: 'N5 Kanji', eyebrow: 'JLPT N5 · AUDITED', topics: KANJI_N5_TOPIC_CATALOG },
+  { title: 'N4 Vocabulary', eyebrow: 'N4 · OPEN STUDY SET', topics: VOCAB_N4_TOPIC_CATALOG },
+  { title: 'N4 Kanji', eyebrow: 'N4 · OPEN STUDY SET', topics: KANJI_N4_TOPIC_CATALOG },
+  { title: 'N3 Vocabulary', eyebrow: 'N3 · OPEN STUDY SET', topics: VOCAB_N3_TOPIC_CATALOG },
+  { title: 'N3 Kanji', eyebrow: 'N3 · OPEN STUDY SET', topics: KANJI_N3_TOPIC_CATALOG },
 ]
 
 export function CustomPracticePage() {

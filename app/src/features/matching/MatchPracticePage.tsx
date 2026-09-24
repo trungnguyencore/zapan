@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useAppServices } from '../../app/AppServicesContext'
 import { PageIntro } from '../../components/ui/PageIntro'
+import { KANJI_N3_TOPIC_CATALOG, KANJI_N4_TOPIC_CATALOG, VOCAB_N3_TOPIC_CATALOG, VOCAB_N4_TOPIC_CATALOG } from '../../data/openjlpt/generated/catalog'
 import { KANA_TOPIC_CATALOG, KANJI_N5_TOPIC_CATALOG, VOCAB_N5_TOPIC_CATALOG, type LearningTopicMeta } from '../../data/n5/topicCatalog'
 import { buildMatchPairs, rotateMatchAnswers } from '../../domain/matching/matching'
 import { epochNowMs, monotonicNowMs } from '../../services/time/clock'
 
-const TOPICS: readonly LearningTopicMeta[] = [...KANA_TOPIC_CATALOG, ...VOCAB_N5_TOPIC_CATALOG, ...KANJI_N5_TOPIC_CATALOG]
+const TOPICS: readonly LearningTopicMeta[] = [...KANA_TOPIC_CATALOG, ...VOCAB_N5_TOPIC_CATALOG, ...KANJI_N5_TOPIC_CATALOG, ...VOCAB_N4_TOPIC_CATALOG, ...KANJI_N4_TOPIC_CATALOG, ...VOCAB_N3_TOPIC_CATALOG, ...KANJI_N3_TOPIC_CATALOG]
 
 function MatchSetup({ onStart }: { onStart: (topicId: string) => void }) {
   const [topicId, setTopicId] = useState('kana-hiragana-main')
@@ -23,6 +24,10 @@ function MatchSetup({ onStart }: { onStart: (topicId: string) => void }) {
         <optgroup label="Kana">{KANA_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
         <optgroup label="Vocabulary N5">{VOCAB_N5_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
         <optgroup label="Kanji N5">{KANJI_N5_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
+        <optgroup label="Vocabulary N4 · Open study set">{VOCAB_N4_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
+        <optgroup label="Kanji N4 · Open study set">{KANJI_N4_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
+        <optgroup label="Vocabulary N3 · Open study set">{VOCAB_N3_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
+        <optgroup label="Kanji N3 · Open study set">{KANJI_N3_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count}</option>)}</optgroup>
       </select>
       <p className="muted-copy">ZaPan dùng tối đa 6 pair có answer label khác nhau để tránh tile mơ hồ.</p>
       <button className="button primary" type="button" onClick={() => onStart(topicId)}>Bắt đầu Match</button>

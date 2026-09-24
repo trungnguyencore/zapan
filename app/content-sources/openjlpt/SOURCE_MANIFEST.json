@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "source": "OpenJLPT",
+  "sourceCommit": "c42fd9fa3777bfc1775446f7c418d549dfd6e4cf",
+  "license": "CC BY-SA 4.0",
+  "upstreamNotice": "NOTICE.md",
+  "deduplication": {
+    "rule": "lower-level prompt wins: N5 existing > N4 OpenJLPT > N3 OpenJLPT",
+    "rationale": "ZaPan currently quizzes vocabulary by term and kanji by character; duplicate prompts must not create parallel SRS records."
+  },
+  "files": {
+    "data__json__vocab__n4.json": {
+      "sha256": "978b9813afaac181fe1308eb1ad7d4cb4ad4ffc9178fa88fc7fb2832de5dbb62",
+      "bytes": 218895,
+      "rawEntries": 632,
+      "retainedEntries": 569,
+      "excludedDuplicates": 63
+    },
+    "data__json__vocab__n3.json": {
+      "sha256": "d8ce3998ebb254567436ef3d34c96f6aac83c2c88dbfb85af5e5935bd1bd21ed",
+      "bytes": 679580,
+      "rawEntries": 1784,
+      "retainedEntries": 1668,
+      "excludedDuplicates": 116
+    },
+    "data__json__kanji__n4.json": {
+      "sha256": "5d26112e42a99d3d97ba614f3ef7f71605de237a95a6af4f96e5d444c8ac47eb",
+      "bytes": 49031,
+      "rawEntries": 166,
+      "retainedEntries": 140,
+      "excludedDuplicates": 26
+    },
+    "data__json__kanji__n3.json": {
+      "sha256": "99e632d1d8972dadc2bd2d4c2dee37366b4d32d0173f17b1aa182351adc91273",
+      "bytes": 117134,
+      "rawEntries": 367,
+      "retainedEntries": 366,
+      "excludedDuplicates": 1
+    }
+  }
+}

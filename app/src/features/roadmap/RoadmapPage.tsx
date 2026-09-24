@@ -75,8 +75,8 @@ export function RoadmapPage() {
 
     <article className="surface-card roadmap-deferred" aria-label="Các stage chưa kích hoạt">
       <p className="card-kicker">NOT ACTIVE YET</p>
-      <h2>Grammar · Reading/Listening · N5 consolidation/exam · N4/N3</h2>
-      <p>Các stage này có trong learner-journey specification nhưng chưa được mở thành learning stage vì ZaPan v2 chưa có content + review flow đã xác minh tương ứng. Chúng sẽ không xuất hiện như nội dung khả dụng chỉ để làm roadmap trông đầy hơn.</p>
+      <h2>Grammar · Reading/Listening · N5/N4/N3 exam practice</h2>
+      <p>Vocabulary + Kanji N4/N3 đã active từ nguồn mở có provenance. Grammar, Reading/Listening và exam-practice vẫn chưa mở vì chưa có content + review flow đã xác minh tương ứng.</p>
     </article>
       </>
     </LearningDataBoundary>

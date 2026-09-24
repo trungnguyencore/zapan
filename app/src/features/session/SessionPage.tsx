@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useAppServices } from '../../app/AppServicesContext'
+import { primaryMeaning } from '../../domain/content/meaning'
 import type { ContentCard } from '../../domain/content/types'
 import type { StudyMode } from '../../domain/learning/types'
 import { checkTypedAnswer } from '../../domain/session/answer'
@@ -33,8 +34,8 @@ function answerInstruction(card: ContentCard | undefined): string {
 function contentLabel(card: ContentCard | undefined): string {
   if (!card) return ''
   if (card.contentType === 'kana') return `${card.script} · ${card.group}`
-  if (card.contentType === 'vocabulary') return 'Vocabulary · N5'
-  return 'Kanji · N5'
+  if (card.contentType === 'vocabulary') return `Vocabulary · ${card.level.toUpperCase()}`
+  return `Kanji · ${card.level.toUpperCase()}`
 }
 
 export function SessionPage() {
@@ -182,9 +183,9 @@ export function SessionPage() {
       {feedback && <div className={`feedback-card ${feedback.correct ? 'correct' : 'incorrect'}`} role="status">
         <strong>{feedback.correct ? 'Đúng' : 'Chưa đúng'}</strong>
         <span>Đáp án: {feedback.acceptedAnswers.join(' / ')}</span>
-        {current?.contentType === 'vocabulary' && <span>Nghĩa: {current.meanings.vi}</span>}
+        {current?.contentType === 'vocabulary' && <span>Nghĩa: {primaryMeaning(current)}</span>}
         {current?.contentType === 'kanji' && <>
-          <span>Nghĩa: {current.meanings.vi} · Hán Việt: {current.hanViet}</span>
+          <span>Nghĩa: {primaryMeaning(current)}{current.hanViet ? ' · Hán Việt: ' + current.hanViet : ''}</span>
           <span>On: {current.onYomi || '—'} · Kun: {current.kunYomi || '—'} · {current.strokeCount} nét</span>
           {current.mnemonic && <span className="memory-aid">Gợi nhớ: {current.mnemonic}</span>}
         </>}

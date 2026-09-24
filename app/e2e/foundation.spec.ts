@@ -97,12 +97,12 @@ test('a real Kana session persists progress across reload', async ({ page }, tes
   await expect(page.getByText('100%')).toBeVisible()
   await page.getByRole('link', { name: 'Về Today' }).click()
   await page.getByRole('navigation', { name: 'Điều hướng chính' }).getByRole('link', { name: 'Progress' }).click()
-  await expect(page.getByText('5/1124')).toBeVisible()
+  await expect(page.getByText('5/3867')).toBeVisible()
   await expect(page.locator('.metric-card').filter({ hasText: 'Ngày streak hiện tại' })).toContainText('1')
   await expect(page.locator('.heat-cell.has-activity')).toHaveCount(1)
   await expect(page.locator('.heat-cell.has-activity')).toHaveAttribute('aria-label', /5 lượt/)
   await page.reload()
-  await expect(page.getByText('5/1124')).toBeVisible()
+  await expect(page.getByText('5/3867')).toBeVisible()
   await expect(page.locator('.metric-card').filter({ hasText: 'Ngày streak hiện tại' })).toContainText('1')
 
   await page.goto('/roadmap')
@@ -115,7 +115,7 @@ test('a real Kana session persists progress across reload', async ({ page }, tes
 test('verified N5 Vocabulary topic runs through the real study pipeline', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'chromium-desktop', 'desktop vocabulary learning flow')
   await page.goto('/learn')
-  await expect(page.getByRole('heading', { name: 'Vocabulary' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'N5 Vocabulary' })).toBeVisible()
   await page.getByRole('link', { name: 'Học Số đếm & Lượng từ' }).click()
   await expect(page).toHaveURL(/\/session\/learn\/vocab-n5-numbers$/)
   await expect(page.getByText('五つ', { exact: true })).toBeVisible()
@@ -132,7 +132,7 @@ test('verified N5 Vocabulary topic runs through the real study pipeline', async 
 test('verified N5 Kanji topic reveals audited metadata after answer', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'chromium-desktop', 'desktop kanji learning flow')
   await page.goto('/learn')
-  await expect(page.getByRole('heading', { name: 'Kanji' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'N5 Kanji' })).toBeVisible()
   await page.getByRole('link', { name: 'Học Số đếm', exact: true }).click()
   await expect(page).toHaveURL(/\/session\/learn\/kanji-n5-numbers$/)
   await expect(page.getByText('一', { exact: true })).toBeVisible()
@@ -146,10 +146,38 @@ test('verified N5 Kanji topic reveals audited metadata after answer', async ({ p
   await expect(feedback).toContainText('Gợi nhớ:')
 })
 
+test('N4 OpenJLPT vocabulary runs through the real study pipeline with source-backed English meaning', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chromium-desktop', 'desktop N4 vocabulary learning flow')
+  await page.goto('/session/learn/vocab-n4-open-01')
+  await expect(page.getByText('Vocabulary · N4')).toBeVisible()
+  await expect(page.locator('.question-glyph')).toHaveText('あ')
+
+  await page.getByLabel('Câu trả lời').fill('あ')
+  await page.getByRole('button', { name: 'Kiểm tra' }).click()
+  const feedback = page.getByRole('status')
+  await expect(feedback).toContainText('Đúng')
+  await expect(feedback).toContainText('Đáp án: あ')
+  await expect(feedback).toContainText('Nghĩa: Ah')
+})
+
+test('N3 OpenJLPT Kanji runs through the real study pipeline with source-backed metadata', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chromium-desktop', 'desktop N3 Kanji learning flow')
+  await page.goto('/session/learn/kanji-n3-open-01')
+  await expect(page.getByText('Kanji · N3')).toBeVisible()
+  await expect(page.getByText('政', { exact: true })).toBeVisible()
+
+  await page.getByLabel('Câu trả lời').fill('せい')
+  await page.getByRole('button', { name: 'Kiểm tra' }).click()
+  const feedback = page.getByRole('status')
+  await expect(feedback).toContainText('Đúng')
+  await expect(feedback).toContainText('Nghĩa: politics; government')
+  await expect(feedback).toContainText('9 nét')
+})
+
 test('Library searches the complete verified repository and filters content types', async ({ page }) => {
   await page.goto('/library')
   await expect(page.getByRole('heading', { name: 'Tra cứu nội dung đã xác minh' })).toBeVisible()
-  await expect(page.getByText('1124 kết quả')).toBeVisible()
+  await expect(page.getByText('3867 kết quả')).toBeVisible()
 
   const search = page.getByLabel('Tìm ký tự, từ, reading hoặc nghĩa')
   await search.fill('いつつ')
@@ -159,7 +187,7 @@ test('Library searches the complete verified repository and filters content type
 
   await search.fill('')
   await page.getByRole('button', { name: 'Kanji' }).click()
-  await expect(page.getByText('109 kết quả')).toBeVisible()
+  await expect(page.getByText('615 kết quả')).toBeVisible()
   await search.fill('Nhất')
   await expect(page.getByText('一', { exact: true })).toBeVisible()
   await expect(page.getByText(/Hán Việt: Nhất/)).toBeVisible()
@@ -488,30 +516,30 @@ test('Roadmap exposes only verified learner stages on desktop and mobile', async
   await page.getByRole('link', { name: 'Mở Roadmap' }).click()
   await expect(page).toHaveURL(/\/roadmap$/)
   await expect(page.getByRole('heading', { name: 'Lộ trình dựa trên mastery thật' })).toBeVisible()
-  await expect(page.locator('.roadmap-stage')).toHaveCount(4)
-  await expect(page.getByRole('heading', { name: '0/4 stage complete' })).toBeVisible()
-  await expect(page.getByText('1124 cards hiện có trong learner path.')).toBeVisible()
+  await expect(page.locator('.roadmap-stage')).toHaveCount(6)
+  await expect(page.getByRole('heading', { name: '0/6 stage complete' })).toBeVisible()
+  await expect(page.getByText('3867 cards hiện có trong learner path.')).toBeVisible()
 
   const hiraganaStage = page.locator('.roadmap-stage').filter({ has: page.getByRole('heading', { name: 'Hiragana' }) })
   await expect(hiraganaStage).toContainText('Gợi ý tiếp theo')
   await expect(hiraganaStage).toContainText('0/46')
-  await expect(page.locator('.roadmap-deferred')).toContainText('Grammar · Reading/Listening · N5 consolidation/exam · N4/N3')
+  await expect(page.locator('.roadmap-deferred')).toContainText('Grammar · Reading/Listening · N5/N4/N3 exam practice')
   await expect(page.locator('.roadmap-deferred').getByRole('link')).toHaveCount(0)
 })
 
 test('Roadmap exposes only verified stages and derives status from canonical progress', async ({ page }) => {
   await page.goto('/roadmap')
   await expect(page.getByRole('heading', { name: 'Lộ trình dựa trên mastery thật' })).toBeVisible()
-  await expect(page.getByText('0/4 stage complete')).toBeVisible()
-  await expect(page.getByText('1124 cards hiện có trong learner path.')).toBeVisible()
-  await expect(page.locator('.roadmap-stage')).toHaveCount(4)
+  await expect(page.getByText('0/6 stage complete')).toBeVisible()
+  await expect(page.getByText('3867 cards hiện có trong learner path.')).toBeVisible()
+  await expect(page.locator('.roadmap-stage')).toHaveCount(6)
 
   const hiraganaStage = page.locator('.roadmap-stage').filter({ hasText: 'Hiragana' })
   await expect(hiraganaStage).toContainText('Gợi ý tiếp theo')
   await expect(hiraganaStage).toContainText('Chưa bắt đầu')
   await expect(hiraganaStage).toContainText('0/46')
   await expect(hiraganaStage).toContainText('0 đã học')
-  await expect(page.getByRole('heading', { name: 'Grammar · Reading/Listening · N5 consolidation/exam · N4/N3' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Grammar · Reading/Listening · N5/N4/N3 exam practice' })).toBeVisible()
 
   await hiraganaStage.getByRole('link', { name: 'Bắt đầu stage' }).click()
   await expect(page).toHaveURL(/\/session\/learn\/kana-hiragana-main$/)
@@ -531,7 +559,7 @@ test('Roadmap exposes only verified stages and derives status from canonical pro
   await expect(updatedHiragana).toContainText('Gợi ý tiếp theo')
   await expect(updatedHiragana).toContainText('5 đã học')
   await expect(updatedHiragana).toContainText('0/46')
-  await expect(page.getByText('0/4 stage complete')).toBeVisible()
+  await expect(page.getByText('0/6 stage complete')).toBeVisible()
 })
 
 test('keyboard focus path exposes skip navigation and activates secondary routes', async ({ page }) => {
@@ -689,5 +717,5 @@ test('loaded study session remains local-first while the browser is offline', as
   await context.setOffline(false)
   await page.getByRole('link', { name: 'Về Today' }).click()
   await page.getByRole('navigation', { name: 'Điều hướng chính' }).getByRole('link', { name: 'Progress' }).click()
-  await expect(page.getByText('5/1124')).toBeVisible()
+  await expect(page.getByText('5/3867')).toBeVisible()
 })

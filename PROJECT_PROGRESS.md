@@ -2,8 +2,8 @@
 
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
-Current phase: Phase 5 — Release engineering and production migration
-Current status: VERIFIED — LIVE PRODUCTION
+Current phase: Phase 6 — Sourced N4/N3 content expansion
+Current status: TESTING — LOCAL VERIFIED; PRODUCTION DEPLOY PENDING
 Last verified: 2026-09-24
 
 ## Hard scope boundary
@@ -169,6 +169,47 @@ Verified live-site behavior:
 
 See `PROJECT_EVIDENCE.md` E-052 through E-055 for the local candidate, production preflight, merge/deploy and live verification trail.
 
+## Phase 6 current state
+Phase 6 expands the verified learning repository with sourced N4/N3 Vocabulary and Kanji while preserving the existing SRS/progress identity model.
+
+Locally verified implementation:
+- pinned OpenJLPT snapshot commit `c42fd9fa3777bfc1775446f7c418d549dfd6e4cf` is stored under `app/content-sources/openjlpt/` with upstream `NOTICE.md`, CC BY-SA 4.0 `LICENSE`, SHA-256 source manifest and duplicate-exclusion report;
+- raw imported source contains 798 N4 records and 2,151 N3 records;
+- ZaPan applies lower-level-prompt-wins deduplication (existing N5 > N4 > N3) because Vocabulary is quizzed by term and Kanji by character; 206 higher-level duplicate prompts are excluded from SRS identities while raw source records remain preserved;
+- retained N4: 569 Vocabulary + 140 Kanji = 709 cards;
+- retained N3: 1,668 Vocabulary + 366 Kanji = 2,034 cards;
+- total learner repository is now 3,867 cards: 92 Kana + 923 N5 Vocabulary + 109 N5 Kanji + 709 N4 + 2,034 N3;
+- N4/N3 meanings remain source-backed English when reviewed Vietnamese is unavailable; the content schema permits `vi` or `en` but requires at least one nonempty meaning;
+- Learn, Library, Roadmap, Custom Practice, Writing, Match, Time Attack and Survival can consume the new sourced topics through the same canonical StudyEvent/SRS/progress model;
+- Roadmap now contains six active stages: Hiragana, Katakana, N5 Vocabulary, N5 Kanji, N4 open study set and N3 open study set;
+- Grammar, Reading, Listening and exam-practice remain inactive because separate sourced/content-flow verification has not been completed;
+- generated OpenJLPT modules are split into small chunks; content bootstrap and Learn route remain lazy-loaded enough to keep the core entry under the executable 490 kB budget.
+
+Local Phase 6 integrated gate:
+- OpenJLPT data-contract/repository tests: PASS;
+- lint: PASS, 0 warnings / 0 errors;
+- normal unit/component tests: PASS, 113/113 across 35 files;
+- TypeScript + production build: PASS;
+- bundle budget: PASS, core 481.43 kB <= 490.00 kB; every JS chunk <= 500.00 kB;
+- Firebase Auth/Firestore emulator regression: PASS, 24/24;
+- Playwright Chromium desktop/mobile matrix: 34 PASS / 10 intentional project-specific skips;
+- built GitHub Pages artifact smoke: 6/6 PASS, including direct N4/N3 deep-link sessions on desktop/mobile;
+- production dependency audit: 0 vulnerabilities;
+- `git diff --check`: PASS.
+
+Failures caught before the local gate became green:
+- raw OpenJLPT N4/N3 overlaps with existing lower-level prompts would have created duplicate SRS identities; generator now deduplicates with a deterministic lower-level-wins rule and records every exclusion;
+- first repository expectation incorrectly used pre-dedupe total 4,073; corrected verified total is 3,867;
+- TypeScript build caught an insufficient content-type narrowing in the new dataset test;
+- initial generated imports pushed core entry above budget (494.56–495.03 kB) and Vite reported ineffective dynamic imports; generated catalog/loader were split, Learn was lazy-loaded and bootstrap placeholder content was made empty, reducing core to 481.43 kB;
+- full-suite contention caused one identity test to hit the default 5s timeout although the focused test passed in ~1.3s; only that test received a 10s timeout and the full 113/113 suite then passed;
+- Learn/Roadmap visual baselines failed because the intentionally expanded pages became much taller; semantic/mobile-overflow checks passed, then only the affected Learn/Roadmap desktop/mobile baselines were regenerated and the full browser matrix passed.
+
+Production status:
+- current live site still represents the Phase 5 deployment until this Phase 6 commit is pushed and the Pages workflow succeeds;
+- Firebase schema/rules are unchanged by this slice;
+- no production cloud mutation is required for the content expansion itself.
+
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.
 The initial npm bootstrap occurred before the local `.npmrc` cache guard existed, so npm may have touched its normal user cache outside the workspace; this was not inspected or cleaned because outside-workspace access/change was not approved.
@@ -180,6 +221,8 @@ It has not been deleted because project rules prohibit unapproved deletion.
 
 ## Deferred / unverified
 - current N5 Vocabulary/Kanji bundles are verified against the audited legacy reference and v2 invariants, but have not been independently benchmarked against an external canonical JLPT corpus;
-- N4/N3 learning content is not implemented;
+- N4/N3 Vocabulary/Kanji are implemented locally from a pinned open-data source, but Phase 6 production deployment/live verification is still pending at this state;
+- N4/N3 Vietnamese meaning enrichment is not claimed; imported cards use source-backed English unless a reviewed Vietnamese meaning exists;
+- Grammar, Reading, Listening and JLPT exam-practice content are still not implemented as active sourced learning flows;
 - a real Dexie schema migration remains untested because the production local database still uses schema version 1 and no migration exists yet;
 - Firefox/Safari support remains unverified; the release/browser gates currently cover Chromium desktop/mobile.

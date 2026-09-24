@@ -2,7 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useAppServices } from '../../app/AppServicesContext'
 import { PageIntro } from '../../components/ui/PageIntro'
+import { primaryMeaning } from '../../domain/content/meaning'
 import type { ContentCard } from '../../domain/content/types'
+import { KANJI_N3_TOPIC_CATALOG, KANJI_N4_TOPIC_CATALOG } from '../../data/openjlpt/generated/catalog'
 import {
   KANA_TOPIC_CATALOG,
   KANJI_N5_TOPIC_CATALOG,
@@ -12,7 +14,7 @@ import { buildWritingQueue, type WritingStyle, writingCharacter } from '../../do
 import { StrokeOrderPanel } from './StrokeOrderPanel'
 import { WritingCanvas } from './WritingCanvas'
 
-const WRITING_TOPICS: readonly LearningTopicMeta[] = [...KANA_TOPIC_CATALOG, ...KANJI_N5_TOPIC_CATALOG]
+const WRITING_TOPICS: readonly LearningTopicMeta[] = [...KANA_TOPIC_CATALOG, ...KANJI_N5_TOPIC_CATALOG, ...KANJI_N4_TOPIC_CATALOG, ...KANJI_N3_TOPIC_CATALOG]
 const WRITING_STYLES: Array<{ value: WritingStyle; title: string; description: string }> = [
   { value: 'trace', title: 'Trace', description: 'Đồ theo guide mờ ngay trong ô viết.' },
   { value: 'copy', title: 'Copy', description: 'Nhìn mẫu bên cạnh rồi tự viết vào ô trống.' },
@@ -45,6 +47,12 @@ function WritingSetup({ onStart }: { onStart: (topicId: string, style: WritingSt
             <optgroup label="Kanji N5">
               {KANJI_N5_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count} cards</option>)}
             </optgroup>
+            <optgroup label="Kanji N4 · Open study set">
+              {KANJI_N4_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count} cards</option>)}
+            </optgroup>
+            <optgroup label="Kanji N3 · Open study set">
+              {KANJI_N3_TOPIC_CATALOG.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.label} · {topic.count} cards</option>)}
+            </optgroup>
           </select>
         </div>
         <fieldset className="writing-style-fieldset">
@@ -64,7 +72,7 @@ function WritingSetup({ onStart }: { onStart: (topicId: string, style: WritingSt
 
 function referenceSummary(card: ContentCard) {
   if (card.contentType === 'kana') return card.romanizations.join(' / ')
-  if (card.contentType === 'kanji') return [card.meanings.vi, card.hanViet ? 'Hán Việt: ' + card.hanViet : ''].filter(Boolean).join(' · ')
+  if (card.contentType === 'kanji') return [primaryMeaning(card), card.hanViet ? 'Hán Việt: ' + card.hanViet : ''].filter(Boolean).join(' · ')
   return ''
 }
 

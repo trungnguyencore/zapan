@@ -2,7 +2,14 @@ import { useMemo, useState } from 'react'
 import { LearningDataBoundary } from '../../components/ui/LearningDataBoundary'
 import { PageIntro } from '../../components/ui/PageIntro'
 import { filterLibraryCards, type LibraryContentFilter } from '../../domain/content/libraryFilter'
+import { meaningLanguage, primaryMeaning } from '../../domain/content/meaning'
 import type { ContentCard } from '../../domain/content/types'
+import {
+  KANJI_N3_TOPIC_CATALOG,
+  KANJI_N4_TOPIC_CATALOG,
+  VOCAB_N3_TOPIC_CATALOG,
+  VOCAB_N4_TOPIC_CATALOG,
+} from '../../data/openjlpt/generated/catalog'
 import {
   KANA_TOPIC_CATALOG,
   KANJI_N5_TOPIC_CATALOG,
@@ -19,7 +26,7 @@ const FILTERS: Array<{ value: LibraryContentFilter; label: string }> = [
 ]
 
 const TOPIC_LABELS = new Map(
-  [...KANA_TOPIC_CATALOG, ...VOCAB_N5_TOPIC_CATALOG, ...KANJI_N5_TOPIC_CATALOG]
+  [...KANA_TOPIC_CATALOG, ...VOCAB_N5_TOPIC_CATALOG, ...KANJI_N5_TOPIC_CATALOG, ...VOCAB_N4_TOPIC_CATALOG, ...KANJI_N4_TOPIC_CATALOG, ...VOCAB_N3_TOPIC_CATALOG, ...KANJI_N3_TOPIC_CATALOG]
     .map((topic) => [topic.topicId, topic.label] as const),
 )
 
@@ -51,7 +58,7 @@ function LibraryCard({ card }: { card: ContentCard }) {
           <span className="library-type">Vocab</span>
         </div>
         <strong>{card.readings.join(' / ')}</strong>
-        <p>{card.meanings.vi}</p>
+        <p>{primaryMeaning(card)}{meaningLanguage(card) === 'en' ? ' · EN' : ''}</p>
         <small>{TOPIC_LABELS.get(card.topicId) ?? card.topicId}</small>
       </article>
     )
@@ -64,7 +71,7 @@ function LibraryCard({ card }: { card: ContentCard }) {
         <span className="library-type">Kanji</span>
       </div>
       <strong>{card.readings.join(' / ')}</strong>
-      <p>{card.meanings.vi}{card.hanViet ? ' · Hán Việt: ' + card.hanViet : ''}</p>
+      <p>{primaryMeaning(card)}{meaningLanguage(card) === 'en' ? ' · EN' : ''}{card.hanViet ? ' · Hán Việt: ' + card.hanViet : ''}</p>
       <small>{card.strokeCount} nét · {TOPIC_LABELS.get(card.topicId) ?? card.topicId}</small>
     </article>
   )
@@ -83,7 +90,7 @@ export function LibraryPage() {
       <PageIntro
         eyebrow="Library"
         title="Tra cứu nội dung đã xác minh"
-        description="Tìm trong toàn bộ Kana, N5 Vocabulary và N5 Kanji hiện đã được audit. Library chỉ hiển thị dữ liệu có thật trong content bundle, không tự bổ sung nghĩa hoặc reading."
+        description="Tìm trong Kana, N5 đã audit và các study set N4/N3 nguồn mở đã pin provenance. ZaPan không tự bịa nghĩa hoặc reading; card chưa có tiếng Việt sẽ hiển thị English từ nguồn."
       />
 
       <LearningDataBoundary loading={loading} error={error} onRetry={refresh}>

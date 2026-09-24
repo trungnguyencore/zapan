@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
+import { loadOpenJlptBundles } from '../../data/openjlpt/generated/loader'
 import { KANA_BASIC_BUNDLE } from '../../data/n5/kanaBasic'
 import { KANJI_N5_BUNDLE } from '../../data/n5/kanjiN5'
 import { VOCAB_N5_BUNDLE } from '../../data/n5/vocabN5'
@@ -9,11 +10,17 @@ import { createInitialProgress } from '../progress/progress'
 import { deriveRoadmap } from './roadmap'
 
 const NOW = 50_000_000
-const cards: ContentCard[] = [
-  ...KANA_BASIC_BUNDLE.cards,
-  ...VOCAB_N5_BUNDLE.cards,
-  ...KANJI_N5_BUNDLE.cards,
-]
+let cards: ContentCard[] = []
+
+beforeAll(async () => {
+  const openJlpt = await loadOpenJlptBundles()
+  cards = [
+    ...KANA_BASIC_BUNDLE.cards,
+    ...VOCAB_N5_BUNDLE.cards,
+    ...KANJI_N5_BUNDLE.cards,
+    ...openJlpt.flatMap((bundle) => bundle.cards),
+  ]
+})
 
 function mastered(card: ContentCard): ProgressRecord {
   const base = createInitialProgress(card.cardId, NOW - 10_000)
@@ -60,14 +67,16 @@ function studied(card: ContentCard): ProgressRecord {
 }
 
 describe('canonical learner roadmap', () => {
-  it('contains only the four stages backed by currently verified content', () => {
+  it('contains all active sourced stages and exact retained card totals', () => {
     const snapshot = deriveRoadmap(cards, [], NOW, VERIFIED_ROADMAP_STAGES)
-    expect(VERIFIED_ROADMAP_TOTAL).toBe(1124)
+    expect(VERIFIED_ROADMAP_TOTAL).toBe(3867)
     expect(snapshot.stages.map((stage) => [stage.stageId, stage.totalCards])).toEqual([
       ['hiragana', 46],
       ['katakana', 46],
       ['n5-vocabulary', 923],
       ['n5-kanji', 109],
+      ['n4-open-study', 709],
+      ['n3-open-study', 2034],
     ])
     expect(snapshot.suggestedStageId).toBe('hiragana')
     expect(snapshot.completedStages).toBe(0)

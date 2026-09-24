@@ -121,3 +121,35 @@ Phase 5 quality gate:
 - deployed commit is recorded;
 - live site passes post-deploy verification;
 - rollback path is documented.
+
+## Phase 6 — Sourced N4/N3 content expansion
+Status: TESTING — LOCAL VERIFIED; PRODUCTION DEPLOY PENDING
+Goal: expand beyond the audited N5 foundation without inventing JLPT content or fragmenting learner progress.
+
+Verified local deliverables:
+- pinned OpenJLPT N4/N3 Vocabulary + Kanji source snapshot with CC BY-SA 4.0 attribution;
+- reproducible generator, SHA-256 source manifest and duplicate exclusion report;
+- deterministic lower-level-prompt-wins dedupe across N5 → N4 → N3;
+- retained 709 N4 + 2,034 N3 cards, bringing the learner repository to 3,867 cards;
+- English meaning fallback for source-backed cards without reviewed Vietnamese;
+- N4/N3 integrated into Learn, Library, Roadmap, Custom Practice, Writing, Match and Arcade practice surfaces;
+- six-stage Roadmap;
+- N4/N3 desktop study-pipeline E2E and desktop/mobile Pages deep-link release smoke;
+- bundle architecture adjusted so content expansion stays below the 490 kB core-entry gate.
+
+Phase 6 local quality gate:
+- lint 0 warnings/errors;
+- 113/113 normal tests;
+- build + bundle budget PASS at core 481.43 kB;
+- Firebase emulator 24/24;
+- Playwright 34 PASS / 10 intentional skips;
+- Pages artifact 6/6;
+- audit 0 vulnerabilities;
+- diff-check PASS.
+
+Production closeout still required:
+- checkpoint current source/evidence;
+- prove generator reproducibility from clean Git state;
+- push main and wait for GitHub Pages Actions SUCCESS;
+- rerun live Pages smoke including direct N4/N3 sessions;
+- only then mark Phase 6 VERIFIED — LIVE PRODUCTION.

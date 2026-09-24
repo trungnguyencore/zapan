@@ -17,6 +17,7 @@
     "test:firebase:emulated": "powershell -NoProfile -ExecutionPolicy Bypass -File ../firebase/requests/run-firestore-tests.ps1",
     "check:bundle": "node scripts/check-bundle-budget.mjs",
     "profile:runtime": "cross-env PLAYWRIGHT_BROWSERS_PATH=0 node scripts/profile-runtime.mjs",
+    "generate:openjlpt": "node scripts/generate-openjlpt-content.mjs",
     "check": "npm run lint && npm run test && npm run build && npm run check:bundle",
     "preview": "vite preview"
   },

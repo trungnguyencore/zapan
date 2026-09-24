@@ -2,7 +2,6 @@ import { useEffect, useState, type ReactNode } from 'react'
 import type { AccountAuthService } from '../domain/auth/ports'
 import type { ActiveIdentity } from '../domain/auth/types'
 import type { LearningRepository } from '../domain/learning/ports'
-import { KANA_BASIC_BUNDLE } from '../data/n5/kanaBasic'
 import { getBrowserGuestIdentity } from '../services/auth/guestIdentity'
 import { StaticContentRepository } from '../services/content/StaticContentRepository'
 import { loadVerifiedContentRepository } from '../services/content/loadVerifiedContentRepository'
@@ -29,7 +28,7 @@ function repositoryFor(base: BrowserInfrastructure, userId: string): LearningRep
 
 function createBrowserInfrastructure(): BrowserInfrastructure {
   return {
-    content: new StaticContentRepository([KANA_BASIC_BUNDLE]),
+    content: new StaticContentRepository([]),
     guest: getBrowserGuestIdentity(),
     accountAuth: null,
     repositories: new Map(),

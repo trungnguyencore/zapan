@@ -33,7 +33,7 @@ describe('VOCAB_N5_BUNDLE', () => {
       expect(card.contentType).toBe('vocabulary')
       if (card.contentType !== 'vocabulary') continue
       expect(card.term.trim().length).toBeGreaterThan(0)
-      expect(card.meanings.vi.trim().length).toBeGreaterThan(0)
+      expect(card.meanings.vi?.trim().length ?? 0).toBeGreaterThan(0)
       expect(card.readings.length).toBeGreaterThan(0)
       for (const reading of card.readings) {
         expect(reading.trim().length).toBeGreaterThan(0)

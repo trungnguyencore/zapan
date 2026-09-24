@@ -1,0 +1,1243 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "c42fd9fa3777bfc1775446f7c418d549dfd6e4cf",
+  "rule": "lower-level prompt wins: N5 existing > N4 OpenJLPT > N3 OpenJLPT",
+  "excluded": [
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "アクセサリー",
+      "rawIndex": 5
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "あげる",
+      "rawIndex": 6
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "アメリカ",
+      "rawIndex": 10
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "お土産",
+      "rawIndex": 38
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "ケーキ",
+      "rawIndex": 50
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "サラダ",
+      "rawIndex": 66
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "サンダル",
+      "rawIndex": 67
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "サンドイッチ",
+      "rawIndex": 68
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "ぜひ",
+      "rawIndex": 88
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "だから",
+      "rawIndex": 100
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "もらう",
+      "rawIndex": 146
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "引き出し",
+      "rawIndex": 167
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "運転",
+      "rawIndex": 171
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "屋上",
+      "rawIndex": 181
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "課長",
+      "rawIndex": 193
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "開く",
+      "rawIndex": 204
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "簡単",
+      "rawIndex": 216
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "間",
+      "rawIndex": 217
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "急ぐ",
+      "rawIndex": 238
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "泣く",
+      "rawIndex": 240
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "鏡",
+      "rawIndex": 245
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "苦い",
+      "rawIndex": 248
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "空港",
+      "rawIndex": 252
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "警察",
+      "rawIndex": 260
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "今度",
+      "rawIndex": 301
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "始める",
+      "rawIndex": 317
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "指",
+      "rawIndex": 323
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "止める",
+      "rawIndex": 328
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "試験",
+      "rawIndex": 330
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "治る",
+      "rawIndex": 339
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "社長",
+      "rawIndex": 346
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "寂しい",
+      "rawIndex": 348
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "手袋",
+      "rawIndex": 350
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "首",
+      "rawIndex": 353
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "受付",
+      "rawIndex": 355
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "笑う",
+      "rawIndex": 382
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "乗り物",
+      "rawIndex": 386
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "神社",
+      "rawIndex": 404
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "親切",
+      "rawIndex": 406
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "星",
+      "rawIndex": 418
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "痩せる",
+      "rawIndex": 439
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "送る",
+      "rawIndex": 442
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "卒業",
+      "rawIndex": 451
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "太る",
+      "rawIndex": 452
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "棚",
+      "rawIndex": 461
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "虫",
+      "rawIndex": 478
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "店員",
+      "rawIndex": 493
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "怒る",
+      "rawIndex": 503
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "島",
+      "rawIndex": 505
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "動物園",
+      "rawIndex": 513
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "特に",
+      "rawIndex": 515
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "入学",
+      "rawIndex": 523
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "髪",
+      "rawIndex": 531
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "彼",
+      "rawIndex": 534
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "彼女",
+      "rawIndex": 536
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "美術館",
+      "rawIndex": 542
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "必ず",
+      "rawIndex": 543
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "不便",
+      "rawIndex": 547
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "部長",
+      "rawIndex": 554
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "払う",
+      "rawIndex": 557
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "明日",
+      "rawIndex": 593
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "両方",
+      "rawIndex": 623
+    },
+    {
+      "level": "n4",
+      "contentType": "vocabulary",
+      "key": "力",
+      "rawIndex": 624
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "アイスクリーム",
+      "rawIndex": 1
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "いつも",
+      "rawIndex": 25
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "うまい",
+      "rawIndex": 33
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "うるさい",
+      "rawIndex": 34
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "うん",
+      "rawIndex": 35
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "おじいさん",
+      "rawIndex": 39
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "お腹",
+      "rawIndex": 49
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "ここ",
+      "rawIndex": 75
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "この",
+      "rawIndex": 76
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "ジーンズ",
+      "rawIndex": 88
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "ジュース",
+      "rawIndex": 100
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "すてき",
+      "rawIndex": 110
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "すると",
+      "rawIndex": 114
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "そう",
+      "rawIndex": 117
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "そこ",
+      "rawIndex": 118
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "そして",
+      "rawIndex": 120
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "その",
+      "rawIndex": 123
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "それ",
+      "rawIndex": 127
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "タオル",
+      "rawIndex": 133
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "だから",
+      "rawIndex": 134
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "でも",
+      "rawIndex": 155
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "どう",
+      "rawIndex": 157
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "どれ",
+      "rawIndex": 169
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "なかなか",
+      "rawIndex": 177
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "はい",
+      "rawIndex": 185
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "はさみ",
+      "rawIndex": 190
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "ビール",
+      "rawIndex": 197
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "やはり",
+      "rawIndex": 232
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "案内",
+      "rawIndex": 263
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "椅子",
+      "rawIndex": 276
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "一時",
+      "rawIndex": 293
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "運転",
+      "rawIndex": 320
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "運動",
+      "rawIndex": 321
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "遠慮",
+      "rawIndex": 344
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "音",
+      "rawIndex": 359
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "下",
+      "rawIndex": 360
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "何",
+      "rawIndex": 366
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "皆",
+      "rawIndex": 413
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "外",
+      "rawIndex": 416
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "角",
+      "rawIndex": 431
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "間",
+      "rawIndex": 473
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "丸い",
+      "rawIndex": 479
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "休憩",
+      "rawIndex": 536
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "牛",
+      "rawIndex": 548
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "魚",
+      "rawIndex": 556
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "胸",
+      "rawIndex": 575
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "空",
+      "rawIndex": 606
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "空く",
+      "rawIndex": 608
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "経験",
+      "rawIndex": 627
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "計画",
+      "rawIndex": 632
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "月",
+      "rawIndex": 653
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "肩",
+      "rawIndex": 666
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "見る",
+      "rawIndex": 667
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "鍵",
+      "rawIndex": 675
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "言う",
+      "rawIndex": 690
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "故障",
+      "rawIndex": 699
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "後",
+      "rawIndex": 704
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "工場",
+      "rawIndex": 725
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "黒板",
+      "rawIndex": 763
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "頃",
+      "rawIndex": 767
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "今日",
+      "rawIndex": 772
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "散歩",
+      "rawIndex": 811
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "四",
+      "rawIndex": 819
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "支度",
+      "rawIndex": 833
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "時",
+      "rawIndex": 856
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "七",
+      "rawIndex": 869
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "十",
+      "rawIndex": 928
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "出席",
+      "rawIndex": 944
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "出発",
+      "rawIndex": 945
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "準備",
+      "rawIndex": 951
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "承知",
+      "rawIndex": 982
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "招待",
+      "rawIndex": 985
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "象",
+      "rawIndex": 998
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "上",
+      "rawIndex": 1001
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "食事",
+      "rawIndex": 1023
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "信号",
+      "rawIndex": 1035
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "心配",
+      "rawIndex": 1040
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "辛い",
+      "rawIndex": 1063
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "世話",
+      "rawIndex": 1092
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "成績",
+      "rawIndex": 1102
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "生産",
+      "rawIndex": 1116
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "川",
+      "rawIndex": 1149
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "船",
+      "rawIndex": 1153
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "全然",
+      "rawIndex": 1164
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "掃除",
+      "rawIndex": 1178
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "相談",
+      "rawIndex": 1183
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "太陽",
+      "rawIndex": 1208
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "打つ",
+      "rawIndex": 1209
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "大変",
+      "rawIndex": 1241
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "暖かい",
+      "rawIndex": 1261
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "男の人",
+      "rawIndex": 1263
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "地下",
+      "rawIndex": 1275
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "遅刻",
+      "rawIndex": 1280
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "中",
+      "rawIndex": 1282
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "都",
+      "rawIndex": 1357
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "二十",
+      "rawIndex": 1409
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "日",
+      "rawIndex": 1411
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "日本",
+      "rawIndex": 1416
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "入院",
+      "rawIndex": 1418
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "入学",
+      "rawIndex": 1419
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "馬",
+      "rawIndex": 1446
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "背",
+      "rawIndex": 1449
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "膝",
+      "rawIndex": 1504
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "表",
+      "rawIndex": 1510
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "弁当",
+      "rawIndex": 1585
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "放送",
+      "rawIndex": 1602
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "方",
+      "rawIndex": 1603
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "本当",
+      "rawIndex": 1622
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "夜",
+      "rawIndex": 1672
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "訳",
+      "rawIndex": 1680
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "輸出",
+      "rawIndex": 1683
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "輸入",
+      "rawIndex": 1684
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "浴びる",
+      "rawIndex": 1724
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "履く",
+      "rawIndex": 1733
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "涙",
+      "rawIndex": 1756
+    },
+    {
+      "level": "n3",
+      "contentType": "vocabulary",
+      "key": "練習",
+      "rawIndex": 1766
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "会",
+      "rawIndex": 1
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "社",
+      "rawIndex": 5
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "新",
+      "rawIndex": 11
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "立",
+      "rawIndex": 14
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "手",
+      "rawIndex": 16
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "目",
+      "rawIndex": 23
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "言",
+      "rawIndex": 25
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "作",
+      "rawIndex": 33
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "思",
+      "rawIndex": 41
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "多",
+      "rawIndex": 44
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "安",
+      "rawIndex": 46
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "教",
+      "rawIndex": 50
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "売",
+      "rawIndex": 58
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "知",
+      "rawIndex": 59
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "道",
+      "rawIndex": 60
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "口",
+      "rawIndex": 79
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "少",
+      "rawIndex": 80
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "空",
+      "rawIndex": 85
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "足",
+      "rawIndex": 92
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "店",
+      "rawIndex": 97
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "答",
+      "rawIndex": 115
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "古",
+      "rawIndex": 120
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "買",
+      "rawIndex": 122
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "週",
+      "rawIndex": 125
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "花",
+      "rawIndex": 131
+    },
+    {
+      "level": "n4",
+      "contentType": "kanji",
+      "key": "飲",
+      "rawIndex": 149
+    },
+    {
+      "level": "n3",
+      "contentType": "kanji",
+      "key": "耳",
+      "rawIndex": 354
+    }
+  ]
+}

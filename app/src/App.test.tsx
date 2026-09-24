@@ -20,7 +20,7 @@ describe('ZaPan application shell', () => {
     const user = userEvent.setup()
     renderApp()
     await user.click(screen.getAllByRole('link', { name: 'Learn' })[0])
-    expect(screen.getByRole('heading', { name: 'Học theo lộ trình' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Học theo lộ trình' })).toBeInTheDocument()
     await waitFor(() => expect(screen.getByRole('main')).toHaveFocus())
     await user.click(screen.getAllByRole('link', { name: 'Review' })[0])
     expect(screen.getByRole('heading', { name: 'Ôn đúng thứ cần ôn' })).toBeInTheDocument()

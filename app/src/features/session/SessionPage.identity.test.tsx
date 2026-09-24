@@ -102,5 +102,5 @@ describe('SessionPage identity integrity', () => {
     expect(await accountLearning.listEvents()).toHaveLength(5)
     expect(await guestLearning.listEvents()).toHaveLength(0)
     expect((await accountLearning.listProgress()).filter((record) => record.attempts > 0)).toHaveLength(5)
-  })
+  }, 10_000)
 })

@@ -1,5 +1,11 @@
-import { KANA_TOPIC_CATALOG, KANJI_N5_TOPIC_CATALOG, VOCAB_N5_TOPIC_CATALOG } from '../n5/topicCatalog'
 import type { RoadmapStageDefinition } from '../../domain/roadmap/roadmap'
+import {
+  KANJI_N3_TOPIC_CATALOG,
+  KANJI_N4_TOPIC_CATALOG,
+  VOCAB_N3_TOPIC_CATALOG,
+  VOCAB_N4_TOPIC_CATALOG,
+} from '../openjlpt/generated/catalog'
+import { KANA_TOPIC_CATALOG, KANJI_N5_TOPIC_CATALOG, VOCAB_N5_TOPIC_CATALOG } from '../n5/topicCatalog'
 
 export const VERIFIED_ROADMAP_STAGES: readonly RoadmapStageDefinition[] = [
   {
@@ -25,7 +31,7 @@ export const VERIFIED_ROADMAP_STAGES: readonly RoadmapStageDefinition[] = [
     order: 3,
     eyebrow: 'STAGE 3 · JLPT N5',
     title: 'N5 core vocabulary',
-    description: '923 từ đã audit, học theo chủ đề với new-card limits và scheduled Review.',
+    description: '923 từ đã audit từ legacy source, học theo chủ đề với new-card limits và scheduled Review.',
     topicIds: VOCAB_N5_TOPIC_CATALOG.map((topic) => topic.topicId),
     learnPath: '/learn',
   },
@@ -38,10 +44,32 @@ export const VERIFIED_ROADMAP_STAGES: readonly RoadmapStageDefinition[] = [
     topicIds: KANJI_N5_TOPIC_CATALOG.map((topic) => topic.topicId),
     learnPath: '/learn',
   },
+  {
+    stageId: 'n4-open-study',
+    order: 5,
+    eyebrow: 'STAGE 5 · N4 OPEN STUDY SET',
+    title: 'N4 Vocabulary + Kanji',
+    description: '709 learnable cards giữ lại từ 798 raw OpenJLPT records sau khi loại prompt trùng N5. Level assignment là community approximation vì JLPT không công bố official N4 vocabulary/kanji list.',
+    topicIds: [...VOCAB_N4_TOPIC_CATALOG, ...KANJI_N4_TOPIC_CATALOG].map((topic) => topic.topicId),
+    learnPath: '/learn',
+  },
+  {
+    stageId: 'n3-open-study',
+    order: 6,
+    eyebrow: 'STAGE 6 · N3 OPEN STUDY SET',
+    title: 'N3 Vocabulary + Kanji',
+    description: '2.034 learnable cards giữ lại từ 2.151 raw OpenJLPT records sau khi loại prompt trùng level thấp hơn. Dùng để học/ôn theo study set, không được diễn giải là official JLPT content specification.',
+    topicIds: [...VOCAB_N3_TOPIC_CATALOG, ...KANJI_N3_TOPIC_CATALOG].map((topic) => topic.topicId),
+    learnPath: '/learn',
+  },
 ]
 
 export const VERIFIED_ROADMAP_TOTAL = [
   ...KANA_TOPIC_CATALOG,
   ...VOCAB_N5_TOPIC_CATALOG,
   ...KANJI_N5_TOPIC_CATALOG,
+  ...VOCAB_N4_TOPIC_CATALOG,
+  ...KANJI_N4_TOPIC_CATALOG,
+  ...VOCAB_N3_TOPIC_CATALOG,
+  ...KANJI_N3_TOPIC_CATALOG,
 ].reduce((sum, topic) => sum + topic.count, 0)
