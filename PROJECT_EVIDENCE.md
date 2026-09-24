@@ -770,3 +770,43 @@ Deferred boundaries carried into later work:
 
 Result: PASS — Phase 4 is VERIFIED for the implemented hardening scope and the currently verified/source-gated content contract.
 Next state: Phase 5 is PLANNED and requires a fresh owner review immediately before any production/destructive migration step.
+
+### E-052 — Phase 5 local release-candidate preflight and regression
+Date: 2026-09-24
+Scope: owner-approved Phase 5 preparation before any remote branch/tag, Pages-setting, Firestore-production-rule, push or live-site mutation.
+
+Remote/preflight facts verified read-only:
+- authenticated GitHub account: `trungnguyencore`;
+- target repository: public `trungnguyencore/zapan`, default branch `main`;
+- legacy remote `main`: `a387e71351aa8266b6ae4751e89ae6be3e5ea1d9`;
+- GitHub Pages legacy site returned HTTP 200 at `https://trungnguyencore.github.io/zapan/`, source `main:/`, build type `legacy`;
+- remote had no rollback tags, no branch protection, no custom workflow, and zero repository Actions secrets/variables;
+- Firebase v2 project `zapan-v2-trunk`, its Web App, and default Firestore Native database were ACTIVE; separate legacy project `zapan-app` was not selected for v2 work;
+- the local origin typo `trunnguyencore/zapan` was corrected to `trungnguyencore/zapan` and `git ls-remote` then resolved the verified legacy commit.
+
+Local release-candidate implementation:
+- production Vite base is `/zapan/`; BrowserRouter basename derives from `BASE_URL`;
+- production build emits `dist/404.html` from the same `dist/index.html` artifact;
+- built `index.html` and `404.html` were read back and both referenced favicon/JS/CSS through `/zapan/`;
+- a GitHub-Pages-like static harness verifies actual 404 fallback behavior instead of relying on Vite dev history fallback;
+- GitHub Actions Pages workflow, release regression config, production-preview routing, public/developer README and release screenshot tooling were added;
+- screenshots generated from the built artifact: desktop Today 1440x1000 / SHA-256 `8AD5E3877763B8B879B37F081BE35414E45201D822C6D6289633CBFB564F1E18`; mobile Learn 1081x1999 / SHA-256 `EFAA362DB093416CB5BE6C2B3DFE01B749C1D189BD4F7981E0C1ACE8C94397CE`.
+
+Failures caught and corrected before the local release candidate became green:
+1. The first Pages smoke treated every runtime `<script>` as a build asset. Firebase Auth injected an external Google API script on mobile, so that assertion failed while both desktop/mobile deep-route fallbacks already rendered correctly. Correction: verify the raw built HTML response for `/zapan/` asset prefixes instead of third-party runtime injections.
+2. The first integrated release gate reported two `no-useless-escape` lint warnings in the new Pages regex assertions. Correction: remove only the unnecessary regex escaping.
+3. The same integrated gate had one mobile Custom Practice failure after navigation to Progress. The failure snapshot still showed the authentication bootstrap surface (`Đang tải ZaPan…` / `Đang khôi phục trạng thái đăng nhập an toàn.`), while a focused mobile rerun passed 1/1 in 3.7 s. Correction: the existing E2E now waits for the real Progress heading before asserting streak/heatmap data; production logic was unchanged.
+
+Final integrated local release gate on corrected source:
+- lint: 0 warnings / 0 errors;
+- normal unit/component suite: 108/108 PASS across 34 files;
+- TypeScript + production build: PASS;
+- bundle budget: PASS, core entry 486.10 kB raw <= 490.00 kB; all JS chunks <= 500.00 kB;
+- Firebase Auth/Firestore emulator suite: 24/24 PASS across 3 files;
+- normal Playwright Chromium desktop/mobile matrix: 32 PASS / 8 intentional project-specific skips;
+- GitHub-Pages-like built-artifact matrix: 4/4 PASS across desktop/mobile root + direct/reloaded `/zapan/learn` fallback;
+- production dependency audit: `found 0 vulnerabilities`;
+- `git diff --check`: PASS;
+- integrated command exit code: 0.
+
+Result: PASS — local Phase 5 release candidate is verified. Production Firestore rules, rollback refs, GitHub Pages workflow setting, GitHub variables, remote `main` and the live site remain unchanged at this evidence point.

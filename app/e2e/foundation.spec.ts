@@ -214,6 +214,7 @@ test('Custom Practice uses the canonical custom StudyEvent pipeline', async ({ p
   expect(events.every((event) => event.mode === 'custom' && event.inputKind === 'typing')).toBe(true)
 
   await page.goto('/progress')
+  await expect(page.getByRole('heading', { name: 'Tiến độ từ dữ liệu thật' })).toBeVisible()
   await expect(page.locator('.metric-card').filter({ hasText: 'Ngày streak hiện tại' })).toContainText('1')
   await expect(page.locator('.heat-cell.has-activity')).toHaveCount(1)
   await expect(page.locator('.heat-cell.has-activity')).toHaveAttribute('aria-label', /5 lượt/)

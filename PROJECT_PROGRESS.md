@@ -3,7 +3,7 @@
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
 Current phase: Phase 5 — Release engineering and production migration
-Current status: PLANNED — OWNER REVIEW REQUIRED
+Current status: IMPLEMENTING — LOCAL RELEASE CANDIDATE VERIFIED; PRODUCTION MUTATIONS PENDING
 Last verified: 2026-09-24
 
 ## Hard scope boundary
@@ -141,10 +141,23 @@ Performance guard:
 - Phase 4 content gate: PASS by keeping unavailable Grammar/Reading/Listening/JLPT/N4/N3 inactive; no unsourced placeholder content was promoted.
 See `PROJECT_EVIDENCE.md` E-051 for the integrated closeout command and limitations.
 
-## Phase 5 next
-No Phase 5 production mutation has started.
-Before any Firebase production rule deployment, GitHub legacy working-tree replacement, push or live deployment, the owner must receive and approve a fresh migration/release review with exact scope and rollback path.
-The reviewed release sequence should cover production configuration/rules verification, rollback tag/branch, release-candidate regression, legacy working-tree replacement, push/deploy, live smoke tests and recorded rollback evidence.
+## Phase 5 current state
+Owner review was approved on 2026-09-24. The local release candidate is verified; no remote branch/tag, GitHub Pages setting, Firebase production rule, push or live-site mutation has been executed yet.
+
+Verified local release-candidate work:
+- corrected the local `origin` URL to the verified repository `trungnguyencore/zapan`; remote legacy `main` remains `a387e71351aa8266b6ae4751e89ae6be3e5ea1d9`;
+- production builds use `/zapan/`, BrowserRouter derives its basename from `BASE_URL`, and the build emits `dist/404.html` from the same artifact for GitHub Pages deep-route recovery;
+- added a GitHub Pages Actions workflow, built-artifact release regression, production-preview routing updates, public/developer README refresh and two generated release screenshots;
+- GitHub-Pages-like desktop/mobile artifact regression is 4/4 PASS, including direct `/zapan/learn` + reload through a real 404 fallback;
+- final local integrated gate is lint 0/0, normal tests 108/108, build/bundle PASS with core 486.10 kB, Firebase emulator 24/24, Playwright 32 PASS / 8 intentional skips, Pages release smoke 4/4, audit 0 vulnerabilities and `git diff --check` PASS.
+
+Next approved production sequence:
+1. checkpoint this local release candidate;
+2. create and verify rollback branch/tag at the legacy remote commit;
+3. configure GitHub Actions Firebase web variables and switch Pages to workflow deployment;
+4. deploy only the hardened Firestore rules to `zapan-v2-trunk`, then run the real production cloud smoke and verify cleanup;
+5. merge the unrelated legacy history into v2 with a merge commit that preserves the v2 tree, then push `main` without force;
+6. wait for Pages deployment, run live-site smoke/deep-link/account/mobile checks, record rollback evidence and only then close Phase 5 VERIFIED.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.

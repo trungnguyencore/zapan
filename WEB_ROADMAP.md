@@ -100,7 +100,7 @@ Phase 4 quality gate:
 - known limitations are documented.
 
 ## Phase 5 — Release engineering and production migration
-Status: PLANNED — OWNER REVIEW REQUIRED
+Status: IMPLEMENTING — OWNER REVIEW APPROVED; LOCAL RELEASE CANDIDATE VERIFIED
 Goal: replace the legacy GitHub Pages application safely.
 Deliverables:
 - full regression suite;

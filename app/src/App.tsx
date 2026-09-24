@@ -47,5 +47,6 @@ export function AppRoutes() {
 }
 
 export default function App() {
-  return <BrowserRouter><AppErrorBoundary><AppServicesProvider><AppRoutes /></AppServicesProvider></AppErrorBoundary></BrowserRouter>
+  const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
+  return <BrowserRouter basename={basename}><AppErrorBoundary><AppServicesProvider><AppRoutes /></AppServicesProvider></AppErrorBoundary></BrowserRouter>
 }

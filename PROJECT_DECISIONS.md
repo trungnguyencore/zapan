@@ -320,3 +320,10 @@ Date: 2026-09-24
 Decision: Phase 4 can close when its hardening quality gate is verified while Grammar, Reading, Listening, JLPT practice, N4 and N3 remain inactive if no inspected/versioned/verified content set exists. Their roadmap presence is not permission to invent or expose placeholder learning content.
 Reason: both the engineering roadmap and learner roadmap explicitly gate later learning stages on real verified source material. Treating an absent source as a mandatory implementation target would conflict with the project's source-grounded rule and create misleading product availability.
 Consequence: Phase 5 may begin release planning for the verified current product; later content expansion reopens only when suitable source material is available and reviewed.
+
+## DEC-038 — Preserve legacy Git ancestry and deploy the v2 Pages artifact through Actions
+Status: ACCEPTED
+Date: 2026-09-24
+Decision: the production migration must not force-push over the legacy GitHub history. The verified v2 history will be connected to the legacy remote `main` with an unrelated-history merge that keeps the v2 working tree, after rollback refs are created at the legacy commit. GitHub Pages will deploy the built `app/dist` artifact through GitHub Actions rather than publishing the repository root.
+Reason: the local v2 rewrite and the existing GitHub application were developed as separate Git histories. A force-push would make the legacy line harder to recover, while branch-root Pages cannot directly publish the Vite source tree with its required build, `/zapan/` base and deep-route fallback.
+Consequence: Phase 5 creates/verifies a rollback tag and branch before changing `main`, configures Pages workflow deployment and Firebase web build variables, verifies the production artifact locally, then pushes only a non-force merge commit whose ancestry retains the legacy commit. Production execution remains gated on the approved Phase 5 sequence and actual green release evidence.

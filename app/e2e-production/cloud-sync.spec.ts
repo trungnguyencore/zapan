@@ -6,7 +6,7 @@ const password = process.env.ZAPAN_SMOKE_PASSWORD
 if (!email || !password) throw new Error('ZAPAN_SMOKE_EMAIL and ZAPAN_SMOKE_PASSWORD are required')
 
 async function registerAccount(page: import('@playwright/test').Page) {
-  await page.goto('/account')
+  await page.goto('account')
   await expect(page.getByRole('heading', { name: 'Guest hoặc tài khoản' })).toBeVisible()
   await page.getByRole('button', { name: 'Tạo tài khoản mới' }).click()
   await page.getByLabel('Email').fill(email!)
@@ -17,7 +17,7 @@ async function registerAccount(page: import('@playwright/test').Page) {
 }
 
 async function signInAccount(page: import('@playwright/test').Page) {
-  await page.goto('/account')
+  await page.goto('account')
   await expect(page.getByRole('heading', { name: 'Guest hoặc tài khoản' })).toBeVisible()
   await page.getByLabel('Email').fill(email!)
   await page.getByLabel('Mật khẩu').fill(password!)
@@ -34,7 +34,7 @@ test('production account sync converges across two isolated browser contexts', a
   console.log('production-account-stable', await pageA.getByRole('heading', { name: 'Tài khoản ZaPan' }).isVisible())
   await expect(pageA.getByRole('heading', { name: 'Tài khoản ZaPan' })).toBeVisible()
 
-  await pageA.goto('/learn')
+  await pageA.goto('learn')
   await pageA.getByRole('link', { name: 'Học Hiragana' }).click()
   await expect(pageA).toHaveURL(/\/session\/learn\/kana-hiragana-main$/)
 
@@ -79,7 +79,7 @@ test('production account sync converges across two isolated browser contexts', a
   await pageB.getByRole('button', { name: 'Sync ngay' }).click()
   await expect(pageB.getByRole('status')).toContainText('Đã sync 5 event cloud', { timeout: 20_000 })
 
-  await pageB.goto('/progress')
+  await pageB.goto('progress')
   await expect(pageB.getByText('5/1124')).toBeVisible({ timeout: 10_000 })
   await expect(pageB.getByText('100%')).toBeVisible()
 
