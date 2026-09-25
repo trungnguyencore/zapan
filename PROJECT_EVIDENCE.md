@@ -991,3 +991,29 @@ Current boundary:
 - local follow-up commit `e4fb7928ee1906f2bf5527b20e4f419534969ad4` contains the verified bootstrap/profiler optimization and is intentionally not pushed in this evidence step.
 
 Result: PASS.
+
+### E-058 — Phase 6 follow-up deploy and post-deploy live regression
+Date: 2026-09-25
+Scope: owner-approved push of the verified Phase 6 bootstrap/runtime-profiler follow-up, GitHub Pages deployment and post-deploy live verification.
+
+Deployment:
+- pre-push local `main` was clean and ahead `origin/main` by exactly two commits: `e4fb792` and `4b229f9`;
+- `git push origin main` advanced remote `main` from `94db529` to `4b229f9` without force;
+- GitHub Pages Actions run `36089691755` targeted head SHA `4b229f99a249cec16018c68402c9a924ccb05386`;
+- workflow completed successfully: build job PASS, deploy job PASS, overall exit status 0;
+- run emitted one non-blocking annotation that `ubuntu-latest` will migrate to Ubuntu 26 beginning 2026-10-19.
+
+Post-deploy live regression:
+- test target: `https://trungnguyencore.github.io/zapan/` via `ZAPAN_LIVE_URL` and `playwright.release.config.ts`;
+- result: 6/6 PASS in Playwright release matrix;
+- desktop/mobile project-base loading PASS;
+- desktop/mobile GitHub Pages 404 deep-route fallback PASS;
+- desktop/mobile direct N4/N3 study-session deep links PASS;
+- command exited 0.
+
+Production boundary after verification:
+- current live/remote release is `4b229f9` and includes the verified `e4fb792` content-bootstrap/runtime-profiler optimization;
+- Firebase schema/rules were not changed;
+- Phase 6 follow-up deployment gate is closed.
+
+Result: PASS.

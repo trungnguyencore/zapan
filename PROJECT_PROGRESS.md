@@ -3,7 +3,7 @@
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
 Current phase: Phase 6 — Sourced N4/N3 content expansion
-Current status: VERIFIED — LIVE PRODUCTION at `94db529`; LOCAL FOLLOW-UP `e4fb792` VERIFIED, PUSH PENDING
+Current status: VERIFIED — LIVE PRODUCTION at `4b229f9`; PHASE 6 FOLLOW-UP CLOSED
 Last verified: 2026-09-25
 
 ## Hard scope boundary
@@ -206,10 +206,11 @@ Failures caught before the local gate became green:
 - Learn/Roadmap visual baselines failed because the intentionally expanded pages became much taller; semantic/mobile-overflow checks passed, then only the affected Learn/Roadmap desktop/mobile baselines were regenerated and the full browser matrix passed.
 
 Production status:
-- Phase 6 content is live at commit `94db52960c2ca771e8b9450100724715773d4371`; GitHub Pages Actions run `36026433186` completed successfully and live Pages regression is 6/6 PASS including direct N4/N3 sessions on desktop/mobile;
-- Firebase schema/rules are unchanged by this slice;
-- local follow-up commit `e4fb7928ee1906f2bf5527b20e4f419534969ad4` contains the verified content-bootstrap/runtime-profiler optimization and is not yet pushed;
-- no additional production cloud mutation is required for that follow-up beyond the normal Pages deploy if/when it is approved for push.
+- Phase 6 content was first verified live at `94db52960c2ca771e8b9450100724715773d4371`; GitHub Pages Actions run `36026433186` completed successfully and live Pages regression was 6/6 PASS including direct N4/N3 sessions on desktop/mobile;
+- the verified follow-up (`e4fb792` bootstrap/runtime-profiler optimization + `4b229f9` evidence closeout) was pushed to `main` on 2026-09-25;
+- GitHub Pages Actions run `36089691755` completed successfully for `4b229f99a249cec16018c68402c9a924ccb05386` with both build and deploy jobs green;
+- post-deploy live Pages regression reran against `https://trungnguyencore.github.io/zapan/` and passed 6/6 on desktop/mobile, covering project-base loading, deep-route fallback and direct N4/N3 study sessions;
+- Firebase schema/rules remain unchanged by this follow-up; no production cloud mutation beyond the normal Pages deployment was required.
 
 ## Scope / local artifact notes
 All project source, generated build output, browser binaries and maintained caches are now configured under the canonical workspace.
@@ -222,7 +223,7 @@ It has not been deleted because project rules prohibit unapproved deletion.
 
 ## Deferred / unverified
 - current N5 Vocabulary/Kanji bundles are verified against the audited legacy reference and v2 invariants, but have not been independently benchmarked against an external canonical JLPT corpus;
-- N4/N3 Vocabulary/Kanji are implemented locally from a pinned open-data source, but Phase 6 production deployment/live verification is still pending at this state;
+- N4/N3 Vocabulary/Kanji are live from the pinned open-data source and post-follow-up Pages verification is complete at `4b229f9`; no pending Phase 6 deployment gate remains;
 - N4/N3 Vietnamese meaning enrichment is not claimed; imported cards use source-backed English unless a reviewed Vietnamese meaning exists;
 - Grammar, Reading, Listening and JLPT exam-practice content are still not implemented as active sourced learning flows;
 - a real Dexie schema migration remains untested because the production local database still uses schema version 1 and no migration exists yet;

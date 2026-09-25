@@ -123,7 +123,7 @@ Phase 5 quality gate:
 - rollback path is documented.
 
 ## Phase 6 — Sourced N4/N3 content expansion
-Status: VERIFIED — LIVE PRODUCTION at `94db529`; LOCAL FOLLOW-UP `e4fb792` PUSH PENDING
+Status: VERIFIED — LIVE PRODUCTION at `4b229f9`; FOLLOW-UP CLOSED
 Goal: expand beyond the audited N5 foundation without inventing JLPT content or fragmenting learner progress.
 
 Verified local deliverables:
@@ -148,7 +148,8 @@ Phase 6 local quality gate:
 - diff-check PASS.
 
 Production state:
-- Phase 6 content commit is already live and GitHub Pages Actions succeeded;
-- live Pages regression including direct N4/N3 sessions is 6/6 PASS;
+- Phase 6 content and the bootstrap/runtime-profiler follow-up are live on `main` at `4b229f9`;
+- GitHub Pages Actions run `36089691755` completed successfully with build + deploy green;
+- post-deploy live Pages regression including direct N4/N3 sessions is 6/6 PASS on desktop/mobile;
 - generator reproducibility was rechecked across 38 generated/manifest files and returned `REPRODUCIBLE=True`;
-- local follow-up commit `e4fb792` contains the later bootstrap/runtime-profiler optimization; it remains unpushed and requires owner review before another Pages deployment.
+- Firebase schema/rules were not changed by the follow-up; Phase 6 has no remaining deployment gate.
