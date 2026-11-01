@@ -11,6 +11,7 @@ import {
   type LearningTopicMeta,
 } from '../../data/n5/topicCatalog'
 import { buildWritingQueue, type WritingStyle, writingCharacter } from '../../domain/writing/writing'
+import { randomUuid } from '../../services/id/uuid'
 import { StrokeOrderPanel } from './StrokeOrderPanel'
 import { WritingCanvas } from './WritingCanvas'
 
@@ -80,7 +81,7 @@ function WritingSession({ topicId, style, onExit }: { topicId: string; style: Wr
   const { content, learning, identity, sync } = useAppServices()
   const [scope] = useState(() => ({ content, learning, userId: identity.userId }))
   const queue = useMemo(() => buildWritingQueue(scope.content.listCards(), topicId, 5), [scope, topicId])
-  const sessionIdRef = useRef('session-' + crypto.randomUUID())
+  const sessionIdRef = useRef('session-' + randomUuid())
   const [startedAt] = useState(() => Date.now())
   const [status, setStatus] = useState<'preparing' | 'active' | 'complete' | 'error'>('preparing')
   const [index, setIndex] = useState(0)
@@ -134,7 +135,7 @@ function WritingSession({ topicId, style, onExit }: { topicId: string; style: Wr
     setSaving(true)
     try {
       await scope.learning.recordEvent({
-        eventId: 'event-' + crypto.randomUUID(),
+        eventId: 'event-' + randomUuid(),
         sessionId: sessionIdRef.current,
         cardId: current.cardId,
         mode: 'writing',

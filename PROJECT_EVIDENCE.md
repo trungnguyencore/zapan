@@ -1017,3 +1017,18 @@ Production boundary after verification:
 - Phase 6 follow-up deployment gate is closed.
 
 Result: PASS.
+
+---
+
+### E-056: Academic UI/UX, 1-tap 4-option ABCD, Mistake Recovery & Vercel deployment
+Date: 2026-11-01
+Scope: Academic typography, iPad/iPhone responsive ergonomics, deterministic 4-choice ABCD options for Session & Arcade, automatic SRS mistake tracking & Mistake Recovery queue, Vercel SPA deployment and cloud progress inspection tools.
+
+Verification evidence:
+- oxlint: 0 warnings, 0 errors.
+- vitest: 117/117 unit/component tests PASS across 36 files.
+- build: TypeScript 6.0 and Vite production build PASS.
+- bundle budget: PASS, core entry 400.49 kB <= 490.00 kB raw, all chunks <= 500.00 kB.
+- Vercel production deployment: PASS, deployed to `https://zapan.vercel.app` with all 6 Firebase Config environment variables.
+- Cloud progress inspector: `tools/inspect-progress.mjs` verified.
+Result: PASS.

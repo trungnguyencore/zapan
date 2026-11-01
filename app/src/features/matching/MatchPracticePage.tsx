@@ -5,6 +5,7 @@ import { PageIntro } from '../../components/ui/PageIntro'
 import { KANJI_N3_TOPIC_CATALOG, KANJI_N4_TOPIC_CATALOG, VOCAB_N3_TOPIC_CATALOG, VOCAB_N4_TOPIC_CATALOG } from '../../data/openjlpt/generated/catalog'
 import { KANA_TOPIC_CATALOG, KANJI_N5_TOPIC_CATALOG, VOCAB_N5_TOPIC_CATALOG, type LearningTopicMeta } from '../../data/n5/topicCatalog'
 import { buildMatchPairs, rotateMatchAnswers } from '../../domain/matching/matching'
+import { randomUuid } from '../../services/id/uuid'
 import { epochNowMs, monotonicNowMs } from '../../services/time/clock'
 
 const TOPICS: readonly LearningTopicMeta[] = [...KANA_TOPIC_CATALOG, ...VOCAB_N5_TOPIC_CATALOG, ...KANJI_N5_TOPIC_CATALOG, ...VOCAB_N4_TOPIC_CATALOG, ...KANJI_N4_TOPIC_CATALOG, ...VOCAB_N3_TOPIC_CATALOG, ...KANJI_N3_TOPIC_CATALOG]
@@ -40,7 +41,7 @@ function MatchSession({ topicId, onExit }: { topicId: string; onExit: () => void
   const [scope] = useState(() => ({ content, learning, userId: identity.userId }))
   const pairs = useMemo(() => buildMatchPairs(scope.content.listCards(), topicId, 6), [scope, topicId])
   const answers = useMemo(() => rotateMatchAnswers(pairs, 2), [pairs])
-  const sessionIdRef = useRef('session-' + crypto.randomUUID())
+  const sessionIdRef = useRef('session-' + randomUuid())
   const [startedAt] = useState(() => Date.now())
   const selectedAtRef = useRef(0)
   const [status, setStatus] = useState<'preparing' | 'active' | 'complete' | 'error'>('preparing')
@@ -106,7 +107,7 @@ function MatchSession({ topicId, onExit }: { topicId: string; onExit: () => void
     setSaving(true)
     try {
       await scope.learning.recordEvent({
-        eventId: 'event-' + crypto.randomUUID(),
+        eventId: 'event-' + randomUuid(),
         sessionId: sessionIdRef.current,
         cardId: selectedPair.card.cardId,
         mode: 'match',

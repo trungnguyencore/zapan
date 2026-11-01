@@ -28,9 +28,9 @@ export function ProgressPage() {
   return (
     <section className="page-stack">
       <PageIntro
-        eyebrow="Progress"
+        eyebrow="Progress · Phân tích năng lực"
         title="Tiến độ từ dữ liệu thật"
-        description="Mastery lấy từ ProgressRecord; activity lấy trực tiếp từ StudyEvent đã lưu. Phút học đo được chỉ cộng responseTimeMs thực sự có dữ liệu, không tự ước lượng thời gian thiếu."
+        description="Các chỉ số thành thạo và thời lượng phản xạ được tổng hợp trực tiếp từ lịch sử trả lời thực tế của bạn, không cộng dồn thời gian chờ hay ước lượng ảo."
       />
 
       <LearningDataBoundary loading={loading} error={error} onRetry={refresh}>
@@ -51,7 +51,7 @@ export function ProgressPage() {
               <div>
                 <p className="card-kicker">ACTIVITY · 28 DAYS</p>
                 <h2>Nhịp học gần đây</h2>
-                <p>Mỗi ô là số StudyEvent của một ngày theo timezone <code>{activity.timeZone}</code>. Streak tiếp tục nếu chuỗi liên tục kết thúc hôm nay hoặc hôm qua.</p>
+                <p>Biểu đồ mật độ học tập trong 28 ngày gần nhất theo múi giờ <code>{activity.timeZone}</code>. Chuỗi ngày học (Streak) được duy trì khi bạn hoàn thành ít nhất một lượt ôn tập mỗi ngày.</p>
               </div>
               <span className="status-pill">{activity.totalEvents} events</span>
             </div>

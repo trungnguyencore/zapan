@@ -24,6 +24,30 @@ export function buildReviewQueue(
     .map((record) => byId.get(record.cardId)!)
 }
 
+export function buildMistakeQueue(
+  cards: readonly ContentCard[],
+  progress: readonly ProgressRecord[],
+  limit = 20,
+): ContentCard[] {
+  const byId = new Map(cards.map((card) => [card.cardId, card]))
+  return progress
+    .filter(
+      (record) =>
+        record.incorrectCount > 0 &&
+        (record.currentCorrectStreak < 2 || record.mastery === 'weak') &&
+        byId.has(record.cardId),
+    )
+    .sort(
+      (a, b) =>
+        a.currentCorrectStreak - b.currentCorrectStreak ||
+        b.incorrectCount - a.incorrectCount ||
+        b.updatedAt - a.updatedAt ||
+        a.cardId.localeCompare(b.cardId),
+    )
+    .slice(0, Math.max(0, limit))
+    .map((record) => byId.get(record.cardId)!)
+}
+
 export function buildNewQueue(
   cards: readonly ContentCard[],
   progress: readonly ProgressRecord[],

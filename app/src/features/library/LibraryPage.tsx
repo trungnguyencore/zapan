@@ -44,8 +44,8 @@ function LibraryCard({ card }: { card: ContentCard }) {
           <span className="library-glyph" lang="ja">{card.character}</span>
           <span className="library-type">Kana</span>
         </div>
-        <strong>{card.romanizations.join(' / ')}</strong>
-        <p>{card.script === 'hiragana' ? 'Hiragana' : 'Katakana'} · {TOPIC_LABELS.get(card.topicId) ?? card.topicId}</p>
+        <strong className="library-reading-pill">{card.romanizations.join(' / ')}</strong>
+        <small>{card.script === 'hiragana' ? 'Hiragana' : 'Katakana'} · {TOPIC_LABELS.get(card.topicId) ?? card.topicId}</small>
       </article>
     )
   }
@@ -55,9 +55,9 @@ function LibraryCard({ card }: { card: ContentCard }) {
       <article className={'library-card accent-' + accentFor(card)}>
         <div className="library-card-top">
           <span className="library-term" lang="ja">{card.term}</span>
-          <span className="library-type">Vocab</span>
+          <span className="library-type">Vocab · {card.level.toUpperCase()}</span>
         </div>
-        <strong>{card.readings.join(' / ')}</strong>
+        <strong className="library-reading-pill" lang="ja">{card.readings.join(' / ')}</strong>
         <p>{primaryMeaning(card)}{meaningLanguage(card) === 'en' ? ' · EN' : ''}</p>
         <small>{TOPIC_LABELS.get(card.topicId) ?? card.topicId}</small>
       </article>
@@ -68,10 +68,13 @@ function LibraryCard({ card }: { card: ContentCard }) {
     <article className={'library-card accent-' + accentFor(card)}>
       <div className="library-card-top">
         <span className="library-glyph" lang="ja">{card.character}</span>
-        <span className="library-type">Kanji</span>
+        <div className="library-badge-group">
+          {card.hanViet && <span className="lexicon-badge hanviet">Hán Việt: {card.hanViet}</span>}
+          <span className="library-type">Kanji · {card.level.toUpperCase()}</span>
+        </div>
       </div>
-      <strong>{card.readings.join(' / ')}</strong>
-      <p>{primaryMeaning(card)}{meaningLanguage(card) === 'en' ? ' · EN' : ''}{card.hanViet ? ' · Hán Việt: ' + card.hanViet : ''}</p>
+      <strong className="library-reading-pill" lang="ja">{card.readings.join(' / ')}</strong>
+      <p>{primaryMeaning(card)}{meaningLanguage(card) === 'en' ? ' · EN' : ''}</p>
       <small>{card.strokeCount} nét · {TOPIC_LABELS.get(card.topicId) ?? card.topicId}</small>
     </article>
   )
@@ -88,9 +91,9 @@ export function LibraryPage() {
   return (
     <section className="page-stack">
       <PageIntro
-        eyebrow="Library"
+        eyebrow="Library · Từ điển học liệu"
         title="Tra cứu nội dung đã xác minh"
-        description="Tìm trong Kana, N5 đã audit và các study set N4/N3 nguồn mở đã pin provenance. ZaPan không tự bịa nghĩa hoặc reading; card chưa có tiếng Việt sẽ hiển thị English từ nguồn."
+        description="Tra cứu nhanh 3.867 mục từ Kana, N5, N4 và N3 theo mặt chữ, cách đọc, âm Hán Việt hoặc ý nghĩa."
       />
 
       <LearningDataBoundary loading={loading} error={error} onRetry={refresh}>

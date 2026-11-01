@@ -2,9 +2,9 @@
 
 ## Canonical status
 Project root: `D:\OTHERS\LATVAT\japan`
-Current phase: Phase 6 — Sourced N4/N3 content expansion
-Current status: VERIFIED — LIVE PRODUCTION at `4b229f9`; PHASE 6 FOLLOW-UP CLOSED
-Last verified: 2026-09-25
+Current phase: Phase 6 — Academic UI/UX & Mistake Recovery
+Current status: VERIFIED — LIVE PRODUCTION at `https://zapan.vercel.app` & GitHub Pages
+Last verified: 2026-11-01
 
 ## Hard scope boundary
 All implementation writes are restricted to this project root.

@@ -4,6 +4,7 @@ import { useAppServices } from '../../app/AppServicesContext'
 import { PageIntro } from '../../components/ui/PageIntro'
 import { CONFUSABLE_KANA_GROUPS, CONFUSABLE_KANA_SOURCE_VERSION } from '../../data/practice/confusableKana'
 import { buildConfusableQuestions, type ConfusableScriptFilter } from '../../domain/confusable/confusable'
+import { randomUuid } from '../../services/id/uuid'
 import { epochNowMs, monotonicNowMs } from '../../services/time/clock'
 
 function isScript(value: string | null): value is ConfusableScriptFilter {
@@ -42,7 +43,7 @@ function ConfusableSession({ script, onExit }: { script: ConfusableScriptFilter;
     () => buildConfusableQuestions(scope.content.listCards(), CONFUSABLE_KANA_GROUPS, script, 10),
     [scope, script],
   )
-  const sessionIdRef = useRef('session-' + crypto.randomUUID())
+  const sessionIdRef = useRef('session-' + randomUuid())
   const [startedAt] = useState(() => Date.now())
   const questionStartedAt = useRef(0)
   const [status, setStatus] = useState<'preparing' | 'active' | 'complete' | 'error'>('preparing')
@@ -89,7 +90,7 @@ function ConfusableSession({ script, onExit }: { script: ConfusableScriptFilter;
     setSaving(true)
     try {
       await scope.learning.recordEvent({
-        eventId: 'event-' + crypto.randomUUID(),
+        eventId: 'event-' + randomUuid(),
         sessionId: sessionIdRef.current,
         cardId: current.card.cardId,
         mode: 'confusable',

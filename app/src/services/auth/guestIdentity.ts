@@ -1,4 +1,5 @@
 import type { GuestIdentity } from '../../domain/auth/types'
+import { randomUuid } from '../id/uuid'
 
 const GUEST_ID_KEY = 'zapan-v2:guest-id'
 const GUEST_ID_PATTERN = /^guest:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
@@ -16,7 +17,7 @@ function createGuestId(makeId: IdFactory): `guest:${string}` {
 
 export function getOrCreateGuestIdentity(
   storage: IdentityStorage,
-  makeId: IdFactory = () => crypto.randomUUID(),
+  makeId: IdFactory = () => randomUuid(),
 ): GuestIdentity {
   try {
     const existing = storage.getItem(GUEST_ID_KEY)

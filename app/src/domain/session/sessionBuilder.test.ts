@@ -3,7 +3,7 @@ import type { ContentCard } from '../content/types'
 import type { ProgressRecord } from '../learning/types'
 import { createCardId } from '../learning/cardId'
 import { createInitialProgress } from '../progress/progress'
-import { buildCustomPracticeQueue, buildNewQueue, buildReviewQueue, buildTodayQueue } from './sessionBuilder'
+import { buildCustomPracticeQueue, buildMistakeQueue, buildNewQueue, buildReviewQueue, buildTodayQueue } from './sessionBuilder'
 
 const NOW = 20_000_000
 
@@ -72,5 +72,26 @@ describe('session queue builders', () => {
 
   it('does not build Custom Practice without an explicit topic selection', () => {
     expect(buildCustomPracticeQueue(cards, [], 10)).toEqual([])
+  })
+
+  it('builds mistake recovery queue prioritizing cards with active errors', () => {
+    const missedOnce: ProgressRecord = {
+      ...reviewed(cards[1], NOW + 600_000),
+      attempts: 2,
+      correctCount: 1,
+      incorrectCount: 1,
+      currentCorrectStreak: 0,
+      accuracy: 0.5,
+    }
+    const missedTwice: ProgressRecord = {
+      ...reviewed(cards[2], NOW + 600_000),
+      attempts: 2,
+      correctCount: 0,
+      incorrectCount: 2,
+      currentCorrectStreak: 0,
+      accuracy: 0,
+    }
+    expect(buildMistakeQueue(cards, [reviewed(cards[0], NOW + 600_000), missedOnce, missedTwice]).map((item) => item.cardId))
+      .toEqual([cards[2].cardId, cards[1].cardId])
   })
 })

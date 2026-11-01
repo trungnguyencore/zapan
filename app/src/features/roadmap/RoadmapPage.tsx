@@ -52,9 +52,9 @@ export function RoadmapPage() {
 
   return <section className="page-stack">
     <PageIntro
-      eyebrow="Roadmap"
+      eyebrow="Roadmap · Tiến trình cấp độ"
       title="Lộ trình dựa trên mastery thật"
-      description="Roadmap chỉ mở các stage đang có content đã xác minh. Seen không đồng nghĩa learned: một stage chỉ complete khi toàn bộ cards của stage đang ở trạng thái mastered."
+      description="Lộ trình học thuật đo lường mức độ nắm vững thực chất: việc mới xem qua thẻ chưa được tính là hoàn tất, một chặng chỉ hoàn thành khi toàn bộ thẻ trong chặng đạt trạng thái thành thạo bền vững (Mastered)."
     />
     <LearningDataBoundary loading={loading} error={error} onRetry={refresh}>
       <>
@@ -76,7 +76,7 @@ export function RoadmapPage() {
     <article className="surface-card roadmap-deferred" aria-label="Các stage chưa kích hoạt">
       <p className="card-kicker">NOT ACTIVE YET</p>
       <h2>Grammar · Reading/Listening · N5/N4/N3 exam practice</h2>
-      <p>Vocabulary + Kanji N4/N3 đã active từ nguồn mở có provenance. Grammar, Reading/Listening và exam-practice vẫn chưa mở vì chưa có content + review flow đã xác minh tương ứng.</p>
+      <p>Các học phần Ngữ pháp, Đọc hiểu, Nghe hiểu và Đề luyện thi JLPT đang trong giai đoạn kiểm duyệt nguồn học liệu chuẩn và sẽ được mở khi hoàn tất xác minh.</p>
     </article>
       </>
     </LearningDataBoundary>
